@@ -1,0 +1,19 @@
+{
+  "name": "pokusew/mojekucharka-net",
+  "description": "A simple web app for managing recipes",
+  "private": true,
+  "homepage": "https://github.com/pokusew/mojekucharka-zwa#readme",
+  "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Martin Endler",
+      "homepage": "https://github.com/pokusew"
+    }
+  ],
+  "require": {
+    "php": ">= 7.4.0"
+  },
+  "require-dev": {
+  }
+}

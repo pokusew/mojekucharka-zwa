@@ -1,0 +1,102 @@
+//
+// Theme
+// --------------------------------------------------
+
+// see https://sass-lang.com/documentation/style-rules/declarations#custom-properties
+@use "sass:meta";
+
+@use "config" as *;
+@use "utils";
+
+:root {
+
+	--white: #{$white};
+	@include utils.define-color(--white, $white);
+	--black: #{$black};
+	@include utils.define-color(--black, $black);
+	--red: #{$red};
+	@include utils.define-color(--red, $red);
+	--orange: #{$orange};
+	@include utils.define-color(--orange, $orange);
+	--yellow: #{$yellow};
+	@include utils.define-color(--yellow, $yellow);
+	--green: #{$green};
+	@include utils.define-color(--green, $green);
+	--blue: #{$blue};
+	@include utils.define-color(--blue, $blue);
+	--teal: #{$teal};
+	@include utils.define-color(--teal, $teal);
+	--pink: #{$pink};
+	@include utils.define-color(--pink, $pink);
+	--purple: #{$purple};
+	@include utils.define-color(--purple, $purple);
+
+	--gray-dark: #{$gray-dark};
+	@include utils.define-color(--gray-dark, $gray-dark);
+	--gray: #{$gray};
+	@include utils.define-color(--gray, $gray);
+	--gray-light: #{$gray-light};
+	@include utils.define-color(--gray-light, $gray-light);
+	--gray-lighter: #{$gray-lighter};
+	@include utils.define-color(--gray-lighter, $gray-lighter);
+	--gray-lightest: #{$gray-lightest};
+	@include utils.define-color(--gray-lightest, $gray-lightest);
+
+	--brand-primary: #{$brand-primary};
+	@include utils.define-color(--brand-primary, $brand-primary);
+	--brand-success: #{$brand-success};
+	@include utils.define-color(--brand-success, $brand-success);
+	--brand-info: #{$brand-info};
+	@include utils.define-color(--brand-info, $brand-info);
+	--brand-warning: #{$brand-warning};
+	@include utils.define-color(--brand-warning, $brand-warning);
+	--brand-danger: #{$brand-danger};
+	@include utils.define-color(--brand-danger, $brand-danger);
+	--brand-inverse: #{$brand-inverse};
+	@include utils.define-color(--brand-inverse, $brand-inverse);
+
+	--link-color: #{$link-color};
+	@include utils.define-color(--link-color, $link-color);
+	--link-hover-color: #{$link-hover-color};
+	@include utils.define-color(--link-hover-color, $link-hover-color);
+
+	--line-height-base: #{$line-height-base};
+	--font-weight-base: #{$font-weight-base};
+
+	--font-family-sans-serif: #{meta.inspect($font-family-sans-serif)};
+	--font-family-serif: #{meta.inspect($font-family-serif)};
+	--font-family-monospace: #{meta.inspect($font-family-monospace)};
+	--font-family-base: #{meta.inspect($font-family-base)};
+
+	--text-color: #{$text-color};
+	@include utils.define-color(--text-color, $text-color);
+
+	--state-success-text: #{$state-success-text};
+	@include utils.define-color(--state-success-text, $state-success-text);
+	--state-success-bg: #{$state-success-bg};
+	@include utils.define-color(--state-success-bg, $state-success-bg);
+	--state-success-border: #{$state-success-border};
+	@include utils.define-color(--state-success-border, $state-success-border);
+
+	--state-info-text: #{$state-info-text};
+	@include utils.define-color(--state-info-text, $state-info-text);
+	--state-info-bg: #{$state-info-bg};
+	@include utils.define-color(--state-info-bg, $state-info-bg);
+	--state-info-border: #{$state-info-border};
+	@include utils.define-color(--state-info-border, $state-info-border);
+
+	--state-warning-text: #{$state-warning-text};
+	@include utils.define-color(--state-warning-text, $state-warning-text);
+	--state-warning-bg: #{$state-warning-bg};
+	@include utils.define-color(--state-warning-bg, $state-warning-bg);
+	--state-warning-border: #{$state-warning-border};
+	@include utils.define-color(--state-warning-border, $state-warning-border);
+
+	--state-danger-text: #{$state-danger-text};
+	@include utils.define-color(--state-danger-text, $state-danger-text);
+	--state-danger-bg: #{$state-danger-bg};
+	@include utils.define-color(--state-danger-bg, $state-danger-bg);
+	--state-danger-border: #{$state-danger-border};
+	@include utils.define-color(--state-danger-border, $state-danger-border);
+
+}

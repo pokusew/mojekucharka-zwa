@@ -1,0 +1,94 @@
+//
+// Table
+// --------------------------------------------------
+
+@use "utils";
+
+.table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	border: none;
+	margin: 0;
+	padding: 0;
+
+	td, th {
+		text-align: left;
+		border: 0;
+		line-height: utils.remy(18px);
+
+		padding: 10px 10px;
+		white-space: nowrap;
+
+		&.column--number {
+			text-align: right;
+		}
+
+		&.column--raw {
+			padding: 0;
+		}
+	}
+
+	th {
+		font-weight: 500;
+		border-bottom: 2px solid utils.alpha(var(--black), 90%);
+
+		&.column--sortable {
+			user-select: none;
+			cursor: pointer;
+
+			&:hover {
+				background-color: utils.alpha(var(--link-color), 90%);
+			}
+		}
+
+	}
+
+	tr {
+
+		td {
+			border-bottom: 1px solid utils.alpha(var(--black), 90%);
+		}
+
+		&:last-child {
+			td {
+				border: none;
+			}
+		}
+
+	}
+
+	thead {
+
+	}
+
+	tbody {
+
+	}
+
+}
+
+.table-responsive-container {
+	display: block;
+	width: 100%;
+	overflow-x: auto;
+	-ms-overflow-style: -ms-autohiding-scrollbar; // See https://github.com/twbs/bootstrap/pull/10057
+}
+
+//// Responsive tables
+////
+//// Add `.table-responsive` to `.table`s and we'll make them mobile friendly by
+//// enabling horizontal scrolling. Only applies <768px. Everything above that
+//// will display normally.
+//
+//.table-responsive {
+//	display: block;
+//	width: 100%;
+//	overflow-x: auto;
+//	-ms-overflow-style: -ms-autohiding-scrollbar; // See https://github.com/twbs/bootstrap/pull/10057
+//
+//	// Prevent double border on horizontal scroll due to use of `display: block;`
+//	&.table-bordered {
+//		border: 0;
+//	}
+//}

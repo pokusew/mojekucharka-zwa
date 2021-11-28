@@ -1,0 +1,252 @@
+//
+// App
+// --------------------------------------------------
+
+@use "utils";
+@use "config" as *;
+
+:root {
+	--app-header-size: #{utils.remy(80px)};
+
+	--app-footer-size: #{utils.remy(100px)};
+}
+
+.app-logo {
+
+	width: auto;
+	height: 100%;
+
+	fill-rule: evenodd;
+	clip-rule: evenodd;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+
+	$stroke-width: 10px;
+
+	.plate, .fork, .spoon {
+		stroke: #fff;
+	}
+
+	.fork, .spoon {
+		// simulate stoke-location: outside (normal behavior is center)
+		// see https://stackoverflow.com/questions/7241393/can-you-control-how-an-svgs-stroke-width-is-drawn
+		stroke-width: $stroke-width * 2;
+		paint-order: stroke;
+	}
+
+	.plate {
+		fill: #ffad00;
+		stroke-width: $stroke-width;
+	}
+
+	.fork {
+		fill: #9b5200;
+		// transform: rotate(45deg);
+		// transform-origin: center;
+		// transform-box: fill-box;
+	}
+
+	.spoon {
+		fill: #9b0071;
+	}
+
+}
+
+.app {
+	position: relative;
+	min-width: 280px;
+	height: 100%;
+	display: grid;
+	grid-template-rows: var(--app-header-size) 1fr 1fr var(--app-footer-size);
+	grid-template-columns: 100%;
+	grid-template-areas:
+		"header"
+		"breadcumbs"
+		"content"
+		"footer";
+	overflow-x: hidden;
+}
+
+.app-header {
+	grid-area: header;
+	display: block;
+	margin: 0;
+	padding: 0;
+	// background-color: var(--gray-lighter);
+	// background-color: #D9DD6B;
+	color: rgba(0, 0, 0, .8);
+
+	> .container {
+		display: flex;
+	}
+
+	.app-name {
+		display: flex;
+		align-items: center;
+		font-size: 1.25rem;
+		margin: 0 1rem 0 0;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.app-navigation {
+		flex: 1;
+		display: flex;
+
+		ul {
+			display: flex;
+			margin: 0;
+			padding: 0;
+
+			> li {
+				display: block;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+
+				> a {
+					display: flex;
+					height: 34px;
+					align-items: center;
+					margin: 0;
+					padding: 0 15px;
+					border-radius: 17px;
+					// border-top: 2px solid transparent;
+					// border-left: none;
+					// border-right: none;
+					// border-bottom: 2px solid transparent;
+					color: var(--black);
+
+					&, &:focus, &:hover {
+						color: var(--black);
+						text-decoration: none;
+					}
+
+					&:focus, &:hover {
+						background-color: utils.darken(var(--gray-lighter), 10%);
+					}
+
+					&.active {
+						//color: $gray;
+						background-color: $gray-lighter;
+					}
+
+				}
+			}
+
+		}
+
+		.right {
+			margin-left: auto;
+		}
+
+	}
+
+	.ws-info {
+		margin: 0 0 0 auto;
+	}
+
+	.ws-info + .ws-info {
+		margin: 0;
+	}
+
+	#app-navigation-toggle {
+		// TODO: This is not focusable
+		display: none;
+	}
+
+	#app-navigation-toggle-label {
+		cursor: pointer;
+		user-select: none;
+		display: flex;
+		align-items: center;
+		margin: 0 1rem;
+		padding: 0;
+		text-decoration: none;
+		font-weight: normal;
+	}
+
+	#app-navigation-toggle:checked ~ #app-navigation-toggle-label {
+		color: var(--brand-danger);
+	}
+
+	@media (max-width: $sm - 1px) {
+
+		.container {
+			padding: 0;
+		}
+
+		.app-navigation {
+			display: none;
+		}
+
+		#app-navigation-toggle:checked ~ .app-navigation {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			position: absolute;
+			top: var(--app-header-size);
+			// bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: var(--gray-lighter);
+			z-index: 10;
+
+			ul {
+				flex-direction: column;
+
+				> li {
+					> a {
+						height: var(--app-header-size);
+					}
+				}
+			}
+
+			.right {
+				margin: 0;
+			}
+
+		}
+
+	}
+
+	@media (min-width: $sm) {
+
+		#app-navigation-toggle, #app-navigation-toggle-label {
+			display: none;
+		}
+
+	}
+
+}
+
+.app-breadcrumbs {
+	grid-area: breadcumbs;
+}
+
+.app-content {
+	grid-area: content;
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+
+	> .container {
+		padding: 1rem 1rem 0 1rem;
+	}
+
+}
+
+.app-footer {
+	grid-area: footer;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--yellow);
+	justify-content: center;
+	text-align: center;
+
+	p {
+		margin: 0;
+	}
+
+}

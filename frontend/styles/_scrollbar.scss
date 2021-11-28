@@ -1,0 +1,15 @@
+//
+// Base scrollbar
+// --------------------------------------------------
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: transparentize(#000, .9);
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: transparentize(var(--gray-dark), .5);
+}

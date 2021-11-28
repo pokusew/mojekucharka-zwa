@@ -1,0 +1,148 @@
+//
+// Base global styles for whole project (body styling, helpers, global classes, etc)
+// --------------------------------------------------
+
+html {
+	// font-size: 16px; // respect the browser's (user's) size
+	line-height: 1.5;
+	font-family: var(--font-family-base);
+	color: var(--text-color);
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+p {
+	margin: 0 0 1rem 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0 0 .5rem 0;
+	padding: 0;
+	font-weight: 500;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	font-size: 1.75em;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+h4 {
+	font-size: 1.25em;
+}
+
+h5 {
+	font-size: 1em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+strong {
+	font-weight: 500;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+a {
+	color: var(--link-color);
+	text-decoration: underline;
+
+	&:hover {
+		color: var(--link-hover-color);
+		text-decoration: none;
+	}
+}
+
+.bg-primary {
+	background-color: var(--brand-primary);
+}
+
+.bg-success {
+	background-color: var(--brand-success);
+}
+
+.bg-info {
+	background-color: var(--brand-info);
+}
+
+.bg-warning {
+	background-color: var(--brand-warning);
+}
+
+.bg-danger, .bg-error {
+	background-color: var(--brand-danger);
+}
+
+pre, code, kbd {
+	font-family: var(--font-family-monospace);
+}
+
+kbd {
+	display: inline-block;
+	font-size: 0.625rem;
+	background-color: var(--white);
+	color: var(--black);
+	font-weight: 500;
+	font-family: var(--font-family-monospace);
+	padding: 0.125rem 0.1875rem;
+	border-radius: 0.25rem;
+	opacity: .9;
+	margin: 0;
+	align-self: center;
+
+	&.dark {
+		background-color: var(--gray-dark);
+		color: var(--white);
+	}
+}
+
+.copyable-code {
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--gray-lighter);
+	}
+
+	&:active {
+		background-color: var(--gray-dark);
+		color: var(--white);
+	}
+}
+
+ul, ol {
+	display: block;
+	margin: 0 0 1rem 0;
+	padding: 0 0 0 2rem;
+}
+
+hr {
+	margin: 20px 0;
+	border: 0;
+	border-top: 1px solid #eeeeee;
+	border-bottom: 1px solid #ffffff;
+}

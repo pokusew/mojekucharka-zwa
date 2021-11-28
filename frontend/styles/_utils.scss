@@ -1,0 +1,74 @@
+//
+// Utils
+// --------------------------------------------------
+
+@use "sass:math";
+@use "sass:color";
+@use "sass:string";
+
+@function remy($value, $base: 16px) {
+	@return math.div($value, $base) * 1rem;
+}
+
+@function emy($value, $base) {
+	@return math.div($value, $base) * 1em;
+}
+
+@mixin define-color($color-name, $value) {
+
+	// #{$color-name}: $value;
+
+	$red: color.red($value);
+	$green: color.green($value);
+	$blue: color.blue($value);
+	// #{$color-name}: string.unquote("rgb(#{$red}, #{$green}, #{$blue})");
+	#{$color-name}_rgb: $red, $green, $blue;
+	// #{$color-name}_r: $red;
+	// #{$color-name}_g: $green;
+	// #{$color-name}_b: $blue;
+
+	$hue: color.hue($value);
+	$saturation: color.saturation($value);
+	$lightness: color.lightness($value);
+
+	// #{$color-name}: string.unquote("hsl(#{$hue}, #{$saturation}, #{$lightness})");
+	#{$color-name}_hsl: $hue, $saturation, $lightness;
+	#{$color-name}_h: $hue;
+	#{$color-name}_s: $saturation;
+	#{$color-name}_l: $lightness;
+
+}
+
+// replace substring with another string
+// credits: https://css-tricks.com/snippets/sass/str-replace-function/
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+	}
+	@return $string;
+}
+
+@function alpha($color, $opacity) {
+	$color: str-replace($color, 'var(');
+	$color: str-replace($color, ')');
+	@return rgba(var(#{$color}_rgb), $opacity);
+}
+
+@function lighten($color, $amount) {
+	$color: str-replace($color, 'var(');
+	$color: str-replace($color, ')');
+	$color-h: var(#{$color}_h);
+	$color-s: var(#{$color}_s);
+	$color-l: var(#{$color}_l);
+	@return hsl($color-h, $color-s, calc(#{$color-l} + #{$amount}));
+}
+
+@function darken($color, $amount) {
+	$color: str-replace($color, 'var(');
+	$color: str-replace($color, ')');
+	$color-h: var(#{$color}_h);
+	$color-s: var(#{$color}_s);
+	$color-l: var(#{$color}_l);
+	@return hsl($color-h, $color-s, calc(#{$color-l} - #{$amount}));
+}

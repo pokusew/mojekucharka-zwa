@@ -1,0 +1,61 @@
+//
+// Breadcrumbs navigation
+// --------------------------------------------------
+
+@use "utils";
+
+.breadcrumbs {
+	display: block;
+	margin: 0;
+	padding: 0;
+
+	ol, li {
+		margin: 0;
+		padding: 0;
+	}
+
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		list-style-type: none;
+	}
+
+	li {
+		display: flex;
+		margin: 0 0 1rem 0;
+
+		> a {
+			display: block;
+			color: var(--gray-light);
+			text-decoration: none;
+
+			&:hover, &:focus {
+				color: var(--link-hover-color);
+				text-decoration: underline;
+			}
+
+		}
+
+		&:not(:last-child) {
+			margin: 0 .5rem 0 0;
+
+			&:after {
+				content: "»";
+				display: block;
+				margin: 0 0 0 .5rem;
+			}
+
+		}
+
+		&:last-child {
+
+			> a {
+				color: var(--text-muted);
+				pointer-events: none;
+			}
+
+		}
+
+	}
+
+}

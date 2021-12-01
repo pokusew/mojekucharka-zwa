@@ -1,8 +1,11 @@
 # Apache configuration file (see https://httpd.apache.org/docs/current/mod/quickreference.html)
 
 <IfModule mod_dir.c>
-	# disable directory index
-	DirectoryIndex disabled
+	# disable directory index (let the rewrite rule handle it)
+	# DirectoryIndex disabled
+	# so we can control it using rewrite rules and minimize number of redirects
+	# (instead of two redirects 1. no dir slash > trailing dir slash, 2. http > https, we can do it using one)
+	DirectorySlash Off
 </IfModule>
 
 # see https://httpd.apache.org/docs/2.4/content-negotiation.html
@@ -19,6 +22,11 @@
 
 	RewriteEngine On
 	# RewriteBase /
+	RewriteOptions AllowNoSlash
+
+	# emulate DirectorySlash On but with HTTPS and correct HTTP Host at once
+    RewriteCond %{REQUEST_URI} ^/~endlemar$
+    RewriteRule ^(.*)$ https://wa.toad.cz/~endlemar/ [R=301,QSA,L]
 
 	# force HTTPS and correct HTTP Host
 	# force canonical URLs - strip trailing slash if present
@@ -44,7 +52,7 @@
 	# If REQUEST_FILENAME is NOT an existing file
 	RewriteCond %{REQUEST_FILENAME} !-f
 	# and REQUEST_FILENAME is NOT an existing directory
-	RewriteCond %{REQUEST_FILENAME} !-d
+	# RewriteCond %{REQUEST_FILENAME} !-d
 	# then do the following rewrite:
 	RewriteRule ^(.*)$ index.php [L]
 

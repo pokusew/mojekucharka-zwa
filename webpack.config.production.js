@@ -31,17 +31,8 @@ export default merge(baseConfig, {
 	},
 
 	output: {
-		filename: (pathData, assetInfo) => {
-
-			// note: this is currently not needed as it is handled by the InjectManifest plugin
-			// Service Worker scripts should always have the same name
-			// if (pathData.chunk.name === 'sw') {
-			// 	return '[name].js';
-			// }
-
-			return '[name].[contenthash].imt.js';
-
-		},
+		path: path.join(__dirname, 'build', 'production'),
+		filename: '[name].[contenthash].imt.js',
 		publicPath: '/',
 		// https://github.com/waysact/webpack-subresource-integrity#webpack-configuration-example
 		crossOriginLoading: 'anonymous',
@@ -123,7 +114,7 @@ export default merge(baseConfig, {
 		// https://github.com/webdeveric/webpack-assets-manifest
 		new WebpackAssetsManifest({
 			// see https://github.com/webdeveric/webpack-assets-manifest#options-read-the-schema
-			output: '../backend/assets.json', // place in the project root
+			output: '../assets.production.json', // place in the project root
 			integrity: true,
 			integrityHashes: ['sha256', 'sha384'],
 		}),

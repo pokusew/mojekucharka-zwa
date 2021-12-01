@@ -2,9 +2,10 @@
 
 TARGET:=wa.toad.cz
 SERVER:=localhost:8007
+MODE:=development
 
 .PHONY: deploy
-deploy: backend/assets.json www
+deploy: build/assets.production.json build/production
 	@echo "deploying app to $(TARGET) ..."
 	@cd "deploy/$(TARGET)" && ./deploy.sh
 
@@ -13,19 +14,19 @@ destroy:
 	@echo "destroying app on $(TARGET) ..."
 	@cd "deploy/$(TARGET)" && ./destroy.sh
 
-backend/assets.json:
+build/assets.production.json:
 	@echo "building $(@) ..."
 	yarn build
 
-www:
+build/production:
 	@echo "building $(@) ..."
 	yarn build
 
 .PHONY: run
 run:
-	@echo "running the app locally using the built-in PHP web server ..."
-	php --server "$(SERVER)" --docroot www backend/index.php
+	@echo "running the app in $(MODE) mode locally using the built-in PHP web server ..."
+	MODE=$(MODE) php --server "$(SERVER)" --docroot "build/$(MODE)" backend/index.php
 
 .PHONY: clean
 clean:
-	rm -rf www backend/assets.json
+	rm -rf build/* backend/assets.*.json

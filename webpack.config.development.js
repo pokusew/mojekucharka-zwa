@@ -4,6 +4,7 @@ import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import path from 'path';
 import baseConfig, { srcDir } from './webpack.config.base';
+import WebpackAssetsManifest from 'webpack-assets-manifest';
 
 
 const port = 3000;
@@ -26,6 +27,7 @@ export default merge(baseConfig, {
 	},
 
 	output: {
+		path: path.join(__dirname, 'build', 'development'),
 		publicPath,
 	},
 
@@ -85,6 +87,14 @@ export default merge(baseConfig, {
 		// 	chunks: ['index'],
 		// 	xhtml: true,
 		// }),
+
+		// https://github.com/webdeveric/webpack-assets-manifest
+		new WebpackAssetsManifest({
+			// see https://github.com/webdeveric/webpack-assets-manifest#options-read-the-schema
+			output: '../assets.development.json', // place in the project root
+			integrity: true,
+			integrityHashes: ['sha256', 'sha384'],
+		}),
 
 	],
 

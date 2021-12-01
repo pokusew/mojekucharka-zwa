@@ -78,7 +78,7 @@ export default {
 	},
 
 	output: {
-		path: path.join(__dirname, 'www'),
+		path: path.join(__dirname, 'build'),
 		filename: '[name].js',
 	},
 

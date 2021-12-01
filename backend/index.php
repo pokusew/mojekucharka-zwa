@@ -1,22 +1,15 @@
 <?php
 
-// TODO: require autoload
-
 // see https://www.php.net/manual/en/features.commandline.webserver.php
+if (php_sapi_name() === 'php-cli') {
+	return false;
+}
 
-// $_SERVER['DOCUMENT_ROOT']
-// $_SERVER['REMOTE_ADDR']
-// $_SERVER['REQUEST_METHOD']
-// $_SERVER['REQUEST_URI']
+$config = require_once __DIR__  . '/../config/config.local.php';
 
-// TODO: define DEBUG true or false
-// TODO: load config
-// TODO: load assets.json
+$assetsStr = file_get_contents($config['assetsManifest']);
+$assets = json_decode($assetsStr, true);
 
-echo "<pre>";
-var_dump(php_sapi_name());
-var_dump($_SERVER);
-var_dump($_GET);
-var_dump($_POST);
-var_dump($_REQUEST);
-echo "</pre>";
+// var_dump($assets);
+
+require_once __DIR__ . '/templates/layout.php';

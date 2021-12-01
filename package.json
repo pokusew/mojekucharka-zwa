@@ -18,10 +18,10 @@
     "url": "https://github.com/pokusew"
   },
   "scripts": {
-    "analyze": "rm -rf www && mkdir -p www && cross-env NODE_ENV=production node -r @babel/register ./node_modules/.bin/webpack --config webpack.config.production.js --progress --profile --color --json > www/stats.json && webpack-bundle-analyzer www/stats.json",
-    "build": "rm -rf www && mkdir -p www && cross-env NODE_ENV=production node -r @babel/register ./node_modules/.bin/webpack --config webpack.config.production.js --profile --color",
-    "lint": "eslint 'src/**/*.{js,ts,tsx}'",
-    "start": "rm -rf www && mkdir -p www && cross-env NODE_ENV=development node -r @babel/register ./node_modules/.bin/webpack serve --config ./webpack.config.development.js",
+    "analyze": "rm -rf build/production && mkdir -p build/production && cross-env NODE_ENV=production node -r @babel/register ./node_modules/.bin/webpack --config webpack.config.production.js --progress --profile --color --json > build/stats.production.json && webpack-bundle-analyzer build/stats.production.json",
+    "build": "rm -rf build/production && mkdir -p build/production && cross-env NODE_ENV=production node -r @babel/register ./node_modules/.bin/webpack --config webpack.config.production.js --profile --color",
+    "lint": "eslint 'frontend/**/*.{js,ts,tsx}'",
+    "start": "rm -rf build/development && mkdir -p build/development && cross-env NODE_ENV=development node -r @babel/register ./node_modules/.bin/webpack serve --config ./webpack.config.development.js",
     "tsc": "tsc"
   },
   "dependencies": {},

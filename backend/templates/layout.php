@@ -1,10 +1,31 @@
+<?php declare(strict_types=1); ?>
 <!DOCTYPE html>
 <html lang="cs">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Mojekuchařka.net</title>
-		<script src="http://localhost:3000/index.js"></script>
+		<link
+			rel="manifest"
+			href="<?= $config['basePath'] . $assets['manifest.json']['src'] ?>"
+			crossorigin="anonymous"
+		/>
+		<?php if ($config['mode'] === 'development'): ?>
+			<script src="<?= $config['webpackDevServer'] ?>/index.js"></script>
+		<?php else: ?>
+			<link
+				rel="stylesheet"
+				href="<?= $config['basePath'] . $assets['index.css']['src'] ?>"
+				integrity="<?= $assets['index.css']['integrity'] ?>"
+				crossorigin="anonymous"
+			/>
+			<script
+				defer="defer"
+				src="<?= $config['basePath'] . $assets['index.js']['src'] ?>"
+				integrity="<?= $assets['index.js']['integrity'] ?>"
+				crossorigin="anonymous"
+			></script>
+		<?php endif; ?>
 	</head>
 	<body class="app">
 		<header class="app-header">
@@ -91,7 +112,7 @@
 					</p>
 
 					<p>
-						Upečená kolečka slepujeme náplní připravenou z tvarohu a sušeného mléka. Do tvarohu postupně přidáváme sušené mléko tak, aby nám vznikl hustší krém. Podle chuti dosladíme.
+						Upečená kolečka slepujeme náplní připravenou z tvarohu a sušeného mléka. do tvarohu postupně přidáváme sušené mléko tak, aby nám vznikl hustší krém. Podle chuti dosladíme.
 						A teď už jen nanést na kolečka, přiklopit a nechat chvilku zatuhnout!
 					</p>
 
@@ -113,5 +134,3 @@
 		</footer>
 	</body>
 </html>
-
-

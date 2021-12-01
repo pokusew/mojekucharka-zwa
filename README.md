@@ -147,6 +147,9 @@ TODO: document Apache, PHP, MySQL setup
 3. Use `yarn start` to start dev server with HMR.
 4. Then open `http://localhost:3000/` in the browser.
 
+**Backend:**
+1. Using the built-in PHP web server: `make run` or `make SERVER=addr:port run`
+
 
 ### Available commands
 
@@ -169,7 +172,10 @@ TODO: document Apache, PHP, MySQL setup
 
 ## Deployment
 
-TODO
+* to https://wa.toad.cz/~endlemar/:
+	* see [these notes](./deploy/wa.toad.cz/README.md)
+	* `make TARGET=wa.toad.cz deploy`
+	* `make TARGET=wa.toad.cz destroy`
 
 
 <!-- links references -->

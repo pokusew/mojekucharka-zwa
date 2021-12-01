@@ -1,0 +1,100 @@
+# Apache configuration file (see https://httpd.apache.org/docs/current/mod/quickreference.html)
+
+<IfModule mod_dir.c>
+	# disable directory index
+	DirectoryIndex disabled
+</IfModule>
+
+# see https://httpd.apache.org/docs/2.4/content-negotiation.html
+<IfModule mod_negotiation.c>
+	# We need to disable MultiViews.
+	# When it is enabled, it breaks the f ront controller rewrite rule in some cases, for exmaple:
+	# GET /manifest returns 404 iff manifest.json is a file but it should be rewritten to index.php
+	Options -MultiViews
+</IfModule>
+
+# enable mod_rewrite for pretty URLs, HTTPS redirection and canonical URLs
+# see https://httpd.apache.org/docs/current/mod/mod_rewrite.html
+<IfModule mod_rewrite.c>
+
+	RewriteEngine On
+	# RewriteBase /
+
+	# force HTTPS and correct HTTP Host
+	# force canonical URLs - strip trailing slash if present
+	# do permanent redirect (status 301) to the correct URL
+	# If https is not on
+	RewriteCond %{HTTPS} !=on [OR]
+	# or if HTTP Host is not correct
+	RewriteCond %{HTTP_HOST} !=wa.toad.cz [OR]
+	# or if the REQUEST_URI contains an unnecessary trailing slash (i.e. ends with / and is not just /)
+	RewriteCond %{REQUEST_URI} ^/~endlemar/(.*)/$
+	# then do the following rewrite:
+	RewriteRule ^(.*)/$|^(.*)$ https://wa.toad.cz/~endlemar/$1$2 [R=301,QSA,L]
+
+	# prevent files starting with dot to be viewed by browser (sends 403 Forbidden)
+	# RewriteRule /\.|^\. - [F,L]
+
+	# prevent README.txt file to be viewed by browser (sends 403 Forbidden)
+	RewriteRule ^README\.txt$ - [F,L]
+
+	# front controller
+	#   rewrite all requests to index.php
+	#   if all conditions are met and pattern matches
+	# If REQUEST_FILENAME is NOT an existing file
+	RewriteCond %{REQUEST_FILENAME} !-f
+	# and REQUEST_FILENAME is NOT an existing directory
+	RewriteCond %{REQUEST_FILENAME} !-d
+	# then do the following rewrite:
+	RewriteRule ^(.*)$ index.php [L]
+
+</IfModule>
+
+# enable gzip compression
+# see https://httpd.apache.org/docs/current/mod/mod_deflate.html
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
+</IfModule>
+
+# see https://httpd.apache.org/docs/current/mod/mod_expires.html
+# <IfModule mod_expires.c>
+# 	ExpiresActive On
+# 	ExpiresDefault A0
+#
+# 	ExpiresByType image/gif "access plus 14 days"
+# 	ExpiresByType image/jpg "access plus 14 days"
+# 	ExpiresByType image/jpeg "access plus 14 days"
+# 	ExpiresByType image/png "access plus 14 days"
+#
+# 	ExpiresByType text/css "access plus 14 days"
+# 	ExpiresByType text/javascript "access plus 14 days"
+# 	ExpiresByType application/x-javascript "access plus 14 days"
+# 	ExpiresByType application/javascript "access plus 14 days"
+#
+# 	ExpiresByType text/html A0
+# </IfModule>
+
+# TODO: apply these rules
+# group /* means for all pages / files
+# /*
+# 	Content-Security-Policy: frame-ancestors 'none'
+# 	X-Frame-Options: DENY
+# 	X-XSS-Protection: 1; mode=block
+# 	Referrer-Policy: no-referrer
+# 	X-Content-Type-Options: nosniff
+#
+# # add Cache-Control for assets with hash
+# /*.imt.js
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.css
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.json
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.png
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.jpg
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.svg
+# 	Cache-Control: public, max-age=31536000, immutable
+# /*.imt.mp3
+# 	Cache-Control: public, max-age=31536000, immutable

@@ -6,4 +6,4 @@ import './robots.txt';
 // import './_headers';
 import './manifest.json';
 
-import './scripts/example';
+import './scripts/app';

@@ -1,4 +1,11 @@
-<?php declare(strict_types=1); ?>
+<?php
+declare(strict_types=1);
+/**
+ * @var App\Config $config
+ * @var App\Assets $assets
+ * @var App\Router $router
+ */
+?>
 <!DOCTYPE html>
 <html lang="cs">
 	<head>
@@ -7,22 +14,23 @@
 		<title>Mojekuchařka.net</title>
 		<link
 			rel="manifest"
-			href="<?= $config['basePath'] . $assets['manifest.json']['src'] ?>"
+			href="<?= $assets->getUrl('manifest.json') ?>"
+			integrity="<?= $assets->getIntegrity('manifest.json') ?>"
 			crossorigin="anonymous"
 		/>
-		<?php if ($config['mode'] === 'development'): ?>
-			<script src="<?= $config['webpackDevServer'] ?>/index.js"></script>
+		<?php if ($config->isDevelopment()): ?>
+			<script src="<?= $config->webpackDevServer . '/index.js' ?>"></script>
 		<?php else: ?>
 			<link
 				rel="stylesheet"
-				href="<?= $config['basePath'] . $assets['index.css']['src'] ?>"
-				integrity="<?= $assets['index.css']['integrity'] ?>"
+				href="<?= $assets->getUrl('index.css') ?>"
+				integrity="<?= $assets->getIntegrity('index.css') ?>"
 				crossorigin="anonymous"
 			/>
 			<script
 				defer="defer"
-				src="<?= $config['basePath'] . $assets['index.js']['src'] ?>"
-				integrity="<?= $assets['index.js']['integrity'] ?>"
+				src="<?= $assets->getUrl('index.js') ?>"
+				integrity="<?= $assets->getIntegrity('index.js') ?>"
 				crossorigin="anonymous"
 			></script>
 		<?php endif; ?>
@@ -49,15 +57,15 @@
 				</svg>
 
 
-				<a class="app-name" href="/">Mojekuchařka.net</a>
+				<a class="app-name" href="<?= $router->getUrl('/') ?>">Mojekuchařka.net</a>
 				<nav class="app-navigation">
 					<ul class="left">
-						<li><a class="active" href="/">Úvod</a></li>
-						<li><a class="" href="/recepty">Recepty</a></li>
+						<li><a class="active" href="<?= $router->getUrl('/') ?>">Úvod</a></li>
+						<li><a class="" href="<?= $router->getUrl('/recepty') ?>">Recepty</a></li>
 					</ul>
 					<ul class="right">
-						<li><a class="" href="/prihlaseni">Přihlášení</a></li>
-						<li><a class="" href="/registrace">Registrace</a></li>
+						<li><a class="" href="<?= $router->getUrl('/prihlaseni') ?>">Přihlášení</a></li>
+						<li><a class="" href="<?= $router->getUrl('/registrace') ?>">Registrace</a></li>
 					</ul>
 				</nav>
 
@@ -67,9 +75,9 @@
 		<nav class="app-breadcrumbs breadcrumbs">
 			<div class="container">
 				<ol>
-					<li><a href="#">Recepty</a></li>
-					<li><a href="#">Cukroví</a></li>
-					<li><a href="#">Domácí Oreo sušenky</a></li>
+					<li><a href="<?= $router->getUrl('#') ?>">Recepty</a></li>
+					<li><a href="<?= $router->getUrl('#') ?>">Cukroví</a></li>
+					<li><a href="<?= $router->getUrl('#') ?>">Domácí Oreo sušenky</a></li>
 				</ol>
 			</div>
 		</nav>
@@ -79,7 +87,13 @@
 				<h1>Domácí Oreo sušenky</h1>
 
 				<p class="muted">
-					Přidal uživatel <a itemprop="author" class="author" rel="author" href="/profil/Robot">Robot</a>,
+					Přidal uživatel
+					<a
+						itemprop="author"
+						class="author"
+						rel="author"
+						href="<?= $router->getUrl('/profil/Robot') ?>"
+					>Robot</a>,
 					<time datetime="2013-07-09T15:03+02:00">09. 07. 2013 v 15:03</time>
 				</p>
 
@@ -124,7 +138,7 @@
 
 				<hr />
 
-				<button type="button" class="btn">Tisknout recept</button>
+				<button type="button" class="btn btn-print">Tisknout recept</button>
 
 			</div>
 		</main>

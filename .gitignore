@@ -30,7 +30,8 @@ Desktop.ini
 # Node.js packages from npm
 /node_modules/
 
-# build
+# app
+/log/
 /vendor/
 /build/
 /deploy/wa.toad.cz/README.txt

@@ -11,10 +11,14 @@
       "homepage": "https://github.com/pokusew"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/App/"
+    }
+  },
   "require": {
     "php": ">= 7.4.0",
-	  "ext-json": "*"
-  },
-  "require-dev": {
+    "ext-json": "*",
+    "tracy/tracy": "^2.8"
   }
 }

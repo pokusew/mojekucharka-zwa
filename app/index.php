@@ -19,11 +19,16 @@ Tracy\Debugger::$logDirectory = $config->debuggerLogDirectory;
 Tracy\Debugger::$productionMode = $config->isDevelopment() ? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;
 Tracy\Debugger::enable();
 
-$assets = new App\Assets($config);
-$router = new App\Router($config);
+$container = new App\DI\Container();
 
-require_once __DIR__ . '/templates/layout.php';
+$container->add($config);
 
-// $request = \App\HttpRequest::fromSuperglobals();
-// dump($request);
-// dump($_GET);
+$container->registerFactoryForType(
+	'App\HttpRequest',
+	[$container->getByType('App\HttpRequestFactory'), 'createHttpRequest'],
+);
+
+/** @var App\App $app */
+$app = $container->getByType('App\App');
+
+$app->run();

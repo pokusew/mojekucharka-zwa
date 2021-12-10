@@ -23,13 +23,20 @@ abstract class BasePresenter
 	public function render()
 	{
 
+		// define variables so that they are available
 		$config = $this->config;
 		$router = $this->router;
 		$assets = $this->assets;
 
-		if ($this->view !== null) {
-			require __DIR__ . '/../../templates/' . $this->view . '.php';
-		}
+		$layout = '_layout';
+
+		ob_start();
+
+		require __DIR__ . '/../../templates/' . $this->view . '.php';
+
+		$page = ob_get_clean();
+
+		require __DIR__ . '/../../templates/' . $layout . '.php';
 
 	}
 

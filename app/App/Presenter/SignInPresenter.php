@@ -2,12 +2,12 @@
 
 namespace App\Presenter;
 
-class HomePresenter extends BasePresenter
+class SignInPresenter extends BasePresenter
 {
 
 	public function __construct()
 	{
-		$this->view = 'home';
+		$this->view = 'signIn';
 	}
 
 	public function action()

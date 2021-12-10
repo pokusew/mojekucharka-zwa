@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Template;
+namespace Core\Template;
 
 class Html
 {

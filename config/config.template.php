@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Config;
+use Core\Config;
 
 function build_config(): Config
 {

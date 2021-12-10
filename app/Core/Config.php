@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Core;
 
 class Config
 {
@@ -24,6 +24,8 @@ class Config
 	public string $assetsMode = self::DEVELOPMENT;
 	public ?string $assetsManifest = null;
 	public ?string $webpackDevServer = null;
+
+	public string $presenterNamespace = 'App\Presenter';
 
 	public static function parseMode($value, string $defaultMode): string
 	{

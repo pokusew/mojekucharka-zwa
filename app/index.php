@@ -11,7 +11,7 @@ if (should_skip_this_request()) {
 
 require_once __DIR__ . '/autoload.php';
 
-/** @var App\Config $config */
+/** @var Core\Config $config */
 $config = require_once __DIR__ . '/../config/config.local.php';
 
 Tracy\Debugger::$email = $config->debuggerEmail;
@@ -19,16 +19,14 @@ Tracy\Debugger::$logDirectory = $config->debuggerLogDirectory;
 Tracy\Debugger::$productionMode = $config->isDevelopment() ? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;
 Tracy\Debugger::enable();
 
-$container = new App\DI\Container();
+$container = new Core\DI\Container();
 
 $container->add($config);
 
-$container->registerFactoryForType(
-	'App\HttpRequest',
-	[$container->getByType('App\HttpRequestFactory'), 'createHttpRequest'],
-);
+$container->registerFactory('Core\Http\HttpRequestFactory::createHttpRequest');
+$container->registerFactory('App\RouterFactory::createRouter');
 
-/** @var App\App $app */
-$app = $container->getByType('App\App');
+/** @var Core\App $app */
+$app = $container->getByType(Core\App::class);
 
 $app->run();

@@ -2,12 +2,12 @@
 
 namespace App\Presenter;
 
-class HomePresenter extends BasePresenter
+class RecipesPresenter extends BasePresenter
 {
 
 	public function __construct()
 	{
-		$this->view = 'home';
+		$this->view = 'recipes';
 	}
 
 	public function action()

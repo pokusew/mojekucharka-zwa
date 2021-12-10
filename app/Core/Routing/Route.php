@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Core\Routing;
 
 class Route
 {
@@ -22,6 +22,10 @@ class Route
 			return [];
 		}
 		return null;
+	}
+
+	public function link(array $parameters = []) {
+		return $this->pattern;
 	}
 
 }

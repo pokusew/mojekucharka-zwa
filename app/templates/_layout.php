@@ -1,13 +1,17 @@
 <?php
+
 declare(strict_types=1);
+
 /**
- * @var App\Config $config
- * @var App\Assets $assets
- * @var App\Router $router
+ * @var App\Presenter\BasePresenter $this
+ * @var Core\Config $config
+ * @var Core\Assets $assets
+ * @var Core\Routing\Router $router
  * @var ?string $title
  * @var ?string $headers additional HTML to place in the HTML head
  * @var string $page current rendered page (HTML string)
  */
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">

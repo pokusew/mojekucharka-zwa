@@ -2,12 +2,12 @@
 
 namespace App\Presenter;
 
-class HomePresenter extends BasePresenter
+class ErrorPresenter extends BasePresenter
 {
 
 	public function __construct()
 	{
-		$this->view = 'home';
+		$this->view = 'error-404';
 	}
 
 	public function action()

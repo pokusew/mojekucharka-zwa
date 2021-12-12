@@ -19,6 +19,8 @@ Tracy\Debugger::$logDirectory = $config->debuggerLogDirectory;
 Tracy\Debugger::$productionMode = $config->isDevelopment() ? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;
 Tracy\Debugger::enable();
 
+Nette\Utils\Html::$xhtml = true;
+
 $container = new Core\DI\Container();
 
 $container->add($config);

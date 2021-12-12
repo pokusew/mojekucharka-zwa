@@ -7,49 +7,7 @@
 
 :root {
 	--app-header-size: #{utils.remy(80px)};
-
 	--app-footer-size: #{utils.remy(100px)};
-}
-
-.app-logo {
-
-	width: auto;
-	height: 100%;
-
-	fill-rule: evenodd;
-	clip-rule: evenodd;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-
-	$stroke-width: 10px;
-
-	.plate, .fork, .spoon {
-		stroke: #fff;
-	}
-
-	.fork, .spoon {
-		// simulate stoke-location: outside (normal behavior is center)
-		// see https://stackoverflow.com/questions/7241393/can-you-control-how-an-svgs-stroke-width-is-drawn
-		stroke-width: $stroke-width * 2;
-		paint-order: stroke;
-	}
-
-	.plate {
-		fill: #ffad00;
-		stroke-width: $stroke-width;
-	}
-
-	.fork {
-		fill: #9b5200;
-		// transform: rotate(45deg);
-		// transform-origin: center;
-		// transform-box: fill-box;
-	}
-
-	.spoon {
-		fill: #9b0071;
-	}
-
 }
 
 .app {
@@ -57,11 +15,11 @@
 	min-width: 280px;
 	height: 100%;
 	display: grid;
-	grid-template-rows: var(--app-header-size) 1fr 1fr var(--app-footer-size);
+	grid-template-rows: var(--app-header-size) 1fr var(--app-footer-size);
 	grid-template-columns: 100%;
 	grid-template-areas:
 		"header"
-		"breadcumbs"
+		//"breadcrumbs"
 		"content"
 		"footer";
 	overflow-x: hidden;
@@ -78,6 +36,10 @@
 
 	> .container {
 		display: flex;
+	}
+
+	.app-logo {
+
 	}
 
 	.app-name {
@@ -222,7 +184,7 @@
 }
 
 .app-breadcrumbs {
-	grid-area: breadcumbs;
+	grid-area: breadcrumbs;
 }
 
 .app-content {

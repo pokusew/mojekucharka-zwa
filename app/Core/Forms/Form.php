@@ -6,33 +6,60 @@ namespace Core\Forms;
 
 use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\TextInput;
+use Core\Http\HttpRequest;
+use Nette\Utils\Html;
 
 class Form implements \ArrayAccess
 {
 
-	private string $method = 'POST';
+	const METHOD_GET = 'GET';
+	const METHOD_POST = 'POST';
 
-	/**
-	 * @var BaseControl[]
-	 */
+	private string $name;
+
+	private string $method;
+
+	private Html $htmlEl;
+
+	private bool $submitted = false;
+
+	/** @var BaseControl[] */
 	private array $controls = [];
 
-	public ?string $error;
+	public ?string $error = null;
 
-	public ?bool $valid;
+	public ?bool $valid = null;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public array $onSuccess;
 
-	public function __construct()
+	public function __construct(string $name, string $method = self::METHOD_POST)
 	{
+		$this->name = $name;
+		$this->method = $method;
+		$this->htmlEl = Html::el('form');
+		$this->htmlEl->name = $name;
+		$this->htmlEl->method = strtolower($method);
+		$this->htmlEl->action = '';
 	}
 
-	public function addText(string $name)
+	public function getElem(): Html {
+		return $this->htmlEl;
+	}
+
+	public function getName(): string
 	{
-		$this->controls[$name] = new TextInput($name);
+		return $this->name;
+	}
+
+	public function addText(string $name, string $label): TextInput
+	{
+		$control = new TextInput($name, $label);
+		$control->setForm($this);
+
+		$this->controls[$name] = $control;
+
+		return $control;
 	}
 
 	public function offsetExists($offset): bool
@@ -55,17 +82,22 @@ class Form implements \ArrayAccess
 		unset($this->controls[$offset]);
 	}
 
-	public function validate(): bool {
+	public function validate(): bool
+	{
 		return false;
 	}
 
-	public function isSubmitted(\Core\Http\HttpRequest $httpRequest): bool
+	public function process(HttpRequest $httpRequest): bool
 	{
-		return $httpRequest->method === $this->method;
-	}
 
-	public function process(\Core\Http\HttpRequest $httpRequest)
-	{
+		if ($this->submitted) {
+			return false;
+		}
+
+		if ($httpRequest->method !== $this->method) {
+			return false;
+		}
+
 		$rawValues = $httpRequest->post;
 
 		foreach ($this->controls as $name => $control) {
@@ -76,10 +108,13 @@ class Form implements \ArrayAccess
 
 		}
 
-
+		return true;
 
 	}
 
-
+	public function isSubmitted(): bool
+	{
+		return $this->submitted;
+	}
 
 }

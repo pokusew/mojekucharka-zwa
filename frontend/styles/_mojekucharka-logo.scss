@@ -1,0 +1,44 @@
+//
+// Mojekucharka.net SVG logo
+// --------------------------------------------------
+
+.mojekucharka-logo {
+
+	width: auto;
+	height: 100%;
+
+	fill-rule: evenodd;
+	clip-rule: evenodd;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+
+	$stroke-width: 10px;
+
+	.plate, .fork, .spoon {
+		stroke: #fff;
+	}
+
+	.fork, .spoon {
+		// simulate stoke-location: outside (normal behavior is center)
+		// see https://stackoverflow.com/questions/7241393/can-you-control-how-an-svgs-stroke-width-is-drawn
+		stroke-width: $stroke-width * 2;
+		paint-order: stroke;
+	}
+
+	.plate {
+		fill: #ffad00;
+		stroke-width: $stroke-width;
+	}
+
+	.fork {
+		fill: #9b5200;
+		// transform: rotate(45deg);
+		// transform-origin: center;
+		// transform-box: fill-box;
+	}
+
+	.spoon {
+		fill: #9b0071;
+	}
+
+}

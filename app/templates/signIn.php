@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @var App\Presenter\HomePresenter $this
+ * @var App\Presenter\SignInPresenter $this
  * @var Core\Config $config
  * @var Core\Assets $assets
  * @var Core\Routing\Router $router
  */
+
+use App\Template\Helpers;
 
 ?>
 <body class="app">
@@ -19,25 +21,15 @@ declare(strict_types=1);
 
 			<h1>Přihlášení</h1>
 
-			<form
-				name="signIn"
-				method="post"
-				action=""
-			>
+			<?= $this->signInForm->getElem()->startTag() ?>
 
-				<label for="signIn--email">
-					E-mail
-				</label>
+			<?= Helpers::renderFormControl($this->signInForm['email']) ?>
 
-				<input
-					id="signIn--email"
-					name="email"
-					type="email"
-				/>
+			<?= Helpers::renderFormControl($this->signInForm['password']) ?>
 
-				<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="submit" class="btn btn-primary">Submit</button>
 
-			</form>
+			<?= $this->signInForm->getElem()->endTag() ?>
 
 		</div>
 	</main>

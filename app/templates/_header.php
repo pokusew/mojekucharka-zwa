@@ -20,7 +20,7 @@ use Core\Template\Html;
 		<input id="app-navigation-toggle" type="checkbox">
 		<label id="app-navigation-toggle-label" for="app-navigation-toggle">Menu</label>
 
-		<svg class="app-logo" viewBox="0 0 230 230">
+		<svg class="app-logo mojekucharka-logo" viewBox="0 0 230 230">
 			<circle
 				class="plate"
 				cx="115" cy="115" r="91"

@@ -3,6 +3,7 @@
 // --------------------------------------------------
 
 @use "config" as *;
+@use "animations";
 
 // NOTE: Some styles are taken from Twitter Bootstrap 4
 
@@ -138,6 +139,7 @@ input[type="search"] {
 	border-radius: 0; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
 	//@include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075));
 	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	@include animations.apply-shake-animation($paused: true);
 
 	// Customize the `:focus` state to imitate native WebKit styles.
 	@include form-control-focus;

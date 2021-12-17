@@ -21,7 +21,7 @@ class Helpers
 	public static function renderFormControl(TextBase $control): string
 	{
 		$group = Html::el('div');
-		$group->class('form-group');
+		$group->class[] = 'form-group';
 
 		$label = $control->getLabel()->class('form-control-label');
 
@@ -32,11 +32,13 @@ class Helpers
 
 		if ($control->hasError()) {
 
+			$control->getElem()->data('touched', 'true');
+
 			$feedback = Html::el('p');
 			$feedback->class('form-control-feedback');
 			$feedback->setText($control->getError());
 
-			$group->class('has-error');
+			$group->class[] = 'has-error';
 			$group->insert(null, $feedback);
 
 		}

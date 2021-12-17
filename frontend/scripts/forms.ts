@@ -1,6 +1,6 @@
 "use strict";
 
-import { isDefined } from './utils';
+import { IS_DEVELOPMENT, isDefined } from './utils';
 import { shake } from './shake';
 
 
@@ -133,7 +133,7 @@ const focusFormControlWithError = (form: HTMLFormElement): boolean => {
 
 const handleSubmit = (event: SubmitEvent) => {
 
-	console.log('handleSubmit');
+	IS_DEVELOPMENT && console.log('[forms] handleSubmit');
 
 	const form = event.currentTarget as HTMLFormElement;
 
@@ -167,6 +167,39 @@ const registerForm = (form: HTMLFormElement) => {
 
 };
 
+/**
+ * Allow submitting forms without validation in development mode when Alt key is pressed
+ */
+const DEVELOPMENT_ONLY_handleSubmitButtonClick = (event: MouseEvent) => {
+
+	if (!IS_DEVELOPMENT) {
+		return;
+	}
+
+	if (!event.altKey) {
+		return;
+	}
+
+	const button = event.currentTarget;
+
+	if (!(button instanceof HTMLButtonElement) || !isDefined(button.form)) {
+		return;
+	}
+
+	console.log('handleSubmitButtonClick');
+
+	// ignores any submit handlers
+	// that are triggered after `button.form.submit()` is called
+	// but before the form's submission causes navigation
+	event.preventDefault();
+
+	// submit the associated form
+	// but ignores any submit handlers and constraints validation
+	// useful for development when testing server-side validation
+	button.form.submit();
+
+};
+
 const unregisterForm = (form: HTMLFormElement) => {
 	form.noValidate = false;
 	form.removeEventListener('submit', handleSubmit);
@@ -183,11 +216,23 @@ export const registerForms = () => {
 	for (const form of forms) {
 		registerForm(form);
 	}
+	if (IS_DEVELOPMENT) {
+		const submitButtons = document.querySelectorAll('button[type="submit"]');
+		for (const button of submitButtons) {
+			button.addEventListener('click', DEVELOPMENT_ONLY_handleSubmitButtonClick);
+		}
+	}
 };
 
 export const unregisterForms = () => {
 	const forms: NodeListOf<HTMLFormElement> = document.querySelectorAll('form[data-validation="true"]');
 	for (const form of forms) {
 		unregisterForm(form);
+	}
+	if (IS_DEVELOPMENT) {
+		const submitButtons = document.querySelectorAll('button[type="submit"]');
+		for (const button of submitButtons) {
+			button.removeEventListener('click', DEVELOPMENT_ONLY_handleSubmitButtonClick);
+		}
 	}
 };

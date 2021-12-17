@@ -12,4 +12,19 @@ class TextArea extends HtmlWithLabelControl
 		parent::__construct($name, 'textarea', $label);
 	}
 
+	public function setValueFromRequest(array &$data): self
+	{
+		$htmlDataName = $this->htmlEl->name;
+		$value = isset($data[$htmlDataName]) && is_string($data[$htmlDataName]) ? $data[$htmlDataName] : null;
+		$this->setValue($value);
+		return $this;
+	}
+
+	public function setValue(?string $value): HtmlControl
+	{
+		parent::setValue($value);
+		$this->htmlEl->setText($value);
+		return $this;
+	}
+
 }

@@ -55,6 +55,8 @@ abstract class BaseControl
 		return $this->value !== null;
 	}
 
+	public abstract function setValueFromRequest(array &$data): self;
+
 	public function setValue(?string $value): self
 	{
 		if ($value === '') {
@@ -89,7 +91,7 @@ abstract class BaseControl
 		if ($cond) {
 			$this->error = $error;
 		}
-		return $cond;
+		return !$cond;
 	}
 
 	public function clearError(): self

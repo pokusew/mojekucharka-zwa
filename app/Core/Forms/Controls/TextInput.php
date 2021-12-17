@@ -15,6 +15,8 @@ class TextInput extends TextBaseControl
 	protected string $type = self::TYPE_TEXT;
 	protected ?string $pattern = null;
 
+	protected bool $outputPasswordValueEnabled = false;
+
 	public function __construct(string $name, $label)
 	{
 		parent::__construct($name, 'input', $label);
@@ -24,6 +26,35 @@ class TextInput extends TextBaseControl
 			'validateMinLength',
 			'validateMaxLength',
 		];
+	}
+
+	public function setValueFromRequest(array &$data): self
+	{
+		$htmlDataName = $this->htmlEl->name;
+		$value = isset($data[$htmlDataName]) && is_string($data[$htmlDataName]) ? $data[$htmlDataName] : null;
+		$this->setValue($value);
+		return $this;
+	}
+
+	public function setValue(?string $value): HtmlControl
+	{
+		parent::setValue($value);
+		if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
+			$this->htmlEl->value = $value;
+		}
+		return $this;
+	}
+
+
+	public function isOutputPasswordValueEnabled(): bool
+	{
+		return $this->outputPasswordValueEnabled;
+	}
+
+	public function setOutputPasswordValueEnabled(bool $outputPasswordValueEnabled): self
+	{
+		$this->outputPasswordValueEnabled = $outputPasswordValueEnabled;
+		return $this;
 	}
 
 	public function getType(): string

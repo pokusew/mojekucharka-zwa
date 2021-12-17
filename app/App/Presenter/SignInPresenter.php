@@ -47,14 +47,16 @@ class SignInPresenter extends BasePresenter
 
 		$form->addSubmit('submit', 'Přihlásit se');
 
-		$form->onSuccess[] = [$this, 'handleSignInFormSuccess'];
+		$form->onSuccess[] = function (Form $form) {
+			$this->handleSignInFormSuccess($form);
+		};
 
 		return $form;
 	}
 
 	private function handleSignInFormSuccess(Form $form)
 	{
-		dump('handleSignInFormSuccess');
+		dump('handleSignInFormSuccess', $form);
 		exit(0);
 	}
 

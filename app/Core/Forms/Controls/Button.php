@@ -14,6 +14,12 @@ class Button extends HtmlControl
 		$this->htmlEl->type = $type;
 	}
 
+	public function setValueFromRequest(array &$data): self
+	{
+		// TODO
+		return $this;
+	}
+
 	public function getType(): ?string
 	{
 		return $this->htmlEl->type;

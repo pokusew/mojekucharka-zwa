@@ -122,19 +122,15 @@ class Form implements \ArrayAccess
 
 		$this->submitted = true;
 
-		$rawValues = $httpRequest->post;
-
-		foreach ($this->controls as $name => $control) {
-
-			if (isset($rawValues[$name]) && is_string($rawValues[$name])) {
-				$control->setValue($rawValues[$name]);
+		if ($httpRequest->post !== null) {
+			foreach ($this->controls as $name => $control) {
+				$control->setValueFromRequest($httpRequest->post);
 			}
-
 		}
 
 		if ($this->validate()) {
 			foreach ($this->onSuccess as $handler) {
-				call_user_func($handler);
+				$handler($this);
 			}
 		}
 

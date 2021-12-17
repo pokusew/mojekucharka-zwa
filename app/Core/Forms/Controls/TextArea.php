@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Core\Forms\Controls;
 
-class TextArea extends TextBase
+class TextArea extends HtmlWithLabelControl
 {
 
-	public function __construct(string $name, string $label)
+	public function __construct(string $name, $label)
 	{
-		parent::__construct($name, $label);
-		$this->htmlEl->setName('textarea');
+		parent::__construct($name, 'textarea', $label);
 	}
 
 }

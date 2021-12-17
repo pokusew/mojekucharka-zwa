@@ -4,58 +4,17 @@ declare(strict_types=1);
 
 namespace Core\Forms\Controls;
 
-use Core\Forms\Form;
-use Nette\Utils\Html;
-
-abstract class TextBase extends BaseControl
+abstract class TextBaseControl extends HtmlWithLabelControl
 {
 
 	protected ?int $minLength = null;
 	protected ?int $maxLength = null;
 
-	protected Html $htmlEl;
-	protected Html $htmlLabelEl;
-
-	public function __construct(string $name, string $label)
+	public function __construct(string $name, string $htmlElementName, $label)
 	{
-		parent::__construct($name);
-		$this->htmlEl = Html::el('input');
-		$this->htmlLabelEl = Html::el('label');
-		$this->htmlLabelEl->setText($label);
-		$this->generateId();
+		parent::__construct($name, $htmlElementName, $label);
 		$this->defaultValidators[] = 'validateMinLength';
 		$this->defaultValidators[] = 'validateMaxLength';
-	}
-
-	public function getElem(): Html
-	{
-		return $this->htmlEl;
-	}
-
-	public function getLabel(): Html
-	{
-		return $this->htmlLabelEl;
-	}
-
-	protected function generateId()
-	{
-		$id = ($this->form !== null ? $this->form->getName() . '--' : '') . $this->name;
-		$this->htmlEl->id = $id;
-		$this->htmlLabelEl->for = $id;
-	}
-
-	public function setForm(?Form $form): self
-	{
-		parent::setForm($form);
-		$this->generateId();
-		return $this;
-	}
-
-	public function setRequired(bool $required = true): self
-	{
-		parent::setRequired($required);
-		$this->htmlEl->required = $required;
-		return $this;
 	}
 
 	public function getMinLength(): ?int
@@ -108,11 +67,6 @@ abstract class TextBase extends BaseControl
 			$this->maxLength !== null && strlen($this->value) > $this->maxLength,
 			"Prosím zadejte maximálně $this->maxLength znaků."
 		);
-	}
-
-	public function __toString(): string
-	{
-		return (string) $this->htmlEl;
 	}
 
 }

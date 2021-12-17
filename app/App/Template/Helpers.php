@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Template;
 
-use Core\Forms\Controls\TextBase;
+use Core\Forms\Controls\TextBaseControl;
 use Nette\Utils\Html;
 
 class Helpers
@@ -15,10 +15,10 @@ class Helpers
 	 *
 	 * Note! It also mutates the HTML elements attributes of the given control.
 	 *
-	 * @param TextBase $control
+	 * @param TextBaseControl $control
 	 * @return string HTML
 	 */
-	public static function renderFormControl(TextBase $control): string
+	public static function renderFormControl(TextBaseControl $control): string
 	{
 		$group = Html::el('div');
 		$group->class[] = 'form-group';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Forms\Controls;
 
-class TextInput extends TextBase
+class TextInput extends TextBaseControl
 {
 
 	public const
@@ -15,9 +15,9 @@ class TextInput extends TextBase
 	protected string $type = self::TYPE_TEXT;
 	protected ?string $pattern = null;
 
-	public function __construct(string $name, string $label)
+	public function __construct(string $name, $label)
 	{
-		parent::__construct($name, $label);
+		parent::__construct($name, 'input', $label);
 		$this->defaultValidators = [
 			'validateType',
 			'validatePattern',

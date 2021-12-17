@@ -1,7 +1,5 @@
 "use strict";
 
-import './utils';
-
 
 const handlePrintButtonClick = (event) => {
 	window.print();

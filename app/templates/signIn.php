@@ -27,7 +27,7 @@ use App\Template\Helpers;
 
 			<?= Helpers::renderFormControl($this->signInForm['password']) ?>
 
-			<button type="submit" class="btn btn-primary">Submit</button>
+			<?= $this->signInForm['submit']->getElem()->class('btn btn-primary') ?>
 
 			<?= $this->signInForm->getElem()->endTag() ?>
 

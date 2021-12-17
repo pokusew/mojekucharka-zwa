@@ -19,12 +19,10 @@ class SignInPresenter extends BasePresenter
 
 	public function action()
 	{
+
 		$this->signInForm = $this->createSignInForm();
 
-		if ($this->signInForm->process($this->httpRequest)) {
-			dump($this->signInForm);
-			exit(0);
-		}
+		$this->signInForm->process($this->httpRequest);
 
 	}
 
@@ -47,6 +45,8 @@ class SignInPresenter extends BasePresenter
 			->setAutocomplete('current-password')
 			->setPlaceholder('Heslo');
 
+		$form->addSubmit('submit', 'Přihlásit se');
+
 		$form->onSuccess[] = [$this, 'handleSignInFormSuccess'];
 
 		return $form;
@@ -54,7 +54,8 @@ class SignInPresenter extends BasePresenter
 
 	private function handleSignInFormSuccess(Form $form)
 	{
-
+		dump('handleSignInFormSuccess');
+		exit(0);
 	}
 
 }

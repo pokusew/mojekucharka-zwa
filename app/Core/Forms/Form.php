@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Forms;
 
 use Core\Forms\Controls\BaseControl;
+use Core\Forms\Controls\Button;
 use Core\Forms\Controls\TextInput;
 use Core\Http\HttpRequest;
 use Nette\Utils\Html;
@@ -15,20 +16,18 @@ class Form implements \ArrayAccess
 	const METHOD_GET = 'GET';
 	const METHOD_POST = 'POST';
 
-	private string $name;
+	protected string $name;
 
-	private string $method;
+	protected string $method;
 
-	private Html $htmlEl;
+	protected Html $htmlEl;
 
-	private bool $submitted = false;
+	protected bool $submitted = false;
 
 	/** @var BaseControl[] */
-	private array $controls = [];
+	protected array $controls = [];
 
-	public ?string $error = null;
-
-	public ?bool $valid = null;
+	protected ?string $error = null;
 
 	/** @var callable[] */
 	public array $onSuccess;
@@ -43,7 +42,8 @@ class Form implements \ArrayAccess
 		$this->htmlEl->action = '';
 	}
 
-	public function getElem(): Html {
+	public function getElem(): Html
+	{
 		return $this->htmlEl;
 	}
 
@@ -52,12 +52,27 @@ class Form implements \ArrayAccess
 		return $this->name;
 	}
 
+	protected function addControl(BaseControl $control): BaseControl
+	{
+		$control->setForm($this);
+		$this->controls[$control->getName()] = $control;
+		return $control;
+	}
+
 	public function addText(string $name, string $label): TextInput
 	{
 		$control = new TextInput($name, $label);
-		$control->setForm($this);
 
-		$this->controls[$name] = $control;
+		$this->addControl($control);
+
+		return $control;
+	}
+
+	public function addSubmit(string $name, $label): Button
+	{
+		$control = new Button($name, $label, 'submit');
+
+		$this->addControl($control);
 
 		return $control;
 	}
@@ -84,7 +99,14 @@ class Form implements \ArrayAccess
 
 	public function validate(): bool
 	{
-		return false;
+		$valid = true;
+		foreach ($this->controls as $name => $control) {
+			if (!$control->validate()) {
+				$valid = false;
+				// do not break, we want to trigger validation of all controls
+			}
+		}
+		return $valid;
 	}
 
 	public function process(HttpRequest $httpRequest): bool
@@ -98,14 +120,22 @@ class Form implements \ArrayAccess
 			return false;
 		}
 
+		$this->submitted = true;
+
 		$rawValues = $httpRequest->post;
 
 		foreach ($this->controls as $name => $control) {
 
-			if (isset($rawValues[$name])) {
+			if (isset($rawValues[$name]) && is_string($rawValues[$name])) {
 				$control->setValue($rawValues[$name]);
 			}
 
+		}
+
+		if ($this->validate()) {
+			foreach ($this->onSuccess as $handler) {
+				call_user_func($handler);
+			}
 		}
 
 		return true;

@@ -10,6 +10,14 @@ use Nette\Utils\Html;
 class Helpers
 {
 
+	/**
+	 * Renders the given form control to HTML
+	 *
+	 * Note! It also mutates the HTML elements attributes of the given control.
+	 *
+	 * @param TextBase $control
+	 * @return string HTML
+	 */
 	public static function renderFormControl(TextBase $control): string
 	{
 		$group = Html::el('div');

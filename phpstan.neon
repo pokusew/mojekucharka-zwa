@@ -1,0 +1,20 @@
+# PHPstan config
+# see https://phpstan.org/config-reference
+# see https://phpstan.org/
+
+parameters:
+	level: 0
+	paths:
+		- app
+	ignoreErrors:
+		-
+			message: '#Access to protected property [a-zA-Z0-9\\_]+Presenter::\$[a-zA-Z0-9\\_]+#'
+			path: app/templates/
+
+rules:
+	# https://github.com/ergebnis/phpstan-rules
+	- Ergebnis\PHPStan\Rules\Files\DeclareStrictTypesRule
+
+includes:
+	# - vendor/phpstan/phpstan-strict-rules/rules.neon
+	# - vendor/phpstan/phpstan-deprecation-rules/rules.neon

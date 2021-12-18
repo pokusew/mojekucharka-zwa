@@ -37,6 +37,14 @@ log:
 	@echo "creating log directory ..."
 	mkdir -p log
 
+.PHONY: phpstan
+phpstan:
+	@echo "running PHPStan ..."
+	@vendor/bin/phpstan
+
+.PHONY: lint
+lint: phpstan
+
 .PHONY: run
 run: vendor log
 	@echo "running the app in $(MODE) mode locally using the built-in PHP web server ..."

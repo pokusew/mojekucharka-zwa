@@ -30,11 +30,16 @@ Desktop.ini
 # Node.js packages from npm
 /node_modules/
 
+# phpDocumentor
+/.phpdoc/
+
 # app
 /log/
 /vendor/
 /build/
-/deploy/wa.toad.cz/README.txt
+
+# deployments
+/deploy/docs/.netlify/
 
 # playground
 /temp/

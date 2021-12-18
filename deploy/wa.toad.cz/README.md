@@ -1,4 +1,4 @@
-# wa.toad.cz
+# App deployment to wa.toad.cz
 
 [wa.toad.cz](https://wa.toad.cz/) is a [web-server for students' semestral projects][ctu-zwa-wa-toad-cz]
 in the CTU's B6B39ZWA course.

@@ -57,11 +57,12 @@ sed -i '' -E -e "s|$old_integrity|$new_integrity|" "$build_deployment_dir/config
 
 # generate production-ready Composer autoloader
 cd "$build_deployment_dir"
-# 1st option: do clean install with --classmap-authoritative
-# composer install --classmap-authoritative
+# 1st option: do clean install with --no-dev and --classmap-authoritative
+composer install --no-dev --classmap-authoritative
 # 2nd option: copy already installed vendor dir and just regenerate the autoloader with --classmap-authoritative
-cp -r "$project_dir/vendor/" "$build_deployment_dir/vendor/"
-composer dump-autoload --classmap-authoritative
+#             and remove (somehow) the dev dependencies
+# cp -r "$project_dir/vendor/" "$build_deployment_dir/vendor/"
+# composer dump-autoload --classmap-authoritative
 cd "$project_dir"
 
 # copy to server using rsync

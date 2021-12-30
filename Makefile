@@ -34,6 +34,10 @@ destroy:
 	@echo "$(bl)$(yellow)Destroying deployment of the app on $(cyan)$(TARGET)$(yellow) ...$(rs)"
 	./deploy/$(TARGET)/destroy.sh
 
+build/development:
+	@echo "$(bl)$(red)Please run $(cyan)yarn start$(red) in another terminal before running this command.$(rs)"
+	@exit 1
+
 build/assets.production.json:
 	@echo "$(bl)$(yellow)Building $(cyan)$(@)$(yellow) ...$(rs)"
 	yarn build
@@ -59,7 +63,7 @@ phpstan:
 lint: phpstan
 
 .PHONY: run
-run: vendor log
+run: vendor log build/$(MODE)
 	@echo "$(bl)$(yellow)Running the app in $(cyan)$(MODE)$(yellow) mode locally using the built-in PHP web server ...$(rs)"
 	MODE=$(MODE) php --server "$(SERVER)" --docroot "build/$(MODE)" app/index.php
 

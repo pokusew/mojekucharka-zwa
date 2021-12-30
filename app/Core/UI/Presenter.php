@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Core\UI;
 
+use Core\AbortException;
 use Core\Assets;
 use Core\Config;
 use Core\Http\HttpRequest;
+use Core\Http\HttpResponse;
+use Core\Response\RedirectResponse;
+use Core\Response\Response;
+use Core\Response\TextResponse;
 use Core\Routing\RouteMatch;
 use Core\Routing\Router;
+use Exception;
 
 abstract class Presenter
 {
@@ -22,8 +28,13 @@ abstract class Presenter
 	/** @inject */
 	public Assets $assets;
 
-	protected HttpRequest $httpRequest;
+	/** @inject */
+	public HttpRequest $httpRequest;
+
 	protected ?RouteMatch $routeMatch;
+	protected ?Exception $exception;
+
+	protected ?Response $response = null;
 
 	protected ?string $templatesDir = null;
 	protected ?string $layout = null;
@@ -40,23 +51,74 @@ abstract class Presenter
 		return false;
 	}
 
-	public function run(HttpRequest $httpRequest, ?RouteMatch $routeMatch)
+	/**
+	 * @throws AbortException
+	 */
+	public function redirect(string $dest, array $params = [], bool $fullUrl = false)
 	{
-		$this->httpRequest = $httpRequest;
+		$code = $this->httpRequest->method === 'POST'
+			? HttpResponse::S_303_SEE_OTHER // see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/303
+			: HttpResponse::S_302_FOUND;
+		$this->redirectWithCode($code, $dest, $params, $fullUrl);
+	}
+
+	/**
+	 * @throws AbortException
+	 */
+	public function redirectWithCode(int $code, string $dest, array $params = [], bool $fullUrl = false)
+	{
+		$url = $this->router->link($dest, $params, $fullUrl);
+		$this->sendResponse(new RedirectResponse($url, $code));
+	}
+
+	/**
+	 * Correctly terminates presenter by throwing an AbortException which is then caught in run
+	 * @throws AbortException always
+	 */
+	public function terminate()
+	{
+		throw new AbortException();
+	}
+
+	/**
+	 * Sends response and terminates presenter.
+	 * @throws AbortException
+	 */
+	public function sendResponse(Response $response)
+	{
+		$this->response = $response;
+		$this->terminate();
+	}
+
+	public function run(?RouteMatch $routeMatch, ?Exception $exception): ?Response
+	{
 		$this->routeMatch = $routeMatch;
+		$this->exception = $exception;
 
-		$this->action();
-		$this->render();
+		try {
+
+			$this->action();
+
+			// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
+			if ($this->httpRequest->method === 'HEAD') {
+				return $this->terminate();
+			}
+
+			$this->render();
+
+		} catch (AbortException $e) {
+
+			return $this->response;
+
+		}
+
+		return $this->response;
 	}
 
-	public function action()
-	{
-
-	}
+	public abstract function action();
 
 	public function render()
 	{
-
 		// define variables so that they are available
 		$config = $this->config;
 		$router = $this->router;
@@ -66,18 +128,18 @@ abstract class Presenter
 			return;
 		}
 
+		ob_start();
+		require $this->templatesDir . '/' . $this->view . '.php';
 		if ($this->layout !== null) {
-
-			ob_start();
-			require $this->templatesDir . '/' . $this->view . '.php';
 			$page = ob_get_clean();
-
+			ob_start();
 			require $this->templatesDir . '/' . $this->layout . '.php';
-
-		} else {
-			require $this->templatesDir . '/' . $this->view . '.php';
 		}
+		$text = ob_get_clean();
 
+		if ($text) {
+			$this->response = new TextResponse($text);
+		}
 	}
 
 }

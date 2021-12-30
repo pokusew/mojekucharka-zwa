@@ -56,8 +56,9 @@ class SignInPresenter extends BasePresenter
 
 	private function handleSignInFormSuccess(Form $form)
 	{
-		dump('handleSignInFormSuccess', $form);
-		exit(0);
+		// dump('handleSignInFormSuccess', $form);
+		// exit(0);
+		$this->redirect('Home');
 	}
 
 }

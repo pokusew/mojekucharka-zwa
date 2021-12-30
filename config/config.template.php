@@ -24,6 +24,9 @@ function build_config(): Config
 	$config->assetsManifest = __DIR__ . "/../build/assets.$mode.json";
 	$config->webpackDevServer = 'http://localhost:3000'; // only used if $config->isDevelopment() === true
 
+	// fill in correct values for the database connection
+	$config->databaseDsn = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
+
 	return $config;
 
 }

@@ -29,6 +29,8 @@ class Config
 
 	public string $presenterNamespace = 'App\Presenter';
 
+	public string $databaseDsn = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
+
 	/**
 	 * @param mixed $value
 	 * @param string $defaultMode

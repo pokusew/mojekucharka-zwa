@@ -21,6 +21,9 @@ function build_config(): Config
 	$config->assetsManifest = __DIR__ . '/assets.wa.toad.cz.json';
 	$config->webpackDevServer = null; // only used if $config->isDevelopment() === true
 
+	// fill in the correct PASSWORD for the database connection
+	$config->databaseDsn = 'mysql:host=localhost;dbname=endlemar;user=endlemar;password=PASSWORD';
+
 	return $config;
 
 }

@@ -43,7 +43,8 @@ class App
 		$this->config = $config;
 	}
 
-	protected function createPresenter(string $presenterName): Presenter {
+	protected function createPresenter(string $presenterName): Presenter
+	{
 
 		$presenterClassName = $this->config->presenterNamespace . '\\' . $presenterName . 'Presenter';
 
@@ -59,27 +60,44 @@ class App
 
 	}
 
+	/**
+	 * @throws BadRequestException
+	 */
+	protected function processRequest(): void
+	{
+
+		$match = $this->router->match($this->httpRequest->path);
+
+		if ($match === null) {
+			throw new BadRequestException('No route for HTTP request.', 404);
+		}
+
+		$presenter = $this->createPresenter($match->route->presenter);
+
+		$response = $presenter->run($match, null);
+
+		if ($response !== null) {
+			$response->send($this->httpRequest, $this->httpResponse);
+		}
+
+	}
+
 	public function run(): void
 	{
-		// dump($this->httpRequest);
+		// during the development, let the Tracy handle all exceptions (i.e. show the blue screen)
+		if ($this->config->isDevelopment()) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$this->processRequest();
+			return;
+		}
 
+		// in production, handle exceptions robustly (first via the Error presenter,
+		// and if it also fails, log the exception and show a minimal error page and set code to 500)
 		try {
 
 			try {
 
-				$match = $this->router->match($this->httpRequest->path);
-
-				if ($match === null) {
-					throw new BadRequestException('No route for HTTP request.', 404);
-				}
-
-				$presenter = $this->createPresenter($match->route->presenter);
-
-				$response = $presenter->run($match, null);
-
-				if ($response !== null) {
-					$response->send($this->httpRequest, $this->httpResponse);
-				}
+				$this->processRequest();
 
 			} catch (\Exception $e) {
 

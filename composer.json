@@ -21,11 +21,11 @@
     "php": ">= 7.4.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "tracy/tracy": "^2.8",
+    "tracy/tracy": "^2.9",
     "nette/utils": "^3.2"
   },
   "require-dev": {
-    "phpstan/phpstan": "^1.2",
+    "phpstan/phpstan": "^1.3",
     "phpstan/phpstan-strict-rules": "^1.1",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "ergebnis/phpstan-rules": "^1.0"

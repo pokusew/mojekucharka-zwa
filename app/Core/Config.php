@@ -52,4 +52,9 @@ class Config
 		return $this->mode === self::DEVELOPMENT;
 	}
 
+	public function isAssetsModeDevelopment(): bool
+	{
+		return $this->assetsMode === self::DEVELOPMENT;
+	}
+
 }

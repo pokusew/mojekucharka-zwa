@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Returns true if this request should be handled by the PHP built-in web server.
  * True is returned if all these conditions are met:

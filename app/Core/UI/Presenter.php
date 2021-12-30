@@ -61,8 +61,8 @@ abstract class Presenter
 	 */
 	public function isLinkCurrent(string $dest, array $params = []): bool
 	{
-		// TODO
-		return false;
+		$url = $this->router->link($dest, $params);
+		return $url === $this->httpRequest->path;
 	}
 
 	/**

@@ -66,7 +66,8 @@ class Form implements ArrayAccess
 
 	/**
 	 * @param string $name
-	 * @param HtmlLabel $label
+	 * @phpstan-param HtmlLabel $label
+	 * @param mixed $label
 	 * @return TextInput
 	 */
 	public function addText(string $name, $label): TextInput
@@ -80,7 +81,8 @@ class Form implements ArrayAccess
 
 	/**
 	 * @param string $name
-	 * @param HtmlLabel $label
+	 * @phpstan-param HtmlLabel $label
+	 * @param mixed $label
 	 * @return Button
 	 */
 	public function addSubmit(string $name, $label): Button

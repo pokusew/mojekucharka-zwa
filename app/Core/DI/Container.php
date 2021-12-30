@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace Core\DI;
 
+use InvalidArgumentException;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionProperty;
+
 class Container
 {
 
+	/**
+	 * @var array<string, callable>
+	 */
 	private array $factories = [];
 
 	/**
 	 * Instances grouped by their types (FQ class/interface names)
-	 * @var object[][]
+	 * @var array<string, array<object>>
 	 */
 	private array $instances = [];
 
@@ -21,14 +32,16 @@ class Container
 	}
 
 	/**
-	 * Adds an existing instance to the container so it can be used for the autoconfiguring
+	 * Adds an existing instance to the container so it can be used for the autowiring
+	 * @return $this
 	 */
-	public function add(object $instance)
+	public function add(object $instance): self
 	{
 		$types = class_parents($instance) + class_implements($instance) + [get_class($instance)];
 		foreach ($types as $type) {
 			$this->instances[$type][] = $instance;
 		}
+		return $this;
 	}
 
 	/**
@@ -43,22 +56,23 @@ class Container
 
 		try {
 
-			$method = new \ReflectionMethod($classMethod);
+			$method = new ReflectionMethod($classMethod);
 			$returnType = $method->getReturnType();
 			$class = $method->getDeclaringClass();
 
 			if ($type === null) {
 
-				if ($returnType === null) {
-					throw new \InvalidArgumentException(
-						"Factory method '$classMethod' has no return type and no explicit type was given.",
+				if (!($returnType instanceof ReflectionNamedType)) {
+					throw new InvalidArgumentException(
+						"Factory method '$classMethod' has no or an invalid return type"
+						. " and no explicit type was given.",
 					);
 				}
 
 				$type = $returnType->getName();
 
 				if ($returnType->isBuiltin()) {
-					throw new \InvalidArgumentException(
+					throw new InvalidArgumentException(
 						"Factory method '$classMethod' has invalid return type '$type'.",
 					);
 				}
@@ -69,8 +83,8 @@ class Container
 
 			$this->factories[$type] = [$instance, $method->getName()];
 
-		} catch (\ReflectionException $e) {
-			throw new \InvalidArgumentException(
+		} catch (ReflectionException $e) {
+			throw new InvalidArgumentException(
 				"Could not register factory method '$classMethod' because it does not exist.",
 				0,
 				$e,
@@ -81,9 +95,15 @@ class Container
 
 	}
 
+	/**
+	 * @template T of object
+	 * @param ReflectionFunctionAbstract $function
+	 * @param ReflectionClass<T>|null $class
+	 * @return mixed[]
+	 */
 	private function autowireFunctionParameters(
-		\ReflectionFunctionAbstract $function,
-		\ReflectionClass $class = null
+		ReflectionFunctionAbstract $function,
+		ReflectionClass $class = null
 	): array
 	{
 
@@ -95,16 +115,16 @@ class Container
 
 			$paramType = $param->getType();
 
-			if ($paramType === null) {
+			if (!($paramType instanceof ReflectionNamedType)) {
 				$functionName = ($class !== null ? $class->getName() . '::' : '') . $function->getName();
-				throw new \InvalidArgumentException(
+				throw new InvalidArgumentException(
 					"Cannot autowire '$functionName' param '$param' with no type information."
 				);
 			}
 
 			if ($paramType->isBuiltin()) {
 				$functionName = ($class !== null ? $class->getName() . '::' : '') . $function->getName();
-				throw new \InvalidArgumentException(
+				throw new InvalidArgumentException(
 					"Cannot autowire '$functionName' param '$param' with builtin type '$paramType'."
 				);
 			}
@@ -119,20 +139,26 @@ class Container
 
 	}
 
-	private function autowireInstanceProperties(object $instance, \ReflectionClass $class = null)
+	/**
+	 * @template T of object
+	 * @param T $instance
+	 * @param ReflectionClass<T>|null $class
+	 * @throws ReflectionException
+	 */
+	private function autowireInstanceProperties(object $instance, ReflectionClass $class = null): void
 	{
 
 		if ($class === null) {
-			$class = new \ReflectionClass($instance);
+			$class = new ReflectionClass($instance);
 		}
 
-		$props = $class->getProperties(\ReflectionProperty::IS_PUBLIC);
+		$props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
 
 		foreach ($props as $prop) {
 
 			$propType = $prop->getType();
 
-			if ($propType === null) {
+			if (!($propType instanceof ReflectionNamedType)) {
 				continue;
 			}
 
@@ -163,10 +189,10 @@ class Container
 
 		try {
 
-			$class = new \ReflectionClass($type);
+			$class = new ReflectionClass($type);
 
 			if (!$class->isInstantiable()) {
-				throw new \InvalidArgumentException("Class '$type' is not instantiable.");
+				throw new InvalidArgumentException("Class '$type' is not instantiable.");
 			}
 
 			$constructor = $class->getConstructor();
@@ -182,13 +208,13 @@ class Container
 			return $instance;
 
 
-		} catch (\ReflectionException $e) {
-			throw new \InvalidArgumentException("Class '$type' not found.");
+		} catch (ReflectionException $e) {
+			throw new InvalidArgumentException("Class '$type' not found.");
 		}
 
 	}
 
-	public function getByType(string $type, $autoCreate = true): ?object
+	public function getByType(string $type, bool $autoCreate = true): ?object
 	{
 
 		if (isset($this->instances[$type]) && count($this->instances[$type]) === 1) {

@@ -12,7 +12,7 @@ class RecipesPresenter extends BasePresenter
 		$this->view = 'recipes';
 	}
 
-	public function action()
+	public function action(): void
 	{
 
 	}

@@ -10,7 +10,7 @@ class Html
 	/**
 	 * Dynamically builds HTML class attribute
 	 * Inspired by https://github.com/JedWatson/classnames
-	 * @param ...$classes
+	 * @param mixed ...$classes
 	 * @return string stringified and escaped classes as the whole attribute class="red blue"
 	 */
 	public static function attrClass(...$classes): string

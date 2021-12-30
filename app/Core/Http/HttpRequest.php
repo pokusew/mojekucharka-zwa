@@ -11,16 +11,18 @@ class HttpRequest
 	public bool $https;
 	public string $host;
 	public string $path;
-	public ?array $query;
-	public ?array $post;
+	/** @var string[] */
+	public array $query;
+	/** @var mixed[] */
+	public array $post;
 
 	/**
 	 * @param string $method
 	 * @param bool $https
 	 * @param string $host
 	 * @param string $path
-	 * @param array $query
-	 * @param array $post
+	 * @param string[] $query
+	 * @param mixed[] $post
 	 */
 	public function __construct(string $method, bool $https, string $host, string $path, array $query, array $post)
 	{

@@ -8,11 +8,12 @@ class RouteMatch
 {
 
 	public Route $route;
+	/** @var mixed[] */
 	public array $params;
 
 	/**
 	 * @param Route $route
-	 * @param array $params
+	 * @param mixed[] $params
 	 */
 	public function __construct(Route $route, array $params)
 	{

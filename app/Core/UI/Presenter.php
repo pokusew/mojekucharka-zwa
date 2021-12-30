@@ -40,11 +40,22 @@ abstract class Presenter
 	protected ?string $layout = null;
 	protected ?string $view = null;
 
+	/**
+	 * @param string $dest
+	 * @param mixed[] $params
+	 * @param bool $fullUrl
+	 * @return string
+	 */
 	public function link(string $dest, array $params = [], bool $fullUrl = false): string
 	{
 		return $this->router->link($dest, $params, $fullUrl);
 	}
 
+	/**
+	 * @param string $dest
+	 * @param mixed[] $params
+	 * @return bool
+	 */
 	public function isLinkCurrent(string $dest, array $params = []): bool
 	{
 		// TODO
@@ -52,7 +63,11 @@ abstract class Presenter
 	}
 
 	/**
+	 * @param string $dest
+	 * @param mixed[] $params
+	 * @param bool $fullUrl
 	 * @throws AbortException
+	 * @return never always throws an AbortException
 	 */
 	public function redirect(string $dest, array $params = [], bool $fullUrl = false)
 	{
@@ -63,7 +78,12 @@ abstract class Presenter
 	}
 
 	/**
+	 * @param int $code
+	 * @param string $dest
+	 * @param mixed[] $params
+	 * @param bool $fullUrl
 	 * @throws AbortException
+	 * @return never always throws an AbortException
 	 */
 	public function redirectWithCode(int $code, string $dest, array $params = [], bool $fullUrl = false)
 	{
@@ -74,6 +94,7 @@ abstract class Presenter
 	/**
 	 * Correctly terminates presenter by throwing an AbortException which is then caught in run
 	 * @throws AbortException always
+	 * @return never always throws an AbortException
 	 */
 	public function terminate()
 	{
@@ -83,6 +104,7 @@ abstract class Presenter
 	/**
 	 * Sends response and terminates presenter.
 	 * @throws AbortException
+	 * @return never always throws an AbortException
 	 */
 	public function sendResponse(Response $response)
 	{
@@ -101,7 +123,7 @@ abstract class Presenter
 
 			// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
 			if ($this->httpRequest->method === 'HEAD') {
-				return $this->terminate();
+				$this->terminate();
 			}
 
 			$this->render();
@@ -115,9 +137,11 @@ abstract class Presenter
 		return $this->response;
 	}
 
-	public abstract function action();
+	public function action(): void {
 
-	public function render()
+	}
+
+	public function render(): void
 	{
 		// define variables so that they are available
 		$config = $this->config;

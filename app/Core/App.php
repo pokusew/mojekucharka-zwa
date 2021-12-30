@@ -59,7 +59,7 @@ class App
 
 	}
 
-	public function run()
+	public function run(): void
 	{
 		// dump($this->httpRequest);
 

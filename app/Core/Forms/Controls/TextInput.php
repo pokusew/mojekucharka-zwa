@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Forms\Controls;
 
+/**
+ * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
+ */
 class TextInput extends TextBaseControl
 {
 
@@ -17,6 +20,10 @@ class TextInput extends TextBaseControl
 
 	protected bool $outputPasswordValueEnabled = false;
 
+	/**
+	 * @param string $name
+	 * @param HtmlLabel $label
+	 */
 	public function __construct(string $name, $label)
 	{
 		parent::__construct($name, 'input', $label);
@@ -28,6 +35,10 @@ class TextInput extends TextBaseControl
 		];
 	}
 
+	/**
+	 * @param mixed[] $data
+	 * @return $this
+	 */
 	public function setValueFromRequest(array &$data): self
 	{
 		$htmlDataName = $this->htmlEl->name;
@@ -51,6 +62,9 @@ class TextInput extends TextBaseControl
 		return $this->outputPasswordValueEnabled;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setOutputPasswordValueEnabled(bool $outputPasswordValueEnabled): self
 	{
 		$this->outputPasswordValueEnabled = $outputPasswordValueEnabled;
@@ -62,6 +76,9 @@ class TextInput extends TextBaseControl
 		return $this->type;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setType(string $type): self
 	{
 		$this->type = $type;

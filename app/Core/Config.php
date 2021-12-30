@@ -29,6 +29,11 @@ class Config
 
 	public string $presenterNamespace = 'App\Presenter';
 
+	/**
+	 * @param mixed $value
+	 * @param string $defaultMode
+	 * @return string
+	 */
 	public static function parseMode($value, string $defaultMode): string
 	{
 

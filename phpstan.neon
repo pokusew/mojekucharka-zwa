@@ -3,12 +3,18 @@
 # see https://phpstan.org/
 
 parameters:
-	level: 0
+	level: 6
 	paths:
 		- app
 	ignoreErrors:
 		-
 			message: '#Access to protected property [a-zA-Z0-9\\_]+Presenter::\$[a-zA-Z0-9\\_]+#'
+			path: app/templates/
+		-
+			message: '#Call to an undefined method Core\\Forms\\Controls\\BaseControl::[a-zA-Z0-9\\_]+#'
+			path: app/templates/
+		-
+			message: '#Parameter \#1 \$control of static method App\\Template\\Helpers::renderFormControl\(\) expects Core\\Forms\\Controls\\TextBaseControl, Core\\Forms\\Controls\\BaseControl\|null given\.#'
 			path: app/templates/
 
 rules:
@@ -18,3 +24,11 @@ rules:
 includes:
 	# - vendor/phpstan/phpstan-strict-rules/rules.neon
 	# - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
+# usage notes:
+# - To denote that a method returns the same type it’s called on, use PHPDoc `@return $this`.
+#	see https://phpstan.org/writing-php-code/phpdoc-types#static-and-%24this
+# - Marking a function or a method with PHPDoc `@return never`
+#	tells PHPStan the function always throws an exception,
+#	or contains a way to end the script execution, like `die()` or `exit()`
+#   see https://phpstan.org/writing-php-code/phpdoc-types#bottom-type

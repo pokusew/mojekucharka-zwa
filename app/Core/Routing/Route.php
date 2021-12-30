@@ -11,6 +11,7 @@ class Route
 	public string $regex;
 	public string $presenter;
 
+	// @phpstan-ignore-next-line
 	public function __construct(string $pattern, string $presenter, bool $placeholders = false)
 	{
 		$this->pattern = $pattern;
@@ -18,6 +19,10 @@ class Route
 		$this->presenter = $presenter;
 	}
 
+	/**
+	 * @param string $path
+	 * @return mixed[]|null
+	 */
 	public function match(string $path): ?array
 	{
 		if ($this->pattern === $path) {
@@ -26,7 +31,11 @@ class Route
 		return null;
 	}
 
-	public function link(array $parameters = []) {
+	/**
+	 * @param mixed[] $parameters
+	 */
+	public function link(array $parameters = []): string
+	{
 		return $this->pattern;
 	}
 

@@ -32,7 +32,7 @@ class Router
 		$this->pathPrefix = substr($config->basePath, 0, -1);
 	}
 
-	public function getUrl($url): string
+	public function getUrl(string $url): string
 	{
 		// strip leading slash in $url
 		if (strlen($url) >= 1 && $url[0] == '/') {
@@ -66,6 +66,12 @@ class Router
 		return null;
 	}
 
+	/**
+	 * @param string $presenter
+	 * @param mixed[] $parameters
+	 * @param bool $fullUrl
+	 * @return string
+	 */
 	public function link(string $presenter, array $parameters = [], bool $fullUrl = false): string
 	{
 		if (!isset($this->logicalToUrl[$presenter])) {

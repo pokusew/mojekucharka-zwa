@@ -12,9 +12,9 @@ class ErrorPresenter extends BasePresenter
 		$this->view = 'error-404';
 	}
 
-	public function action()
+	public function action(): void
 	{
-
+		// TODO: Implement action() method.
 	}
 
 }

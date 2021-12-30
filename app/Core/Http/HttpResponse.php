@@ -36,10 +36,14 @@ class HttpResponse
 
 	private int $code = self::S_200_OK;
 
-	public function setCode(int $code)
+	/**
+	 * @return $this
+	 */
+	public function setCode(int $code): self
 	{
 		$this->code = $code;
 		http_response_code($code);
+		return $this;
 	}
 
 	public function getCode(): int
@@ -85,6 +89,9 @@ class HttpResponse
 		return $headers;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setHeader(string $name, ?string $value, bool $replace = true): self
 	{
 		if (headers_sent($file, $line)) {
@@ -102,16 +109,25 @@ class HttpResponse
 		return $this;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function addHeader(string $name, string $value): self
 	{
 		return $this->setHeader($name, $value);
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function removeHeader(string $name): self
 	{
 		return $this->setHeader($name, null);
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setContentType(string $type, ?string $charset = null): self
 	{
 		return $this->setHeader('Content-Type', $type . ($charset !== null ? '; charset=' . $charset : ''));
@@ -120,7 +136,7 @@ class HttpResponse
 	/**
 	 * Redirects to a new URL. Note: call `exit()` after it
 	 */
-	public function redirect(string $url, int $code = self::S_302_FOUND)
+	public function redirect(string $url, int $code = self::S_302_FOUND): void
 	{
 		$this->setCode($code);
 		$this->setHeader('Location', $url);

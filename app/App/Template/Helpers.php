@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Template;
 
+use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\TextBaseControl;
 use Nette\Utils\Html;
 
@@ -21,6 +22,7 @@ class Helpers
 	public static function renderFormControl(TextBaseControl $control): string
 	{
 		$group = Html::el('div');
+		// @phpstan-ignore-next-line
 		$group->class[] = 'form-group';
 
 		$label = $control->getLabel()->class('form-control-label');

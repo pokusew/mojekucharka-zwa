@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Core;
 
+/**
+ * @phpstan-type Asset array{src: string, integrity: string}
+ */
 class Assets
 {
 
 	private Config $config;
+	/** @var array<string, Asset> */
 	private array $assets;
 
 	/**
@@ -19,7 +23,7 @@ class Assets
 		$this->loadAssets();
 	}
 
-	private function loadAssets()
+	private function loadAssets(): void
 	{
 
 		if (!isset($this->config->assetsManifest)) {

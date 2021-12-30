@@ -39,6 +39,9 @@ abstract class BaseControl
 		return $this->form;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setForm(?Form $form): self
 	{
 		$this->form = $form;
@@ -55,8 +58,15 @@ abstract class BaseControl
 		return $this->value !== null;
 	}
 
+	/**
+	 * @param mixed[] $data
+	 * @return $this
+	 */
 	public abstract function setValueFromRequest(array &$data): self;
 
+	/**
+	 * @return $this
+	 */
 	public function setValue(?string $value): self
 	{
 		if ($value === '') {
@@ -67,6 +77,9 @@ abstract class BaseControl
 		return $this;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setDefaultValue(?string $value): self
 	{
 		if ($this->form === null || !$this->form->isSubmitted()) {
@@ -80,6 +93,9 @@ abstract class BaseControl
 		return $this->error;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setError(?string $error): self
 	{
 		$this->error = $error;
@@ -94,6 +110,9 @@ abstract class BaseControl
 		return !$cond;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function clearError(): self
 	{
 		$this->error = null;
@@ -120,6 +139,9 @@ abstract class BaseControl
 		return $this->required;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setRequired(bool $required): self
 	{
 		$this->required = $required;

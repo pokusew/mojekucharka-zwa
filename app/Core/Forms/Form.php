@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Core\Forms;
 
+use ArrayAccess;
 use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\Button;
 use Core\Forms\Controls\TextInput;
 use Core\Http\HttpRequest;
 use Nette\Utils\Html;
 
-class Form implements \ArrayAccess
+/**
+ * @phpstan-implements ArrayAccess<string, BaseControl>
+ * @phpstan-import-type HtmlLabel from \Core\Forms\Controls\HtmlWithLabelControl
+ */
+class Form implements ArrayAccess
 {
 
 	const METHOD_GET = 'GET';
@@ -59,7 +64,12 @@ class Form implements \ArrayAccess
 		return $control;
 	}
 
-	public function addText(string $name, string $label): TextInput
+	/**
+	 * @param string $name
+	 * @param HtmlLabel $label
+	 * @return TextInput
+	 */
+	public function addText(string $name, $label): TextInput
 	{
 		$control = new TextInput($name, $label);
 
@@ -68,6 +78,11 @@ class Form implements \ArrayAccess
 		return $control;
 	}
 
+	/**
+	 * @param string $name
+	 * @param HtmlLabel $label
+	 * @return Button
+	 */
 	public function addSubmit(string $name, $label): Button
 	{
 		$control = new Button($name, $label, 'submit');

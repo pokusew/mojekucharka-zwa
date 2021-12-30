@@ -12,7 +12,7 @@ class HomePresenter extends BasePresenter
 		$this->view = 'home';
 	}
 
-	public function action()
+	public function action(): void
 	{
 
 	}

@@ -12,7 +12,7 @@ class SignUpPresenter extends BasePresenter
 		$this->view = 'signUp';
 	}
 
-	public function action()
+	public function action(): void
 	{
 
 	}

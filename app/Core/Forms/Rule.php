@@ -13,7 +13,8 @@ class Rule
 	const MIN_LENGTH = 3;
 	const MAX_LENGTH = 4;
 
-	public static $defaultMessage = [
+	/** @var string[] */
+	public static array $defaultMessage = [
 		self::REQUIRED => 'Vyplňte prosím toto pole.',
 		self::EMAIL => 'Prosím zadejte platnou e-mailouvou adresu.',
 		self::PATTERN => 'Zadejte hodnotu, která odpovídá požadovanému formátu.',

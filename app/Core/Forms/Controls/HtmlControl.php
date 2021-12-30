@@ -22,6 +22,9 @@ abstract class HtmlControl extends BaseControl
 		$this->generateId();
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setRequired(bool $required = true): self
 	{
 		parent::setRequired($required);
@@ -34,12 +37,15 @@ abstract class HtmlControl extends BaseControl
 		return $this->htmlEl;
 	}
 
-	protected function generateId()
+	protected function generateId(): void
 	{
 		$id = ($this->form !== null ? $this->form->getName() . '--' : '') . $this->name;
 		$this->htmlEl->id = $id;
 	}
 
+	/**
+	 * @return $this
+	 */
 	public function setForm(?Form $form): self
 	{
 		parent::setForm($form);

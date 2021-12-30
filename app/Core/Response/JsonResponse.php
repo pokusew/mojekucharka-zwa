@@ -13,10 +13,6 @@ use Core\Http\HttpResponse;
 class JsonResponse implements Response
 {
 
-	private string $url;
-
-	private int $code;
-
 	public function send(HttpRequest $httpRequest, HttpResponse $httpResponse)
 	{
 		// TODO: Implement send() method.

@@ -17,7 +17,7 @@ class SignInPresenter extends BasePresenter
 		$this->view = 'signIn';
 	}
 
-	public function action()
+	public function action(): void
 	{
 
 		$this->signInForm = $this->createSignInForm();
@@ -54,7 +54,7 @@ class SignInPresenter extends BasePresenter
 		return $form;
 	}
 
-	private function handleSignInFormSuccess(Form $form)
+	private function handleSignInFormSuccess(Form $form): void
 	{
 		// dump('handleSignInFormSuccess', $form);
 		// exit(0);

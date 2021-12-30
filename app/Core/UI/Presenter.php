@@ -31,6 +31,9 @@ abstract class Presenter
 	/** @inject */
 	public HttpRequest $httpRequest;
 
+	/** @inject */
+	public HttpResponse $httpResponse;
+
 	protected ?RouteMatch $routeMatch;
 	protected ?Exception $exception;
 

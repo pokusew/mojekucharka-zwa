@@ -26,6 +26,7 @@ $container = new Core\DI\Container();
 $container->add($config);
 
 $container->registerFactory('Core\Http\HttpRequestFactory::createHttpRequest');
+$container->registerFactory('Core\Http\HttpResponseFactory::createHttpResponse');
 $container->registerFactory('App\RouterFactory::createRouter');
 
 /** @var Core\App $app */

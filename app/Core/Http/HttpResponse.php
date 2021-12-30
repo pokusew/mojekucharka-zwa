@@ -34,7 +34,22 @@ class HttpResponse
 		S_501_NOT_IMPLEMENTED = 501,
 		S_503_SERVICE_UNAVAILABLE = 503;
 
+	/**
+	 * SameSite cookie attribute values
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+	 */
+	public const
+		SAME_SITE_LAX = 'Lax',
+		SAME_SITE_STRICT = 'Strict',
+		SAME_SITE_NONE = 'None';
+
 	private int $code = self::S_200_OK;
+
+	public ?string $cookieDomain = '';
+	public ?string $cookiePath = '/';
+	public bool $cookieSecure = true;
+	public bool $cookieHttpOnly = true;
+	public ?string $cookieSameSite = self::SAME_SITE_LAX;
 
 	/**
 	 * @return $this
@@ -158,33 +173,55 @@ class HttpResponse
 		END;
 	}
 
-	// TODO: implement simple cookies abstraction
+	/**
+	 * Sends a cookie.
+	 * @return $this
+	 */
+	public function setCookie(
+		string $name,
+		string $value,
+		int $expires = 0,
+		?string $path = null,
+		?string $domain = null,
+		?bool $secure = null,
+		?bool $httpOnly = null,
+		?string $sameSite = null
+	): self
+	{
+		$options = [
+			'expires' => $expires,
+			'path' => $path ?? $this->cookiePath,
+			'domain' => $domain ?? $this->cookieDomain,
+			'secure' => $secure ?? $this->cookieSecure,
+			'httponly' => $httpOnly ?? $this->cookieHttpOnly,
+			'samesite' => $sameSite ?? $this->cookieSameSite,
+		];
+		// @phpstan-ignore-next-line
+		setcookie($name, $value, $options);
+		return $this;
+	}
 
-	// /**
-	//  * Sends a cookie.
-	//  * @param string name of the cookie
-	//  * @param string value
-	//  * @param mixed expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
-	//  * @param string
-	//  * @param string
-	//  * @param bool
-	//  * @param bool
-	//  * @return void
-	//  */
-	// public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL) {
-	//
-	// }
-	//
-	// /**
-	//  * Deletes a cookie.
-	//  * @param string name of the cookie.
-	//  * @param string
-	//  * @param string
-	//  * @param bool
-	//  * @return void
-	//  */
-	// public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL) {
-	//
-	// }
+	/**
+	 * Deletes a cookie.
+	 * @return $this
+	 */
+	public function deleteCookie(
+		string $name,
+		?string $path = null,
+		?string $domain = null,
+		?bool $secure = null,
+		?bool $httpOnly = null,
+		?string $sameSite = null
+	): self
+	{
+		// from https://www.php.net/manual/en/function.setcookie.php:
+		//   Cookies must be deleted with the same parameters as they were set with.
+		//   If the value argument is an empty string,
+		//   and all other arguments match a previous call to setcookie,
+		//   then the cookie with the specified name will be deleted from the remote client.
+		//   This is internally achieved by setting value to 'deleted' and expiration time in the past.
+		$this->setCookie($name, '', 1, $path, $domain, $secure, $httpOnly, $sameSite);
+		return $this;
+	}
 
 }

@@ -20,6 +20,7 @@
   "require": {
     "php": ">= 7.4.0",
     "ext-json": "*",
+    "ext-pdo": "*",
     "tracy/tracy": "^2.8",
     "nette/utils": "^3.2"
   },

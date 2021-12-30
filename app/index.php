@@ -14,6 +14,7 @@ require_once __DIR__ . '/autoload.php';
 /** @var Core\Config $config */
 $config = require_once __DIR__ . '/../config/config.local.php';
 
+Tracy\Debugger::$strictMode = true;
 Tracy\Debugger::$email = $config->debuggerEmail;
 Tracy\Debugger::$logDirectory = $config->debuggerLogDirectory;
 Tracy\Debugger::$productionMode = $config->isDevelopment() ? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;

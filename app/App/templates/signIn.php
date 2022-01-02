@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var Core\Routing\Router $router
  */
 
-use App\Template\Helpers;
+use App\Helpers;
 
 ?>
 <body class="app">

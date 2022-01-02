@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Template;
+namespace App;
 
-use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\TextBaseControl;
 use Nette\Utils\Html;
 

@@ -9,13 +9,13 @@ parameters:
 	ignoreErrors:
 		-
 			message: '#Access to protected property [a-zA-Z0-9\\_]+Presenter::\$[a-zA-Z0-9\\_]+#'
-			path: app/templates/
+			path: app/App/templates/
 		-
 			message: '#Call to an undefined method Core\\Forms\\Controls\\BaseControl::[a-zA-Z0-9\\_]+#'
-			path: app/templates/
+			path: app/App/templates/
 		-
-			message: '#Parameter \#1 \$control of static method App\\Template\\Helpers::renderFormControl\(\) expects Core\\Forms\\Controls\\TextBaseControl, Core\\Forms\\Controls\\BaseControl\|null given\.#'
-			path: app/templates/
+			message: '#Parameter \#1 \$control of static method App\\Helpers::renderFormControl\(\) expects Core\\Forms\\Controls\\TextBaseControl, Core\\Forms\\Controls\\BaseControl\|null given\.#'
+			path: app/App/templates/
 
 rules:
 	# https://github.com/ergebnis/phpstan-rules

@@ -17,12 +17,38 @@ function build_config(): Config
 	$config->host = 'wa.toad.cz';
 	$config->basePath = '/~endlemar/';
 
-	$config->assetsMode = Config::PRODUCTION;
-	$config->assetsManifest = __DIR__ . '/assets.wa.toad.cz.json';
-	$config->webpackDevServer = null; // only used if $config->isDevelopment() === true
+	/**
+	 * Register the application router
+	 * @see \App\RouterFactory::createRouter
+	 */
+	$config->factories[] = 'App\RouterFactory::createRouter';
 
-	// fill in the correct PASSWORD for the database connection
-	$config->databaseDsn = 'mysql:host=localhost;dbname=endlemar;user=endlemar;password=PASSWORD';
+	/**
+	 * Assets configuration
+	 * @see \Core\Assets
+	 */
+	$config->parameters['assets.assetsMode'] = Config::PRODUCTION;
+	$config->parameters['assets.assetsManifest'] = __DIR__ . '/assets.wa.toad.cz.json';
+	$config->parameters['assets.webpackDevServerUrl'] = null;
+
+	/**
+	 * Database configuration
+	 * TODO: add see tag
+	 */
+	// fill in correct values for the database connection
+	$config->parameters['databaseDsn'] = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
+
+	/**
+	 * SMTP mailer configuration
+	 * @see \Nette\Mail\SmtpMailer
+	 * @see https://doc.nette.org/en/mail#toc-smtpmailer
+	 */
+	$config->services[] = 'Nette\Mail\SmtpMailer';
+	$config->parameters['email.from'] = '"Mojekuchařka.net" <info@mojekucharka.net>';
+	$config->parameters['email.admin'] = 'admin@example.com'; // fill in e-mail address for notifications
+	$config->parameters['Nette\Mail\SmtpMailer.options'] = [
+		// fill in correct config
+	];
 
 	return $config;
 

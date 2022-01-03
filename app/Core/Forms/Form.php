@@ -128,7 +128,6 @@ class Form implements ArrayAccess
 
 	public function process(HttpRequest $httpRequest): bool
 	{
-
 		if ($this->submitted) {
 			return false;
 		}
@@ -137,12 +136,14 @@ class Form implements ArrayAccess
 			return false;
 		}
 
+		// TODO: implement CSRF protection using Referer and Origin headers check
+
 		$this->submitted = true;
 
-		if ($httpRequest->post !== null) {
-			foreach ($this->controls as $name => $control) {
-				$control->setValueFromRequest($httpRequest->post);
-			}
+		$data = $httpRequest->method === self::METHOD_GET ? $httpRequest->query : $httpRequest->post;
+
+		foreach ($this->controls as $name => $control) {
+			$control->setValueFromRequest($data);
 		}
 
 		if ($this->validate()) {
@@ -152,7 +153,6 @@ class Form implements ArrayAccess
 		}
 
 		return true;
-
 	}
 
 	public function isSubmitted(): bool

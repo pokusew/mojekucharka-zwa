@@ -45,6 +45,8 @@ class Form implements ArrayAccess
 		$this->htmlEl->name = $name;
 		$this->htmlEl->method = strtolower($method);
 		$this->htmlEl->action = '';
+		// enable custom validation using JS (see frontend/scripts/forms.ts)
+		$this->htmlEl->data('validation', true);
 	}
 
 	public function getElem(): Html

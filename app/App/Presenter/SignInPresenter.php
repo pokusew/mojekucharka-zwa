@@ -30,8 +30,6 @@ class SignInPresenter extends BasePresenter
 	{
 		$form = new Form('signIn');
 
-		$form->getElem()->data('validation', true);
-
 		$form->addText('email', 'E-mail')
 			->setType(TextInput::TYPE_EMAIL)
 			->setRequired()

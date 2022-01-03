@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Routing;
 
+/**
+ * Represents a matched route with with its parameters' values.
+ */
 class RouteMatch
 {
 
@@ -19,6 +22,18 @@ class RouteMatch
 	{
 		$this->route = $route;
 		$this->params = $params;
+	}
+
+	/**
+	 * Generates the link for this route match.
+	 *
+	 * A shortcut for: `$match->route->link($match->params)`
+	 *
+	 * @return string URL
+	 */
+	public function link(): string
+	{
+		return $this->route->link($this->params);
 	}
 
 }

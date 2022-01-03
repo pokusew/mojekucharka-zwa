@@ -16,6 +16,9 @@ parameters:
 		-
 			message: '#Parameter \#1 \$control of static method App\\Helpers::renderFormControl\(\) expects Core\\Forms\\Controls\\TextBaseControl, Core\\Forms\\Controls\\BaseControl\|null given\.#'
 			path: app/App/templates/
+		-
+			message: '#Access to (private|protected) property [a-zA-Z0-9\\_]+::\$[a-zA-Z0-9\\_]+#'
+			path: *.template.php
 
 rules:
 	# https://github.com/ergebnis/phpstan-rules

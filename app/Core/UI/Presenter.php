@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Core\UI;
 
-use Core\AbortException;
 use Core\Assets;
 use Core\Config;
+use Core\Exceptions\AbortException;
 use Core\Http\HttpRequest;
 use Core\Http\HttpResponse;
 use Core\Response\RedirectResponse;

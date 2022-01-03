@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- see https://docs.phpdoc.org/3.0/guide/references/configuration.html -->
+<phpdocumentor
+	configVersion="3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://www.phpdoc.org"
+	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd"
+>
+	<paths>
+		<output>build/docs</output>
+		<cache>.phpdoc/cache</cache>
+	</paths>
+	<version number="3">
+		<folder>latest</folder>
+		<api format="php">
+			<source dsn=".">
+				<path>app</path>
+			</source>
+			<ignore hidden="true" symlinks="true">
+				<path>app/built-in-web-server.php</path>
+			</ignore>
+			<extensions>
+				<extension>php</extension>
+			</extensions>
+			<visibility>api</visibility>
+			<visibility>internal</visibility>
+			<visibility>private</visibility>
+			<visibility>protected</visibility>
+			<visibility>public</visibility>
+			<default-package-name>Mojekucharka</default-package-name>
+			<include-source>true</include-source>
+			<markers>
+				<marker>TODO</marker>
+				<marker>FIXME</marker>
+			</markers>
+		</api>
+	</version>
+</phpdocumentor>

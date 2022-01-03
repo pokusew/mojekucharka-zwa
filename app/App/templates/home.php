@@ -17,9 +17,9 @@ declare(strict_types=1);
 	<nav class="app-breadcrumbs breadcrumbs">
 		<div class="container">
 			<ol>
-				<li><a href="<?= $this->link('#') ?>">Recepty</a></li>
-				<li><a href="<?= $this->link('#') ?>">Cukroví</a></li>
-				<li><a href="<?= $this->link('#') ?>">Domácí Oreo sušenky</a></li>
+				<li><a href="<?= $this->link('Home') ?>">Recepty</a></li>
+				<li><a href="<?= $this->link('Home') ?>">Cukroví</a></li>
+				<li><a href="<?= $this->link('Home') ?>">Domácí Oreo sušenky</a></li>
 			</ol>
 		</div>
 	</nav>

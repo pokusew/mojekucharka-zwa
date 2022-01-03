@@ -6,8 +6,8 @@ declare(strict_types=1);
  * Returns true if this request should be handled by the PHP built-in web server.
  * True is returned if all these conditions are met:
  * - The script is running inside the PHP built-in web server (i.e. `php_sapi_name() === 'cli-server'`).
- * - The request has no query string ($_SERVER['QUERY_STRING'] is unset).
- * - The $_SERVER['REQUEST_URI'] does not end with '/' (i.e. does not correspond to a dir).
+ * - The request has no query string (`$_SERVER['QUERY_STRING']` is unset).
+ * - The `$_SERVER['REQUEST_URI']` does not end with `/` (i.e. does not correspond to a dir).
  * @see https://www.php.net/manual/en/features.commandline.webserver.php
  * @return bool true if this request should be handled by the PHP built-in web server
  */

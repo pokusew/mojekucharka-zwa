@@ -20,12 +20,26 @@ function build_config(): Config
 	$config->host = "${_SERVER['SERVER_NAME']}:${_SERVER['SERVER_PORT']}";
 	$config->basePath = '/';
 
-	$config->assetsMode = $assetsMode;
-	$config->assetsManifest = __DIR__ . "/../build/assets.$mode.json";
-	$config->webpackDevServer = 'http://localhost:3000'; // only used if $config->isDevelopment() === true
+	/**
+	 * Register the application router
+	 * @see \App\RouterFactory::createRouter
+	 */
+	$config->factories[] = 'App\RouterFactory::createRouter';
 
+	/**
+	 * Assets configuration
+	 * @see \Core\Assets
+	 */
+	$config->parameters['assets.assetsMode'] = $assetsMode;
+	$config->parameters['assets.assetsManifest'] = __DIR__ . "/../build/assets.$mode.json";
+	$config->parameters['assets.webpackDevServerUrl'] = 'http://localhost:3000';
+
+	/**
+	 * Database configuration
+	 * TODO: add see tag
+	 */
 	// fill in correct values for the database connection
-	$config->databaseDsn = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
+	$config->parameters['databaseDsn'] = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
 
 	return $config;
 

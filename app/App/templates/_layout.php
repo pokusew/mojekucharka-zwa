@@ -25,8 +25,8 @@ declare(strict_types=1);
 			integrity="<?= $assets->getIntegrity('manifest.json') ?>"
 			crossorigin="anonymous"
 		/>
-		<?php if ($config->isAssetsModeDevelopment()): ?>
-			<script src="<?= $config->webpackDevServer . '/index.js' ?>"></script>
+		<?php if ($assets->isModeDevelopment()): ?>
+			<script src="<?= $assets->webpackDevServerUrl . '/index.js' ?>"></script>
 		<?php else: ?>
 			<link
 				rel="stylesheet"

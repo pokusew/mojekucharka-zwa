@@ -72,7 +72,7 @@ docs:
 	@echo "$(bl)$(yellow)Generating docs ...$(rs)"
 	rm -rf build/docs
 	mkdir -p build/docs
-	phpdoc -d app -t build/docs
+	phpdoc --config phpdoc.dist.xml
 
 .PHONY: docs-deploy
 docs-deploy: docs

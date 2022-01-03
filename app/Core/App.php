@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Core\DI\Container;
+use Core\Exceptions\BadRequestException;
 use Core\Http\HttpRequest;
 use Core\Http\HttpResponse;
 use Core\Routing\Router;
@@ -21,13 +22,6 @@ class App
 	private Container $container;
 	private Config $config;
 
-	/**
-	 * @param HttpRequest $httpRequest
-	 * @param HttpResponse $httpResponse
-	 * @param Router $router
-	 * @param Container $container
-	 * @param Config $config
-	 */
 	public function __construct(
 		HttpRequest $httpRequest,
 		HttpResponse $httpResponse,
@@ -45,9 +39,9 @@ class App
 
 	protected function createPresenter(string $presenterName): Presenter
 	{
-
 		$presenterClassName = $this->config->presenterNamespace . '\\' . $presenterName . 'Presenter';
 
+		// @phpstan-ignore-next-line
 		$presenter = $this->container->createByType($presenterClassName);
 
 		if (!($presenter instanceof Presenter)) {
@@ -57,7 +51,6 @@ class App
 		}
 
 		return $presenter;
-
 	}
 
 	/**
@@ -65,7 +58,6 @@ class App
 	 */
 	protected function processRequest(): void
 	{
-
 		$match = $this->router->match($this->httpRequest->path);
 
 		if ($match === null) {
@@ -79,13 +71,12 @@ class App
 		if ($response !== null) {
 			$response->send($this->httpRequest, $this->httpResponse);
 		}
-
 	}
 
 	public function run(): void
 	{
 		// during the development, let the Tracy handle all exceptions (i.e. show the blue screen)
-		if ($this->config->isDevelopment()) {
+		if ($this->config->isModeDevelopment()) {
 			/** @noinspection PhpUnhandledExceptionInspection */
 			$this->processRequest();
 			return;
@@ -119,7 +110,6 @@ class App
 			require __DIR__ . '/error.template.php';
 			exit(1);
 		}
-
 	}
 
 }

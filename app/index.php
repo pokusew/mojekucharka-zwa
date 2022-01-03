@@ -17,18 +17,15 @@ $config = require_once __DIR__ . '/../config/config.local.php';
 Tracy\Debugger::$strictMode = true;
 Tracy\Debugger::$email = $config->debuggerEmail;
 Tracy\Debugger::$logDirectory = $config->debuggerLogDirectory;
-Tracy\Debugger::$productionMode = $config->isDevelopment() ? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;
+Tracy\Debugger::$productionMode = $config->isModeDevelopment()
+	? Tracy\Debugger::DEVELOPMENT : Tracy\Debugger::PRODUCTION;
 Tracy\Debugger::enable();
 
 Nette\Utils\Html::$xhtml = true;
 
-$container = new Core\DI\Container();
+$container = new Core\DI\Container($config);
 
-$container->add($config);
-
-$container->registerFactory('Core\Http\HttpRequestFactory::createHttpRequest');
-$container->registerFactory('Core\Http\HttpResponseFactory::createHttpResponse');
-$container->registerFactory('App\RouterFactory::createRouter');
+Tracy\Debugger::getBar()->addPanel(new Core\DI\ContainerTracyPanel($container));
 
 /** @var Core\App $app */
 $app = $container->getByType(Core\App::class);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core;
+namespace Core\Exceptions;
 
 /**
  * The exception that is thrown when a method call is invalid for the object's

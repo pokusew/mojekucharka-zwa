@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
-use Core\BadRequestException;
+use Core\Exceptions\BadRequestException;
 use Core\Http\HttpResponse;
 use Tracy\Debugger;
 use Tracy\ILogger;

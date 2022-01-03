@@ -19,7 +19,7 @@ class RecipesPresenter extends BasePresenter
 	{
 		// just a database demo
 		try {
-			$dbh = new PDO($this->config->databaseDsn);
+			$dbh = new PDO($this->config->parameters['databaseDsn']);
 			if (!$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)) {
 				throw new \RuntimeException('Could not set PDO::ATTR_ERRMODE to PDO::ERRMODE_EXCEPTION.');
 			}

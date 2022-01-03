@@ -22,7 +22,8 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "tracy/tracy": "^2.9",
-    "nette/utils": "^3.2"
+    "nette/utils": "^3.2",
+    "nette/mail": "^3.1"
   },
   "require-dev": {
     "phpstan/phpstan": "^1.3",

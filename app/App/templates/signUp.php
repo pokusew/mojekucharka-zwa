@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @var App\Presenter\HomePresenter $this
+ * @var App\Presenter\SignUpPresenter $this
  * @var Core\Config $config
  * @var Core\Assets $assets
  * @var Core\Routing\Router $router
  */
+
+use App\Helpers;
 
 ?>
 <body class="app">
@@ -18,6 +20,18 @@ declare(strict_types=1);
 		<div class="container">
 
 			<h1>Registrace</h1>
+
+			<?= $this->signUpForm->getElem()->startTag() ?>
+
+			<?= Helpers::renderFormControl($this->signUpForm['email']) ?>
+
+			<?= Helpers::renderFormControl($this->signUpForm['password']) ?>
+
+			<?= Helpers::renderFormControl($this->signUpForm['passwordAgain']) ?>
+
+			<?= $this->signUpForm['submit']->getElem()->class('btn btn-primary') ?>
+
+			<?= $this->signUpForm->getElem()->endTag() ?>
 
 		</div>
 	</main>

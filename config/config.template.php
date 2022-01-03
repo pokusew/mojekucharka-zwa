@@ -41,6 +41,18 @@ function build_config(): Config
 	// fill in correct values for the database connection
 	$config->parameters['databaseDsn'] = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
 
+	/**
+	 * SMTP mailer configuration
+	 * @see \Nette\Mail\SmtpMailer
+	 * @see https://doc.nette.org/en/mail#toc-smtpmailer
+	 */
+	$config->services[] = 'Nette\Mail\SmtpMailer';
+	$config->parameters['email.from'] = '"Mojekuchařka.net" <info@mojekucharka.net>';
+	$config->parameters['email.admin'] = 'admin@example.com'; // fill in e-mail address for notifications
+	$config->parameters['Nette\Mail\SmtpMailer.options'] = [
+		// fill in correct config
+	];
+
 	return $config;
 
 }

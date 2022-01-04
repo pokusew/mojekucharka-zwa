@@ -33,26 +33,44 @@ class SignUpPresenter extends BasePresenter
 	{
 		$form = new Form('signUp');
 
+		$form->addText('username', 'Uživatelské jméno')
+			->setPlaceholder('Uživatelské jméno')
+			->setRequired()
+			->setMinLength(4)
+			->setMaxLength(15)
+			->addPattern(
+				'^[A-Za-z0-9_]+$',
+				'Uživatelské jméno může obsahovat jenom písmena (bez diakritiky), číslice a podtržítko ( _ ).',
+			);
+
 		$form->addText('email', 'E-mail')
 			->setType(TextInput::TYPE_EMAIL)
-			->setRequired()
 			// see https://stackoverflow.com/questions/53173806/what-should-be-correct-autocomplete-for-username-email
-			->setAutocomplete('username')
-			->setPlaceholder('E-mail');
+			->setAutocomplete('email')
+			->setPlaceholder('E-mail')
+			->setRequired()
+			// see https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+			->setMaxLength(254);
 
 		$form->addText('password', 'Heslo')
 			->setType(TextInput::TYPE_PASSWORD)
-			->setRequired()
 			->setAutocomplete('new-password')
-			->setPlaceholder('Heslo');
+			->setPlaceholder('Heslo')
+			->setRequired()
+			->setMinLength(8)
+			->setMaxLength(64)
+			->addPattern('[0-9]', 'Heslo musí obsahovat alespoň jedno číslo.')
+			->addPattern('\p{L}', 'Heslo musí obsahovat alespoň jedno písmeno.');
 
-		$form->addText('passwordAgain', 'Heslo znovu')
+		// TODO: check that password === passwordAgain
+		// Zadaná hesla se neshodují.
+		// Hesla se neshodují.
+		$form->addText('passwordAgain', 'Heslo znovu pro kontrolu')
 			->setType(TextInput::TYPE_PASSWORD)
-			->setRequired()
 			->setAutocomplete('new-password')
 			->setPlaceholder('Heslo');
 
-		$form->addSubmit('submit', 'Registrovat se se');
+		$form->addSubmit('submit', 'Zaregistrovat se');
 
 		$form->onSuccess[] = function (Form $form) {
 			$this->handleSignUpFormSuccess($form);

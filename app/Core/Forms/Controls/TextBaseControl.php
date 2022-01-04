@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Core\Forms\Controls;
 
 /**
+ * TODO: newlines in input text
+ * TODO: option for trimming whitespaces
  * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
  */
 abstract class TextBaseControl extends HtmlWithLabelControl
 {
 
 	protected ?int $minLength = null;
+	protected ?string $minLengthMsg = null;
 	protected ?int $maxLength = null;
+	protected ?string $maxLengthMsg = null;
 
 	/**
 	 * @param string $name
@@ -21,8 +25,10 @@ abstract class TextBaseControl extends HtmlWithLabelControl
 	public function __construct(string $name, string $htmlElementName, $label)
 	{
 		parent::__construct($name, $htmlElementName, $label);
-		$this->defaultValidators[] = 'validateMinLength';
-		$this->defaultValidators[] = 'validateMaxLength';
+		$this->defaultValidators = [
+			'validateMaxLength',
+			'validateMinLength'
+		];
 	}
 
 	public function getMinLength(): ?int
@@ -33,10 +39,12 @@ abstract class TextBaseControl extends HtmlWithLabelControl
 	/**
 	 * @return $this
 	 */
-	public function setMinLength(?int $minLength): self
+	public function setMinLength(?int $minLength, ?string $msg = null): self
 	{
 		$this->minLength = $minLength;
+		$this->minLengthMsg = $msg;
 		$this->htmlEl->minlength = $minLength;
+		$this->htmlEl->attrs['data-minlength-msg'] = $msg;
 		return $this;
 	}
 
@@ -48,10 +56,12 @@ abstract class TextBaseControl extends HtmlWithLabelControl
 	/**
 	 * @return $this
 	 */
-	public function setMaxLength(?int $maxLength): self
+	public function setMaxLength(?int $maxLength, ?string $msg = null): self
 	{
 		$this->maxLength = $maxLength;
+		$this->maxLengthMsg = $msg;
 		$this->htmlEl->maxlength = $maxLength;
+		$this->htmlEl->attrs['data-maxlength-msg'] = $msg;
 		return $this;
 	}
 
@@ -65,6 +75,7 @@ abstract class TextBaseControl extends HtmlWithLabelControl
 	}
 
 	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
 	 * @return $this
 	 */
 	public function setAutocomplete(?string $autocomplete): self
@@ -76,16 +87,16 @@ abstract class TextBaseControl extends HtmlWithLabelControl
 	protected function validateMinLength(): bool
 	{
 		return $this->setErrorIf(
-			$this->minLength !== null && strlen($this->value) < $this->minLength,
-			"Prosím zadejte alespoň $this->minLength znaků."
+			$this->minLength !== null && mb_strlen($this->value, 'UTF-8') < $this->minLength,
+			$this->minLengthMsg ?? "Prosím zadejte alespoň $this->minLength znaků.",
 		);
 	}
 
 	protected function validateMaxLength(): bool
 	{
 		return $this->setErrorIf(
-			$this->maxLength !== null && strlen($this->value) > $this->maxLength,
-			"Prosím zadejte maximálně $this->maxLength znaků."
+			$this->maxLength !== null && mb_strlen($this->value, 'UTF-8') > $this->maxLength,
+			$this->maxLengthMsg ?? "Prosím zadejte maximálně $this->maxLength znaků.",
 		);
 	}
 

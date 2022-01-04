@@ -24,8 +24,6 @@ abstract class HtmlWithLabelControl extends HtmlControl
 		$this->htmlLabelEl = Html::el('label');
 		$this->htmlLabelEl->setText($label);
 		parent::__construct($name, $htmlElementName);
-		$this->defaultValidators[] = 'validateMinLength';
-		$this->defaultValidators[] = 'validateMaxLength';
 	}
 
 	public function getLabel(): Html

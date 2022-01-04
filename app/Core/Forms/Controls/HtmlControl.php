@@ -18,17 +18,18 @@ abstract class HtmlControl extends BaseControl
 		$this->htmlEl = Html::el($htmlElementName);
 		// We use the `n_` prefix to avoid interference with JavaScript access to the form's properties and elements.
 		// See https://developer.mozilla.org/en-US/docs/web/api/htmlformelement#issues_with_naming_elements
-		$this->htmlEl->name = 'n_'. $name;
+		$this->htmlEl->name = 'n_' . $name;
 		$this->generateId();
 	}
 
 	/**
 	 * @return $this
 	 */
-	public function setRequired(bool $required = true): self
+	public function setRequired(bool $required = true, ?string $msg = null): self
 	{
 		parent::setRequired($required);
 		$this->htmlEl->required = $required;
+		$this->htmlEl->attrs['data-required-msg'] = $msg;
 		return $this;
 	}
 

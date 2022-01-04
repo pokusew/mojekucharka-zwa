@@ -23,18 +23,19 @@ export const unsetTouched = (el: FormControlElement) => {
 
 const validateForm = (form: HTMLFormElement): boolean => {
 
-	if (form.checkValidity()) {
-		return true;
-	}
+	let valid = true;
 
 	for (const el of form.elements) {
 		if (isFormControlElement(el)) {
 			setTouched(el);
-			validateFormControl(el);
+			if (!validateFormControl(el)) {
+				valid = false;
+			}
+
 		}
 	}
 
-	return false;
+	return valid;
 
 };
 
@@ -59,24 +60,106 @@ const updateFormControlFeedback = (container: Element, text: string | null) => {
 
 };
 
-const validateFormControl = (el: FormControlElement) => {
+const getValidationMessage = (el: FormControlElement): string => {
+
+	if (el.validity.valueMissing && isDefined(el.dataset.requiredMsg)) {
+		return el.dataset.requiredMsg;
+	}
+
+	if (el.validity.typeMismatch && isDefined(el.dataset.typeMsg)) {
+		return el.dataset.typeMsg;
+	}
+
+	if (el.validity.patternMismatch && isDefined(el.dataset.patternMsg)) {
+		return el.dataset.patternMsg;
+	}
+
+	if (el.validity.tooShort && isDefined(el.dataset.minlengthMsg)) {
+		return el.dataset.minlengthMsg;
+	}
+
+	if (el.validity.tooLong && isDefined(el.dataset.maxlengthMsg)) {
+		return el.dataset.maxlengthMsg;
+	}
+
+	return el.validationMessage;
+
+};
+
+const validateValueAgainstPatterns = (value: string, patterns: [string, string | null][]): string | null => {
+
+	for (const pattern of patterns) {
+		try {
+			// use the full Unicode mode (flag u) to be compatible with HTML5 pattern attribute
+			// see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern
+			const re = new RegExp(pattern[0], 'u');
+			IS_DEVELOPMENT && console.log(`[forms] validating '${value}' against pattern`, re);
+			if (!re.test(value)) {
+				return pattern[1] ?? 'Invalid format.';
+			}
+		} catch (e) {
+			// skip regex errors
+			IS_DEVELOPMENT && console.error(`[forms] pattern error`, e);
+		}
+	}
+
+	return null;
+
+};
+
+const validateFormControlValue = (el: FormControlElement): string | null => {
+
+	// always start with required validation
+	if (el.validity.valueMissing) {
+		return getValidationMessage(el);
+	}
+
+	// then custom multiple patterns validation implementation
+	if (isDefined(el.dataset.patterns)) {
+		try {
+			const value = el.value;
+			const patterns: [string, string | null][] = JSON.parse(el.dataset.patterns);
+			const error = validateValueAgainstPatterns(value, patterns);
+			if (error !== null) {
+				return error;
+			}
+		} catch (e) {
+			// ignore JSON parse error
+			IS_DEVELOPMENT && console.error(`[forms] patterns JSON error`, e);
+		}
+	}
+
+	// the rest on HTML5 validations
+	if (!el.validity.valid) {
+		return getValidationMessage(el);
+	}
+
+	return null;
+
+};
+
+const validateFormControl = (el: FormControlElement): boolean => {
 
 	if (!isTouched(el)) {
-		return;
+		return true;
 	}
 
 	const container = el.closest('.form-group');
 
 	if (!isDefined(container)) {
-		return;
+		return true;
 	}
 
-	if (el.validity.valid) {
+	const error = validateFormControlValue(el);
+
+	if (isDefined(error)) {
+		container.classList.add('has-error');
+		updateFormControlFeedback(container, error);
+		return false;
+	} else {
 		container.classList.remove('has-error');
 		updateFormControlFeedback(container, null);
-	} else {
-		container.classList.add('has-error');
-		updateFormControlFeedback(container, el.validationMessage);
+		return true;
 	}
 
 };

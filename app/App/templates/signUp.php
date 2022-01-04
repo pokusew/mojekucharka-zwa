@@ -25,6 +25,8 @@ $title = 'Registrace';
 
 			<?= $this->signUpForm->getElem()->startTag() ?>
 
+			<?= Helpers::renderFormControl($this->signUpForm['username']) ?>
+
 			<?= Helpers::renderFormControl($this->signUpForm['email']) ?>
 
 			<?= Helpers::renderFormControl($this->signUpForm['password']) ?>

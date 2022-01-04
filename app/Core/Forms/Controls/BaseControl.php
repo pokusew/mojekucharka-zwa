@@ -16,6 +16,7 @@ abstract class BaseControl
 	protected bool $defaultValidationEnabled = true;
 
 	protected bool $required = false;
+	protected ?string $requiredMsg = null;
 
 	protected ?string $error = null;
 
@@ -142,9 +143,10 @@ abstract class BaseControl
 	/**
 	 * @return $this
 	 */
-	public function setRequired(bool $required): self
+	public function setRequired(bool $required, ?string $msg = null): self
 	{
 		$this->required = $required;
+		$this->requiredMsg = $msg;
 		return $this;
 	}
 
@@ -187,6 +189,8 @@ abstract class BaseControl
 	public function validate(): bool
 	{
 		$this->clearError();
+
+		// TODO: UTF-8 validation
 
 		if ($this->defaultValidationEnabled && !$this->defaultValidate()) {
 			return false;

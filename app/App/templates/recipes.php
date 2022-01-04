@@ -9,6 +9,8 @@ declare(strict_types=1);
  * @var Core\Routing\Router $router
  */
 
+$title = 'Recepty';
+
 ?>
 <body class="app">
 

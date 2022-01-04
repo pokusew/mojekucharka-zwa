@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 use App\Helpers;
 
+$title = 'Přihlášení';
+
 ?>
 <body class="app">
 

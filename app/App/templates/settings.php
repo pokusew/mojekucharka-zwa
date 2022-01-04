@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var Core\Routing\Router $router
  */
 
-$title = 'Recepty';
+$title = 'Nastavení';
 
 ?>
 <body class="app">
@@ -19,7 +19,7 @@ $title = 'Recepty';
 	<main class="app-content">
 		<div class="container">
 
-			<h1>Recepty</h1>
+			<h1>Nastavení</h1>
 
 		</div>
 	</main>

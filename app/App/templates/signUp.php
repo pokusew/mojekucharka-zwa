@@ -23,6 +23,10 @@ $title = 'Registrace';
 
 			<h1>Registrace</h1>
 
+			<p class="help-block">
+				Už máte účet? <a href="<?= $this->link('SignIn') ?>">Přihlaste se zde.</a>
+			</p>
+
 			<?= $this->signUpForm->getElem()->startTag() ?>
 
 			<?= Helpers::renderFormControl($this->signUpForm['username']) ?>
@@ -43,4 +47,3 @@ $title = 'Registrace';
 	<?php require __DIR__ . '/_footer.php' ?>
 
 </body>
-

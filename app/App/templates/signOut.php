@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @var App\Presenter\HomePresenter $this
+ * @var App\Presenter\SignOutPresenter $this
  * @var Core\Config $config
  * @var Core\Assets $assets
  * @var Core\Routing\Router $router
  */
 
-$title = 'Recepty';
+$title = 'Odhlášení';
 
 ?>
 <body class="app">
@@ -19,7 +19,13 @@ $title = 'Recepty';
 	<main class="app-content">
 		<div class="container">
 
-			<h1>Recepty</h1>
+			<h1>Odhlášení</h1>
+
+			<?= $this->signOutForm->getElem()->startTag() ?>
+
+			<?= $this->signOutForm['submit']->getElem()->class('btn btn-primary') ?>
+
+			<?= $this->signOutForm->getElem()->endTag() ?>
 
 		</div>
 	</main>

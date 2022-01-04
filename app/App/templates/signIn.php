@@ -36,7 +36,7 @@ $title = 'Přihlášení';
 			</p>
 
 			<p class="help-block">
-				<a href="<?= $this->link('SignUp') ?>">Zapomenuté heslo?</a>
+				<a href="<?= $this->link('SignForgotten') ?>">Zapomenuté heslo?</a>
 			</p>
 
 			<?= $this->signInForm->getElem()->endTag() ?>
@@ -47,4 +47,3 @@ $title = 'Přihlášení';
 	<?php require __DIR__ . '/_footer.php' ?>
 
 </body>
-

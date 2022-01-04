@@ -89,4 +89,3 @@ declare(strict_types=1);
 	<?php require __DIR__ . '/_footer.php' ?>
 
 </body>
-

@@ -111,7 +111,7 @@ const handleFormControlEvent = (event: Event) => {
  */
 const focusFormControlWithError = (form: HTMLFormElement): boolean => {
 
-	const focusedEl = document.querySelector(':focus');
+	const focusedEl = document.querySelector(':focus:invalid');
 
 	// the focus is already on a form control (from the given form) with an error
 	if (isFormControlElement(focusedEl) && focusedEl.form === form) {

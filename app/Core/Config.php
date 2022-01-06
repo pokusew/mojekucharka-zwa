@@ -135,7 +135,7 @@ class Config
 	 */
 	public function getBaseUrl(): string
 	{
-		return $this->getUrlScheme() . $this->host . $this->basePath;
+		return $this->getUrlScheme() . '://' . $this->host . $this->basePath;
 	}
 
 }

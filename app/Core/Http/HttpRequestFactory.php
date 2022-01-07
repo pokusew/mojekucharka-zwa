@@ -24,6 +24,7 @@ class HttpRequestFactory
 			$path,
 			$_GET,
 			$_POST,
+			$_SERVER['REMOTE_ADDR'], // TODO: add configurable support for proxy (i.e. X-Forwarded-For header)
 		);
 
 	}

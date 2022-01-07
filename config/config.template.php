@@ -36,10 +36,16 @@ function build_config(): Config
 
 	/**
 	 * Database configuration
-	 * TODO: add see tag
+	 * @see \PDO
 	 */
 	// fill in correct values for the database connection
-	$config->parameters['databaseDsn'] = 'mysql:host=localhost;dbname=DB;user=USER;password=PASSWORD';
+	$config->parameters['PDO.dsn'] = 'mysql:host=localhost;charset=utf8mb4;dbname=DB;user=USER;password=PASSWORD';
+	$config->parameters['PDO.options'] = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		// see https://stackoverflow.com/questions/20079320/how-do-i-return-integer-and-numeric-columns-from-mysql-as-integers-and-numerics
+		PDO::ATTR_EMULATE_PREPARES => false,
+		PDO::ATTR_STRINGIFY_FETCHES => false,
+	];
 
 	/**
 	 * SMTP mailer configuration

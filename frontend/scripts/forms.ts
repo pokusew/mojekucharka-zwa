@@ -129,6 +129,14 @@ const validateFormControlValue = (el: FormControlElement): string | null => {
 		}
 	}
 
+	// then custom invalid (disallowed) value check
+	if (isDefined(el.dataset.invalid)) {
+		const value = el.value;
+		if (value === el.dataset.invalid) {
+			return typeof el.dataset.invalidMsg === 'string' ? el.dataset.invalidMsg : 'This value is not allowed.';
+		}
+	}
+
 	// the rest on HTML5 validations
 	if (!el.validity.valid) {
 		return getValidationMessage(el);

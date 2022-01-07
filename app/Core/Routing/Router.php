@@ -70,10 +70,13 @@ class Router
 	}
 
 	/**
+	 * Generates the URL corresponding to the given logical address.
 	 * @param string $presenter
 	 * @param mixed[] $parameters
-	 * @param bool $fullUrl
-	 * @return string
+	 * @param bool $fullUrl when `true`, the full URL (incl. scheme and host) is returned
+	 * @return string the URL corresponding to the given logical address
+	 *                or `#invalid-link` when no route was found and app is NOT in the development mode
+	 * @throws InvalidArgumentException when no route was found and app is in the development mode
 	 */
 	public function link(string $presenter, array $parameters = [], bool $fullUrl = false): string
 	{
@@ -89,6 +92,17 @@ class Router
 		$prefix = $fullUrl ? $this->fullUrlPrefix : $this->pathPrefix;
 
 		return $prefix . $this->logicalToUrl[$presenter]->link($parameters);
+	}
+
+	/**
+	 * Shortcut for {@see Router::link()} with `$fullUrl = true`.
+	 * @param string $presenter
+	 * @param mixed[] $parameters
+	 * @return string
+	 */
+	public function fullLink(string $presenter, array $parameters = []): string
+	{
+		return $this->link($presenter, $parameters, true);
 	}
 
 	/**

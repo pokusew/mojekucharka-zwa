@@ -30,6 +30,7 @@ class RouterFactory
 		$router->addRoute(new Route('/recipe/:id', 'Recipe'));
 		$router->addRoute(new Route('/profile/:username', 'Profile'));
 		$router->addRoute(new Route('/sign/up', 'SignUp'));
+		$router->addRoute(new Route('/verify-email', 'VerifyEmail'));
 		$router->addRoute(new Route('/sign/in', 'SignIn'));
 		$router->addRoute(new Route('/sign/forgotten', 'SignForgotten'));
 		$router->addRoute(new Route('/sign/out', 'SignOut'));

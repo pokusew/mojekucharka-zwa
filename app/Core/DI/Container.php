@@ -186,7 +186,10 @@ class Container
 				lcfirst($class->getShortName()) . '.' . $param->getName(),
 			];
 			foreach ($configParameterKeys as $configParameterKey) {
-				if (isset($this->config->parameters[$configParameterKey])) {
+				// here we cannot use isset() as isset() does return false for array keys
+				// that correspond to a null value, while array_key_exists() works as its name suggests
+				// and correctly returns true in such cases
+				if (array_key_exists($configParameterKey, $this->config->parameters)) {
 					return $this->config->parameters[$configParameterKey];
 				}
 			}

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Service\UserRegistrationException;
+use App\Service\UsersService;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
-use Nette\Mail\Mailer;
-use Nette\Mail\Message;
 
 class SignUpPresenter extends BasePresenter
 {
 
 	/** @inject */
-	public Mailer $mailer;
+	public UsersService $usersService;
 
 	protected Form $signUpForm;
 
@@ -81,14 +81,36 @@ class SignUpPresenter extends BasePresenter
 
 	private function handleSignUpFormSuccess(Form $form): void
 	{
-		$mail = new Message();
-		$mail->setFrom($this->config->parameters['email.from'])
-			->addTo($this->config->parameters['email.admin'])
-			->setSubject('Registrace')
-			->setBody('test');
+		/** @var TextInput */
+		$username = $form['username'];
+		/** @var TextInput */
+		$email = $form['email'];
+		/** @var TextInput */
+		$password = $form['password'];
 
-		$this->mailer->send($mail);
+		try {
+			$this->usersService->registerUser(
+				$username->getValue(),
+				$email->getValue(),
+				$password->getValue(),
+				$this->httpRequest->remoteAddress,
+			);
+		} catch (UserRegistrationException $e) {
 
+			if ($e->getCode() === UserRegistrationException::DUPLICATE_USERNAME) {
+				$msg = 'Toto uživatelské jméno je již používá jiný uživatel. Prosím zvolte si jiné.';
+				$username->setError($msg);
+				$username->getElem()->attrs['data-invalid'] = $username->getValue();
+				$username->getElem()->attrs['data-invalid-msg'] = $msg;
+				return;
+			}
+
+			// should never happen, but if it did, the app error handler will handle it
+			throw $e;
+
+		}
+
+		// TODO: show success page
 		$this->redirect('Home');
 	}
 

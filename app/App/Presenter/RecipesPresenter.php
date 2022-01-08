@@ -19,7 +19,11 @@ class RecipesPresenter extends BasePresenter
 
 	public function action(): void
 	{
-		dump($this->usersRepository->findOneByEmail('some@value'));
+		dump($this->usersRepository->findOneByEmailOrUsername('pokusew@seznam.cz', [
+			'id',
+			'username',
+			'registered_from_ip' => 'INET6_NTOA(registered_from_ip)',
+		]));
 	}
 
 }

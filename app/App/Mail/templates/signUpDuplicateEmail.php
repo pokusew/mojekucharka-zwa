@@ -17,7 +17,7 @@ $subject = 'Opakováná registrace';
 </p>
 
 <p>
-	<?php if ($key !== null): ?>
+	<?php if ($key === null): ?>
 		Nicméně Vaše e-mailová adresa je již vázána k aktivnímu účtu. Přihlásit se můžete zde:
 		<a href="<?= $router->fulllink('SignIn:') ?>">
 			<?= $router->fulllink('SignIn:') ?>

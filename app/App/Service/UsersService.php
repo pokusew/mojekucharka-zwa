@@ -88,7 +88,7 @@ class UsersService
 
 	private function handleDuplicateEmailDuringRegistration(string $email): void
 	{
-		$user = $this->usersRepository->findOneByEmail($email);
+		$user = $this->usersRepository->findOneByEmail($email, ['id', 'email_verification_key']);
 
 		if ($user === null) {
 			// this should not normally happen

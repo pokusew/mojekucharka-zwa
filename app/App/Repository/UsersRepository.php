@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Service\UserCreationException;
-use PDO;
 use PDOException;
 
 class UsersRepository extends Repository
 {
+
+	protected string $tableName = 'users';
 
 	/**
 	 * Tries to create a new user with the given parameters.
@@ -91,57 +92,70 @@ class UsersRepository extends Repository
 
 	/**
 	 * @param string $email
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
 	 * @return array<string, mixed>|null
 	 */
-	public function findOneByEmail(string $email): ?array
+	public function findOneByEmail(string $email, ?array $columns = null): ?array
 	{
-
-		$dbh = $this->connection->get();
-
-		$sth = $dbh->prepare(<<<'SQL'
-			SELECT * FROM users WHERE email = :email LIMIT 1
-		SQL
-		);
-
-		$sth->execute([
-			'email' => $email,
-		]);
-
-		$result = $sth->fetch(PDO::FETCH_ASSOC);
-
-		if ($result === false) {
-			return null;
-		}
-
-		return $result;
-
+		return $this->findOne(['email' => $email], $columns);
 	}
 
 	/**
 	 * @param string $username
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
 	 * @return array<string, mixed>|null
 	 */
-	public function findOneByUsername(string $username): ?array
+	public function findOneByUsername(string $username, ?array $columns = null): ?array
+	{
+		return $this->findOne(['username' => $username], $columns);
+	}
+
+	/**
+	 * @param string $emailOrUsername
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
+	 * @return array<string, mixed>|null
+	 */
+	public function findOneByEmailOrUsername(string $emailOrUsername, ?array $columns = null): ?array
+	{
+		return $this->findOne(
+			[
+				'OR' => [
+					'email' => $emailOrUsername,
+					'username' => $emailOrUsername,
+				],
+			],
+			$columns
+		);
+	}
+
+	/**
+	 * Tries to set the e-mail address of a user as verified using the given email verification key.
+	 * @param string $emailVerificationKey the email verification key
+	 * @param string $verificationIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool `true` if successful, `false` otherwise (typically invalid key)
+	 */
+	public function verifyEmail(string $emailVerificationKey, string $verificationIp): bool
 	{
 
 		$dbh = $this->connection->get();
 
+		// TODO: maybe limit max email verification key age
 		$sth = $dbh->prepare(<<<'SQL'
-			SELECT * FROM users WHERE username = :username LIMIT 1
+			UPDATE users SET
+				email_verified_at = NOW(),
+				email_verified_from_ip = INET6_ATON(:verificationIp),
+				email_verification_key = NULL,
+				email_verification_key_created_at = NULL
+			WHERE email_verification_key = :emailVerificationKey LIMIT 1
 		SQL
 		);
 
 		$sth->execute([
-			'username' => $username,
+			'emailVerificationKey' => $emailVerificationKey,
+			'verificationIp' => $verificationIp
 		]);
 
-		$result = $sth->fetch(PDO::FETCH_ASSOC);
-
-		if ($result === false) {
-			return null;
-		}
-
-		return $result;
+		return $sth->rowCount() === 1;
 
 	}
 

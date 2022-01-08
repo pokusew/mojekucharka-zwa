@@ -17,10 +17,10 @@ class Random
 	 * @param int|null $bytesLength number of bytes
 	 * @return string a random string with length of `$bytesLength * 2` chars
 	 */
-	public static function generateHexString(?int $bytesLength = 64): string
+	public static function generateHexString(?int $bytesLength = 32): string
 	{
 		try {
-			return bin2hex(random_bytes(64));
+			return bin2hex(random_bytes(32));
 		} catch (\Exception $e) {
 			throw new InvalidStateException(
 				"Could not generate $bytesLength random bytes: " . $e->getMessage(),

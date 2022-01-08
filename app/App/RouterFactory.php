@@ -59,6 +59,7 @@ class RouterFactory
 		));
 
 		$router->addRoute(new SimpleRoute('/sign/up', 'SignUp'));
+		$router->addRoute(new SimpleRoute('/sign/up/success', 'SignUp', 'success'));
 
 		// /verify-email/:key
 		$router->addRoute(new RegexRoute(

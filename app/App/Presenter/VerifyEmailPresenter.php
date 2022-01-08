@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
-use App\Service\UsersService;
+use App\Repository\UsersRepository;
 
 class VerifyEmailPresenter extends BasePresenter
 {
 
 	/** @inject */
-	public UsersService $usersService;
+	public UsersRepository $usersRepository;
+
+	protected bool $success = false;
 
 	public function __construct()
 	{
-		$this->view = null;
+		$this->view = 'verifyEmail';
 	}
 
 	public function action(string $key): void
 	{
-		dump($key);
+		$this->success = $this->usersRepository->verifyEmail($key, $this->httpRequest->remoteAddress);
 	}
 
 }

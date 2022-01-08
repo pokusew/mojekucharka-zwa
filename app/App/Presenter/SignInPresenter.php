@@ -19,29 +19,29 @@ class SignInPresenter extends BasePresenter
 
 	public function action(): void
 	{
-
 		$this->signInForm = $this->createSignInForm();
 
 		$this->signInForm->process($this->httpRequest);
-
 	}
 
 	private function createSignInForm(): Form
 	{
 		$form = new Form('signIn');
 
-		$form->addText('email', 'E-mail')
-			->setType(TextInput::TYPE_EMAIL)
+		$form->addText('usernameOrEmail', 'Uživatelské jméno nebo e-mail')
 			->setRequired()
 			// see https://stackoverflow.com/questions/53173806/what-should-be-correct-autocomplete-for-username-email
 			->setAutocomplete('username')
-			->setPlaceholder('E-mail');
+			->setPlaceholder('Uživatelské jméno nebo e-mail')
+			// see https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+			->setMaxLength(254);
 
 		$form->addText('password', 'Heslo')
 			->setType(TextInput::TYPE_PASSWORD)
-			->setRequired()
 			->setAutocomplete('current-password')
-			->setPlaceholder('Heslo');
+			->setPlaceholder('Heslo')
+			->setRequired()
+			->setMaxLength(64);
 
 		$form->addSubmit('submit', 'Přihlásit se');
 

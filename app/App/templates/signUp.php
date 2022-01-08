@@ -24,7 +24,7 @@ $title = 'Registrace';
 			<h1>Registrace</h1>
 
 			<p class="help-block">
-				Už máte účet? <a href="<?= $this->link('SignIn') ?>">Přihlaste se zde.</a>
+				Už máte účet? <a href="<?= $this->link('SignIn:') ?>">Přihlaste se zde.</a>
 			</p>
 
 			<?= $this->signUpForm->getElem()->startTag() ?>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Limits;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
 
@@ -33,15 +34,14 @@ class SignInPresenter extends BasePresenter
 			// see https://stackoverflow.com/questions/53173806/what-should-be-correct-autocomplete-for-username-email
 			->setAutocomplete('username')
 			->setPlaceholder('Uživatelské jméno nebo e-mail')
-			// see https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-			->setMaxLength(254);
+			->setMaxLength(max(Limits::USERNAME_MAX_LENGTH, Limits::EMAIL_MAX_LENGTH));
 
 		$form->addText('password', 'Heslo')
 			->setType(TextInput::TYPE_PASSWORD)
 			->setAutocomplete('current-password')
 			->setPlaceholder('Heslo')
 			->setRequired()
-			->setMaxLength(64);
+			->setMaxLength(Limits::PASSWORD_MAX_LENGTH);
 
 		$form->addSubmit('submit', 'Přihlásit se');
 

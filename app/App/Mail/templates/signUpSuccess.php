@@ -12,7 +12,7 @@ $subject = 'Dokončení registrace';
 
 ?>
 Registraci dokončíte pomocí následujícího odkazu:
-<?php $emailVerificationLink = $router->fullLink('VerifyEmail', ['key' => $key]) ?>
+<?php $emailVerificationLink = $router->fulllink('VerifyEmail:', ['key' => $key]) ?>
 <a href="<?= $emailVerificationLink ?>">
 	<?= $emailVerificationLink ?>
 </a>

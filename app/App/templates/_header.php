@@ -35,22 +35,22 @@ use Core\Template\Html;
 			/>
 		</svg>
 
-		<a class="app-name" href="<?= $this->link('Home') ?>">Mojekuchařka.net</a>
+		<a class="app-name" href="<?= $this->link('Home:') ?>">Mojekuchařka.net</a>
 
 		<nav class="app-navigation">
 			<ul class="left">
 				<li>
 					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('Home')]) ?>
-						href="<?= $this->link('Home') ?>"
+						<?= Html::attrClass(['active' => $this->isLinkCurrent('Home:')]) ?>
+						href="<?= $this->link('Home:') ?>"
 					>
 						Úvod
 					</a>
 				</li>
 				<li>
 					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('Recipes')]) ?>
-						href="<?= $this->link('Recipes') ?>"
+						<?= Html::attrClass(['active' => $this->isLinkCurrent('Recipes:')]) ?>
+						href="<?= $this->link('Recipes:') ?>"
 					>
 						Recepty
 					</a>
@@ -59,16 +59,16 @@ use Core\Template\Html;
 			<ul class="right">
 				<li>
 					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignIn')]) ?>
-						href="<?= $this->link('SignIn') ?>"
+						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignIn:')]) ?>
+						href="<?= $this->link('SignIn:') ?>"
 					>
 						Přihlášení
 					</a>
 				</li>
 				<li>
 					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignUp')]) ?>
-						href="<?= $this->link('SignUp') ?>"
+						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignUp:')]) ?>
+						href="<?= $this->link('SignUp:') ?>"
 					>
 						Registrace
 					</a>

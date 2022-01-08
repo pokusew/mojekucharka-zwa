@@ -9,12 +9,12 @@ class RecipePresenter extends BasePresenter
 
 	public function __construct()
 	{
-		$this->view = 'recipe';
+		$this->view = null;
 	}
 
-	public function action(): void
+	public function actionView(int $id): void
 	{
-
+		dump($id);
 	}
 
 }

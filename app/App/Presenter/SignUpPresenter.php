@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Limits;
 use App\Service\UserRegistrationException;
 use App\Service\UsersService;
 use Core\Forms\Controls\TextInput;
@@ -36,8 +37,8 @@ class SignUpPresenter extends BasePresenter
 		$form->addText('username', 'Uživatelské jméno')
 			->setPlaceholder('Uživatelské jméno')
 			->setRequired()
-			->setMinLength(4)
-			->setMaxLength(15)
+			->setMinLength(Limits::USERNAME_MIN_LENGTH)
+			->setMaxLength(Limits::USERNAME_MAX_LENGTH)
 			->addPattern(
 				'^[A-Za-z0-9_]+$',
 				'Uživatelské jméno může obsahovat jenom písmena (bez diakritiky), číslice a podtržítko ( _ ).',
@@ -49,16 +50,15 @@ class SignUpPresenter extends BasePresenter
 			->setAutocomplete('email')
 			->setPlaceholder('E-mail')
 			->setRequired()
-			// see https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-			->setMaxLength(254);
+			->setMaxLength(Limits::EMAIL_MAX_LENGTH);
 
 		$form->addText('password', 'Heslo')
 			->setType(TextInput::TYPE_PASSWORD)
 			->setAutocomplete('new-password')
 			->setPlaceholder('Heslo')
 			->setRequired()
-			->setMinLength(8)
-			->setMaxLength(64)
+			->setMinLength(Limits::PASSWORD_MIN_LENGTH)
+			->setMaxLength(Limits::PASSWORD_MAX_LENGTH)
 			->addPattern('[0-9]', 'Heslo musí obsahovat alespoň jedno číslo.')
 			->addPattern('\p{L}', 'Heslo musí obsahovat alespoň jedno písmeno.');
 

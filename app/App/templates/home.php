@@ -17,9 +17,9 @@ declare(strict_types=1);
 	<nav class="app-breadcrumbs breadcrumbs">
 		<div class="container">
 			<ol>
-				<li><a href="<?= $this->link('Home') ?>">Recepty</a></li>
-				<li><a href="<?= $this->link('Home') ?>">Cukroví</a></li>
-				<li><a href="<?= $this->link('Home') ?>">Domácí Oreo sušenky</a></li>
+				<li><a href="<?= $this->link('Home:') ?>">Recepty</a></li>
+				<li><a href="<?= $this->link('Home:') ?>">Cukroví</a></li>
+				<li><a href="<?= $this->link('Home:') ?>">Domácí Oreo sušenky</a></li>
 			</ol>
 		</div>
 	</nav>
@@ -35,7 +35,7 @@ declare(strict_types=1);
 					itemprop="author"
 					class="author"
 					rel="author"
-					href="<?= $this->link('Profile', ['username' => 'Robot']) ?>"
+					href="<?= $this->link('Profile:view', ['username' => 'Robot']) ?>"
 				>Robot</a>,
 				<time datetime="2013-07-09T15:03+02:00">09. 07. 2013 v 15:03</time>
 			</p>

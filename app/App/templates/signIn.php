@@ -32,11 +32,11 @@ $title = 'Přihlášení';
 			<?= $this->signInForm['submit']->getElem()->class('btn btn-primary') ?>
 
 			<p class="help-block">
-				Jestě nemáte účet? <a href="<?= $this->link('SignUp') ?>">Zaregistrujte se zde.</a>
+				Jestě nemáte účet? <a href="<?= $this->link('SignUp:') ?>">Zaregistrujte se zde.</a>
 			</p>
 
 			<p class="help-block">
-				<a href="<?= $this->link('SignForgotten') ?>">Zapomenuté heslo?</a>
+				<a href="<?= $this->link('SignForgotten:') ?>">Zapomenuté heslo?</a>
 			</p>
 
 			<?= $this->signInForm->getElem()->endTag() ?>

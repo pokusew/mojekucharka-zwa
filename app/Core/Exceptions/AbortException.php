@@ -7,7 +7,7 @@ namespace Core\Exceptions;
 /**
  * The exception for signalling presenter termination.
  */
-class AbortException extends \Exception
+class AbortException extends \RuntimeException
 {
 
 }

@@ -10,7 +10,7 @@ namespace Core\Exceptions;
  * For example, when there is no route for the request.
  * The {@see BadRequestException::$code} is a valid HTTP status code.
  */
-class BadRequestException extends \Exception
+class BadRequestException extends \RuntimeException
 {
 
 }

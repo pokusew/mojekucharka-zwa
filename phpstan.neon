@@ -7,15 +7,23 @@ parameters:
 	paths:
 		- app
 	ignoreErrors:
+		# note: JetBrains PHPstan plugin runs the phpstan
+		#       on temporery files that are in a different directory.
+		#       e.g. /private/var/folders/dp/829h1n3900s8hf14362v14500000gn/T/PHPStantemp_folder10693/app/App/templates/signUp.php
+		#       so we need to add the leading ** to path glob to make it work
+		#       see: https://youtrack.jetbrains.com/issue/WI-63891
 		-
 			message: '#Access to protected property [a-zA-Z0-9\\_]+Presenter::\$[a-zA-Z0-9\\_]+#'
-			path: app/App/templates/
+			path: **/templates/*.php
+		-
+			message: '#Call to protected method (link|isLinkCurrent)#'
+			path: **/templates/*.php
 		-
 			message: '#Call to an undefined method Core\\Forms\\Controls\\BaseControl::[a-zA-Z0-9\\_]+#'
-			path: app/App/templates/
+			path: **/templates/*.php
 		-
 			message: '#Parameter \#1 \$control of static method App\\Helpers::renderFormControl\(\) expects Core\\Forms\\Controls\\TextBaseControl, Core\\Forms\\Controls\\BaseControl\|null given\.#'
-			path: app/App/templates/
+			path: **/templates/*.php
 		-
 			message: '#Access to (private|protected) property [a-zA-Z0-9\\_]+::\$[a-zA-Z0-9\\_]+#'
 			path: *.template.php

@@ -21,7 +21,7 @@ $title = 'Dokončení registrace';
 
 			<h1>Dokončení registrace</h1>
 
-			Podívejte se do e-mailu.
+			Pro dokončení regstrace prosím použijte odkaz, který jsme Vám zaslali na Vaši e-mailovou adresu.
 
 		</div>
 	</main>

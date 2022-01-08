@@ -40,7 +40,7 @@ class SignOutPresenter extends BasePresenter
 	{
 		// dump('handleSignOutFormSuccess', $form);
 		// exit(0);
-		$this->redirect('Home');
+		$this->redirect('Home:');
 	}
 
 }

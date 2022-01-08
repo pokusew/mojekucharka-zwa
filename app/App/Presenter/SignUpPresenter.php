@@ -30,6 +30,11 @@ class SignUpPresenter extends BasePresenter
 		$this->signUpForm->process($this->httpRequest);
 	}
 
+	public function actionSuccess(): void
+	{
+		$this->view = 'signUp-success';
+	}
+
 	private function createSignUpForm(): Form
 	{
 		$form = new Form('signUp');
@@ -110,8 +115,7 @@ class SignUpPresenter extends BasePresenter
 
 		}
 
-		// TODO: show success page
-		$this->redirect('Home');
+		$this->redirect('SignUp:success');
 	}
 
 }

@@ -48,7 +48,7 @@ class SignForgottenPresenter extends BasePresenter
 	{
 		// dump('handleSignForgottenFormSuccess', $form);
 		// exit(0);
-		$this->redirect('Home');
+		$this->redirect('Home:');
 	}
 
 }

@@ -56,7 +56,7 @@ class SignInPresenter extends BasePresenter
 	{
 		// dump('handleSignInFormSuccess', $form);
 		// exit(0);
-		$this->redirect('Home');
+		$this->redirect('Home:');
 	}
 
 }

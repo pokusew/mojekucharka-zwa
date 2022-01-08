@@ -72,6 +72,7 @@ class RouterFactory
 		));
 
 		$router->addRoute(new SimpleRoute('/sign/in', 'SignIn'));
+		$router->addRoute(new SimpleRoute('/sign/in/not-verified', 'SignIn', 'emailNotVerified'));
 		$router->addRoute(new SimpleRoute('/sign/forgotten', 'SignForgotten'));
 		$router->addRoute(new SimpleRoute('/sign/out', 'SignOut'));
 		$router->addRoute(new SimpleRoute('/settings', 'Settings'));

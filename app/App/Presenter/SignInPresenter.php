@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace App\Presenter;
 
 use App\Limits;
+use App\Repository\UsersRepository;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
+use Core\Utils\Passwords;
 
 class SignInPresenter extends BasePresenter
 {
+
+	/** @inject */
+	public Passwords $passwords;
+
+	/** @inject */
+	public UsersRepository $usersRepository;
 
 	protected Form $signInForm;
 
@@ -23,6 +31,11 @@ class SignInPresenter extends BasePresenter
 		$this->signInForm = $this->createSignInForm();
 
 		$this->signInForm->process($this->httpRequest);
+	}
+
+	public function actionEmailNotVerified(): void
+	{
+		$this->view = 'signIn-emailNotVerified';
 	}
 
 	private function createSignInForm(): Form
@@ -54,9 +67,39 @@ class SignInPresenter extends BasePresenter
 
 	private function handleSignInFormSuccess(Form $form): void
 	{
-		// dump('handleSignInFormSuccess', $form);
-		// exit(0);
-		$this->redirect('Home:');
+		/** @var TextInput */
+		$usernameOrEmail = $form['usernameOrEmail'];
+		/** @var TextInput */
+		$password = $form['password'];
+
+		$user = $this->usersRepository->findOneByEmailOrUsername($usernameOrEmail->getValue(), [
+			'id',
+			'name',
+			'email_verified_at',
+			'password',
+		]);
+
+		// TODO: add protection against timing attack
+		//       (User could find out whether email/username is valid
+		//        by measuring response times as password validation takes some measurable time.)
+
+		if ($user === null) {
+			$form->setError('Neplatné přihlašovácí údaje.');
+			return;
+		}
+
+		if ($user['email_verified_at'] === null) {
+			$this->redirect('SignIn:emailNotVerified');
+		}
+
+		if (!$this->passwords->verify($password->getValue(), $user['password'])) {
+			$form->setError('Neplatné přihlašovácí údaje.');
+			return;
+		}
+
+		// TODO: store user login in session
+
+		$this->redirect('Recipes:');
 	}
 
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use Core\Forms\Controls\TextBaseControl;
+use Core\Forms\Form;
 use Nette\Utils\Html;
 
 class Helpers
@@ -45,6 +46,26 @@ class Helpers
 		}
 
 		return (string) $group;
+	}
+
+	/**
+	 * Renders the global error (if any)) of the given form
+	 *
+	 * Note! It also mutates the HTML elements attributes of the given control.
+	 *
+	 * @return string HTML
+	 */
+	public static function renderFormError(Form $form): string
+	{
+		if (!$form->hasError()) {
+			return '';
+		}
+
+		$feedback = Html::el('p');
+		$feedback->class('form-control-feedback form-error');
+		$feedback->setText($form->getError());
+
+		return (string) $feedback;
 	}
 
 }

@@ -25,6 +25,8 @@ $title = 'Přihlášení';
 
 			<?= $this->signInForm->getElem()->startTag() ?>
 
+			<?= Helpers::renderFormError($this->signInForm) ?>
+
 			<?= Helpers::renderFormControl($this->signInForm['usernameOrEmail']) ?>
 
 			<?= Helpers::renderFormControl($this->signInForm['password']) ?>

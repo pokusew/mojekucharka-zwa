@@ -8,15 +8,8 @@ use App\Service\UserCreationException;
 use PDO;
 use PDOException;
 
-class UsersRepository
+class UsersRepository extends Repository
 {
-
-	protected PDO $dbh;
-
-	public function __construct(PDO $dbh)
-	{
-		$this->dbh = $dbh;
-	}
 
 	/**
 	 * Tries to create a new user with the given parameters.
@@ -36,7 +29,9 @@ class UsersRepository
 	{
 		try {
 
-			$sth = $this->dbh->prepare(<<<'SQL'
+			$dbh = $this->connection->get();
+
+			$sth = $dbh->prepare(<<<'SQL'
 				INSERT INTO users (
 					username,
 					email,
@@ -68,7 +63,7 @@ class UsersRepository
 				'registrationIp' => $registrationIp,
 			]);
 
-			return (int) $this->dbh->lastInsertId();
+			return (int) $dbh->lastInsertId();
 
 		} catch (PDOException $e) {
 
@@ -101,13 +96,43 @@ class UsersRepository
 	public function findOneByEmail(string $email): ?array
 	{
 
-		$sth = $this->dbh->prepare(<<<'SQL'
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
 			SELECT * FROM users WHERE email = :email LIMIT 1
 		SQL
 		);
 
 		$sth->execute([
 			'email' => $email,
+		]);
+
+		$result = $sth->fetch(PDO::FETCH_ASSOC);
+
+		if ($result === false) {
+			return null;
+		}
+
+		return $result;
+
+	}
+
+	/**
+	 * @param string $username
+	 * @return array<string, mixed>|null
+	 */
+	public function findOneByUsername(string $username): ?array
+	{
+
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
+			SELECT * FROM users WHERE username = :username LIMIT 1
+		SQL
+		);
+
+		$sth->execute([
+			'username' => $username,
 		]);
 
 		$result = $sth->fetch(PDO::FETCH_ASSOC);

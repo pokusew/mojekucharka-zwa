@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use PDO;
+use Core\Database\Connection;
 
 abstract class Repository
 {
 
-	protected PDO $dbh;
+	protected Connection $connection;
 
-	public function __construct(PDO $dbh)
+	public function __construct(Connection $connection)
 	{
-		$this->dbh = $dbh;
+		$this->connection = $connection;
 	}
 
 }

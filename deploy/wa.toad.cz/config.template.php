@@ -33,22 +33,11 @@ function build_config(): Config
 
 	/**
 	 * Database configuration
-	 * @see \PDO
+	 * @see \Core\Database\Connection
 	 */
 	// fill in correct values for the database connection
-	$config->parameters['PDO.dsn'] = 'mysql:host=localhost;charset=utf8mb4;dbname=DB;user=USER;password=PASSWORD';
-	// :START \ReflectionParameter::isDefaultValueAvailable() on the optional parameters of \PDO::__construct() class
-	//        in PHP 7.4 on wa.toad.cz (incorrectly?) returns `false`
-	//        so we have to explicitly pass them in order for the DI Container to be able to instantiate it
-	$config->parameters['PDO.username'] = null;
-	$config->parameters['PDO.passwd'] = null;
-	// :END
-	$config->parameters['PDO.options'] = [
-		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-		// see https://stackoverflow.com/questions/20079320/how-do-i-return-integer-and-numeric-columns-from-mysql-as-integers-and-numerics
-		PDO::ATTR_EMULATE_PREPARES => false,
-		PDO::ATTR_STRINGIFY_FETCHES => false,
-	];
+	$config->parameters['Core\Database\Connection.dsn']
+		= 'mysql:host=localhost;charset=utf8mb4;dbname=DB;user=USER;password=PASSWORD';
 
 	/**
 	 * SMTP mailer configuration

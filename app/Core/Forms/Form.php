@@ -118,6 +118,10 @@ class Form implements ArrayAccess
 
 	public function validate(): bool
 	{
+		if ($this->hasError()) {
+			return false;
+		}
+
 		$valid = true;
 		foreach ($this->controls as $name => $control) {
 			if (!$control->validate()) {
@@ -126,6 +130,42 @@ class Form implements ArrayAccess
 			}
 		}
 		return $valid;
+	}
+
+	public function getError(): ?string
+	{
+		return $this->error;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function setError(?string $error): self
+	{
+		$this->error = $error;
+		return $this;
+	}
+
+	public function setErrorIf(bool $cond, ?string $error): bool
+	{
+		if ($cond) {
+			$this->error = $error;
+		}
+		return !$cond;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function clearError(): self
+	{
+		$this->error = null;
+		return $this;
+	}
+
+	public function hasError(): bool
+	{
+		return $this->error !== null;
 	}
 
 	public function process(HttpRequest $httpRequest): bool

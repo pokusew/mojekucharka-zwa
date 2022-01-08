@@ -17,9 +17,9 @@ class VerifyEmailPresenter extends BasePresenter
 		$this->view = null;
 	}
 
-	public function action(): void
+	public function action(string $key): void
 	{
-		// TODO
+		dump($key);
 	}
 
 }

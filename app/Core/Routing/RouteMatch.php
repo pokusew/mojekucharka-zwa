@@ -11,12 +11,12 @@ class RouteMatch
 {
 
 	public Route $route;
-	/** @var mixed[] */
+	/** @var array<string, mixed> */
 	public array $params;
 
 	/**
 	 * @param Route $route
-	 * @param mixed[] $params
+	 * @param array<string, mixed> $params
 	 */
 	public function __construct(Route $route, array $params)
 	{

@@ -27,7 +27,7 @@ class Router
 	private array $routes = [];
 
 	/**
-	 * Routes indexed by their names.
+	 * Routes indexed by their logical addresses.
 	 * @var array<string, Route>
 	 */
 	private array $logicalToUrl = [];
@@ -71,19 +71,19 @@ class Router
 
 	/**
 	 * Generates the URL corresponding to the given logical address.
-	 * @param string $presenter
-	 * @param mixed[] $parameters
+	 * @param string $logical the logical address (Presenter:action)
+	 * @param array<string, mixed> $params
 	 * @param bool $fullUrl when `true`, the full URL (incl. scheme and host) is returned
 	 * @return string the URL corresponding to the given logical address
 	 *                or `#invalid-link` when no route was found and app is NOT in the development mode
 	 * @throws InvalidArgumentException when no route was found and app is in the development mode
 	 */
-	public function link(string $presenter, array $parameters = [], bool $fullUrl = false): string
+	public function link(string $logical, array $params = [], bool $fullUrl = false): string
 	{
-		if (!isset($this->logicalToUrl[$presenter])) {
+		if (!isset($this->logicalToUrl[$logical])) {
 
 			if ($this->config->isModeDevelopment()) {
-				throw new InvalidArgumentException("Invalid link '$presenter'.");
+				throw new InvalidArgumentException("Invalid link '$logical'.");
 			}
 
 			return '#invalid-link';
@@ -91,18 +91,18 @@ class Router
 
 		$prefix = $fullUrl ? $this->fullUrlPrefix : $this->pathPrefix;
 
-		return $prefix . $this->logicalToUrl[$presenter]->link($parameters);
+		return $prefix . $this->logicalToUrl[$logical]->link($params, $this->config->isModeDevelopment());
 	}
 
 	/**
 	 * Shortcut for {@see Router::link()} with `$fullUrl = true`.
-	 * @param string $presenter
-	 * @param mixed[] $parameters
+	 * @param string $logical
+	 * @param array<string, mixed> $params
 	 * @return string
 	 */
-	public function fullLink(string $presenter, array $parameters = []): string
+	public function fullLink(string $logical, array $params = []): string
 	{
-		return $this->link($presenter, $parameters, true);
+		return $this->link($logical, $params, true);
 	}
 
 	/**
@@ -112,13 +112,28 @@ class Router
 	 * it is also added to the reverse table (i.e. link-generation table).
 	 *
 	 * @param Route $route the route to add
+	 * @param bool $matchOnly When set to `true`, the route is used only for route matching and is omitted
+	 *                        from link generation. This allows adding two routes with different patterns
+	 *                        but with the same logical address (i.e. Presenter:action)
 	 * @return void
 	 */
-	public function addRoute(Route $route): void
+	public function addRoute(Route $route, bool $matchOnly = false): void
 	{
 		$this->routes[] = $route;
-		if (!($route->flags & Route::ROUTE_ONE_WAY)) {
-			$this->logicalToUrl[$route->presenter] = $route;
+
+		if (!$matchOnly) {
+
+			$logical = $route->getLogicalAddress();
+
+			if ($this->config->isModeDevelopment() && isset($this->logicalToUrl[$logical])) {
+				throw new InvalidArgumentException(
+					"Route with logical address '$logical' already defined."
+					. ' If you want match only route, call this method with $matchOnly = false'
+				);
+			}
+
+			$this->logicalToUrl[$logical] = $route;
+
 		}
 	}
 

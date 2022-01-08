@@ -15,6 +15,9 @@ use Core\Response\TextResponse;
 use Core\Routing\RouteMatch;
 use Core\Routing\Router;
 use Exception;
+use InvalidArgumentException;
+use ReflectionException;
+use ReflectionMethod;
 
 abstract class Presenter
 {
@@ -69,8 +72,8 @@ abstract class Presenter
 	 * @param string $dest
 	 * @param mixed[] $params
 	 * @param bool $fullUrl
-	 * @throws AbortException
 	 * @return never always throws an AbortException
+	 * @throws AbortException
 	 */
 	public function redirect(string $dest, array $params = [], bool $fullUrl = false)
 	{
@@ -85,8 +88,8 @@ abstract class Presenter
 	 * @param string $dest
 	 * @param mixed[] $params
 	 * @param bool $fullUrl
-	 * @throws AbortException
 	 * @return never always throws an AbortException
+	 * @throws AbortException
 	 */
 	public function redirectWithCode(int $code, string $dest, array $params = [], bool $fullUrl = false)
 	{
@@ -96,8 +99,8 @@ abstract class Presenter
 
 	/**
 	 * Correctly terminates presenter by throwing an AbortException which is then caught in run
-	 * @throws AbortException always
 	 * @return never always throws an AbortException
+	 * @throws AbortException always
 	 */
 	public function terminate()
 	{
@@ -106,8 +109,8 @@ abstract class Presenter
 
 	/**
 	 * Sends response and terminates presenter.
-	 * @throws AbortException
 	 * @return never always throws an AbortException
+	 * @throws AbortException
 	 */
 	public function sendResponse(Response $response)
 	{
@@ -122,7 +125,48 @@ abstract class Presenter
 
 		try {
 
-			$this->action();
+			$actionMethodName = $routeMatch->route->action !== null
+				? 'action' . ucfirst($routeMatch->route->action)
+				: 'action';
+
+			try {
+
+				$actionMethod = new ReflectionMethod($this, $actionMethodName);
+
+				$args = [];
+
+				$actionMethodParams = $actionMethod->getParameters();
+
+				foreach ($actionMethodParams as $actionMethodParam) {
+
+					if (isset($routeMatch->params[$actionMethodParam->name])) {
+						$args[] = $routeMatch->params[$actionMethodParam->name];
+						continue;
+					}
+
+					if ($actionMethodParam->isDefaultValueAvailable()) {
+						$args[] = $actionMethodParam->getDefaultValue();
+						continue;
+					}
+
+					$fullActionMethodName = get_class($this) . '::' . $actionMethodName;
+					throw new InvalidArgumentException(
+						"Could not determine value for the '$actionMethodParam' parameter"
+						. " of action method '$fullActionMethodName'."
+					);
+
+				}
+
+				$actionMethod->invokeArgs($this, $args);
+
+			} catch (ReflectionException $e) {
+				$fullActionMethodName = get_class($this) . '::' . $actionMethodName;
+				throw new InvalidArgumentException(
+					"Missing action method '$fullActionMethodName'.",
+					0,
+					$e,
+				);
+			}
 
 			// see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
 			if ($this->httpRequest->method === 'HEAD') {
@@ -138,10 +182,6 @@ abstract class Presenter
 		}
 
 		return $this->response;
-	}
-
-	public function action(): void {
-
 	}
 
 	public function render(): void

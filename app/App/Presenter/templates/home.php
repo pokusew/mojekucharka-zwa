@@ -14,74 +14,48 @@ declare(strict_types=1);
 
 	<?php require __DIR__ . '/_header.php' ?>
 
-	<nav class="app-breadcrumbs breadcrumbs">
-		<div class="container">
-			<ol>
-				<li><a href="<?= $this->link('Home:') ?>">Recepty</a></li>
-				<li><a href="<?= $this->link('Home:') ?>">Cukroví</a></li>
-				<li><a href="<?= $this->link('Home:') ?>">Domácí Oreo sušenky</a></li>
-			</ol>
-		</div>
-	</nav>
-
 	<main class="app-content">
 		<div class="container">
 
-			<h1>Domácí Oreo sušenky</h1>
+			<h1>Moje kuchařka</h1>
 
-			<p class="muted">
-				Přidal uživatel
-				<a
-					itemprop="author"
-					class="author"
-					rel="author"
-					href="<?= $this->link('Profile:view', ['username' => 'Robot']) ?>"
-				>Robot</a>,
-				<time datetime="2013-07-09T15:03+02:00">09. 07. 2013 v 15:03</time>
+			<p>
+				Moje kuchařka je webová aplikace pro jednoduchou správu Vašich receptů.
+				Umožňuje přidávat, upravovat a mazat recepty, přidávat obrázky k receptům,
+				a tisknout je.
 			</p>
 
-			<section>
-				<h2>Suroviny</h2>
+			<p>
+				Ve výchozím nastavení jsou všechny recepty soukromé, ale můžete je snadno zveřejnit.
+			</p>
 
-				<strong>Na těsto potřebujeme:</strong>
+			<h2>Začněte ještě dnes</h2>
 
-				<br />300 g hladké mouky
-				<br />180 g tuku
-				<br />100 g moučkového cukru
-				<br />1 celé vejce
-				<br />5 polévkových lžic kakaa
-				<br />1/2 balíčku prášku do pečiva
+			<p>
+				Jen pár kroků Vás dělí od používání Mojí kuchařky.
+			</p>
 
-				<br /><strong>Na náplň potřebujeme:</strong>
+			<ol>
+				<li>
+					<a href="<?= $this->link('SignUp:') ?>">Zaregistrujte se.</a>
+					<p>
+						Registrací získáte plný přístup k Mojí kuchařce.
+						Přidávejte si vlastní recepty včetně obrázků, s možností dalších úprav či mazání.
+					</p>
 
-				<br />1 vaničku tvarohu
-				<br />asi 100 g sušeného mléka
-				<br />moučkový cukr dle potřeby
+				</li>
+				<li>
+					<a href="<?= $this->link('SignIn:') ?>">Přihlaste se.</a>
+				</li>
+				<li>
+					A využívejte Moji kuchařku naplno.
+				</li>
+			</ol>
 
-			</section>
-
-			<section>
-
-				<h2>Postup</h2>
-
-				<p>
-					Všechny suroviny smícháme dohromady a vytvoříme těsto, které necháme v chladu odpočinout. Z těsta vyválíme silnější placku, z které kulatým vykrajovátkem vykrajujeme kolečka. Kolečka pečeme ve vyhřáté troubě asi tak 15 minut.
-				</p>
-
-				<p>
-					Upečená kolečka slepujeme náplní připravenou z tvarohu a sušeného mléka. do tvarohu postupně přidáváme sušené mléko tak, aby nám vznikl hustší krém. Podle chuti dosladíme.
-					A teď už jen nanést na kolečka, přiklopit a nechat chvilku zatuhnout!
-				</p>
-
-				<p>
-					Recept převzat z blogu Jedlíkovo vaření.
-				</p>
-
-			</section>
-
-			<hr />
-
-			<button type="button" class="btn btn-print">Tisknout recept</button>
+			<p>
+				Bez registrace a přihlášení si můžete prohlížet
+				<a href="<?= $this->link('Recipes:') ?>">veřejné recepty.</a>
+			</p>
 
 		</div>
 	</main>

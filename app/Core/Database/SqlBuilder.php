@@ -69,7 +69,7 @@ class SqlBuilder
 	 * Examples:
 	 * ```php
 	 * $whereSimple = ['email' => $email, 'active' => true];
-	 * // returns `email = :email, active = :active`
+	 * // returns `email = :email AND active = :active`
 	 * // and sets $params['email'] = $email
 	 * // and sets $params['active'] = true
 	 *
@@ -80,7 +80,7 @@ class SqlBuilder
 	 *     'username' => $emailOrUsername,
 	 *   ],
 	 * ];
-	 * // returns `active = :active, (email = :email OR username = :username)`
+	 * // returns `active = :active AND (email = :email OR username = :username)`
 	 * // and sets $params['active'] = true
 	 * // and sets $params['email'] = $emailOrUsername
 	 * // and sets $params['username'] = $emailOrUsername
@@ -102,18 +102,13 @@ class SqlBuilder
 				continue;
 			}
 
-			if (is_string($value)) {
-				$parts[] = "$column = :$column";
-				if ($params !== null) {
-					$params[$column] = $value;
-				}
-				continue;
+			$parts[] = "$column = :$column";
+			if ($params !== null) {
+				$params[$column] = $value;
 			}
-
-			throw new \InvalidArgumentException("Invalid value '$value' for column '$column'.");
 		}
 
-		$cond = join(strtoupper($operator) === 'OR' ? ' OR ' : ', ', $parts);
+		$cond = join(strtoupper($operator) === 'OR' ? ' OR ' : ' AND ', $parts);
 
 		return "$cond";
 	}

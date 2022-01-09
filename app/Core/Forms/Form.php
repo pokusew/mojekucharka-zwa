@@ -69,6 +69,15 @@ class Form implements ArrayAccess
 
 	/**
 	 * Sets the form action attribute.
+	 *
+	 * **NOTE 1:** The action attribute does not have to specified. Per the current HTML5 spec,
+	 * when there is no action set, the URL of the form document will be used instead.
+	 * See Step 12 in [HTML5 4.10.21.3 Form submission algorithm](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm).
+	 *
+	 * **NOTE 2:** But if the action attribute is specified,
+	 * it must have must have a value that is a valid non-empty URL.
+	 * See [HTML5 4.10.18.6 Form submission attributes](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-attributes).
+	 *
 	 * @param string|null $action if `null` the action attribute is removed
 	 * @return $this
 	 */

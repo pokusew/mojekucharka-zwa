@@ -22,7 +22,11 @@ declare(strict_types=1);
 		<link
 			rel="manifest"
 			href="<?= $assets->getUrl('manifest.json') ?>"
-			integrity="<?= $assets->getIntegrity('manifest.json') ?>"
+			<?php
+			/* integrity="<?= $assets->getIntegrity('manifest.json') ?>" */
+			// integrity attribute on link with rel=manifest is for whatever reason not allowed per current HTML5 spec
+			// see https://html.spec.whatwg.org/#the-link-element
+			?>
 			crossorigin="anonymous"
 		/>
 		<?php if ($assets->isModeDevelopment()): ?>

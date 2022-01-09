@@ -7,6 +7,8 @@ namespace Core\Forms;
 use ArrayAccess;
 use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\Button;
+use Core\Forms\Controls\CheckBox;
+use Core\Forms\Controls\Select;
 use Core\Forms\Controls\TextArea;
 use Core\Forms\Controls\TextInput;
 use Core\Http\HttpRequest;
@@ -140,6 +142,38 @@ class Form implements ArrayAccess
 	public function addTextArea(string $name, $label): TextArea
 	{
 		$control = new TextArea($name, $label);
+
+		$this->addControl($control);
+
+		return $control;
+	}
+
+	/**
+	 * Adds a new {@see Select}
+	 * @param string $name
+	 * @phpstan-param HtmlLabel $label
+	 * @param mixed $label
+	 * @return Select
+	 */
+	public function addSelect(string $name, $label): Select
+	{
+		$control = new Select($name, $label);
+
+		$this->addControl($control);
+
+		return $control;
+	}
+
+	/**
+	 * Adds a new {@see CheckBox}
+	 * @param string $name
+	 * @phpstan-param HtmlLabel $label
+	 * @param mixed $label
+	 * @return CheckBox
+	 */
+	public function addCheckBox(string $name, $label): CheckBox
+	{
+		$control = new CheckBox($name, $label);
 
 		$this->addControl($control);
 

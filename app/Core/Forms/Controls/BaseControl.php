@@ -171,7 +171,10 @@ abstract class BaseControl
 	{
 		$this->clearError();
 
-		if ($this->hasValue()) {
+		if ($this->hasError()) {
+			// an error is already set, this control is invalid
+			return false;
+		} else if ($this->hasValue()) {
 			// only run validators if there is a non-null value
 			foreach ($this->defaultValidators as $validator) {
 				if (!$this->$validator()) {

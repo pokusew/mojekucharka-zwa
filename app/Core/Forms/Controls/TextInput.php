@@ -56,10 +56,9 @@ class TextInput extends TextBaseControl
 	public function setValue(?string $value): HtmlControl
 	{
 		parent::setValue($value);
-		// TODO: re-enable this check
-		// if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
+		if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
 			$this->htmlEl->value = $value;
-		// }
+		}
 		return $this;
 	}
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Service\UserCreationException;
+use Core\Database\Repository;
 use PDOException;
 
 class UsersRepository extends Repository

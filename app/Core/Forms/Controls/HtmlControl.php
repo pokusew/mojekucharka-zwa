@@ -7,6 +7,9 @@ namespace Core\Forms\Controls;
 use Core\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * Base class for all form controls that are represented by a HTML element.
+ */
 abstract class HtmlControl extends BaseControl
 {
 

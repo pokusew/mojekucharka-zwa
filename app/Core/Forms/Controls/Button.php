@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Forms\Controls;
 
 /**
+ * HTML button
  * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
  */
 class Button extends HtmlControl

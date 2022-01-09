@@ -9,6 +9,9 @@ use Core\Routing\RegexRoute;
 use Core\Routing\Router;
 use Core\Routing\SimpleRoute;
 
+/**
+ * App-specific router (routes) definition.
+ */
 class RouterFactory
 {
 

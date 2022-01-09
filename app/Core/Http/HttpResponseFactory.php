@@ -6,14 +6,14 @@ namespace Core\Http;
 
 use Core\Config;
 
+/**
+ * Default {@see HttpResponse} factory that sets {@see HttpResponse::$cookiePath} to {@see Config::$basePath}.
+ */
 class HttpResponseFactory
 {
 
 	private Config $config;
 
-	/**
-	 * @param Config $config
-	 */
 	public function __construct(Config $config)
 	{
 		$this->config = $config;

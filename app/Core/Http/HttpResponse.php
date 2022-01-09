@@ -6,6 +6,9 @@ namespace Core\Http;
 
 use Core\Exceptions\InvalidStateException;
 
+/**
+ * Represents an HTTP response.
+ */
 class HttpResponse
 {
 
@@ -43,6 +46,9 @@ class HttpResponse
 		SAME_SITE_STRICT = 'Strict',
 		SAME_SITE_NONE = 'None';
 
+	/**
+	 * @var int HTTP response status code
+	 */
 	private int $code = self::S_200_OK;
 
 	public ?string $cookieDomain = '';

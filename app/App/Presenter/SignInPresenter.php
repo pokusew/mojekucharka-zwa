@@ -84,7 +84,7 @@ class SignInPresenter extends BasePresenter
 		//        by measuring response times as password validation takes some measurable time.)
 
 		if ($user === null) {
-			$form->setError('Neplatné přihlašovácí údaje.');
+			$form->setGlobalError('Neplatné přihlašovácí údaje.');
 			return;
 		}
 
@@ -93,11 +93,13 @@ class SignInPresenter extends BasePresenter
 		}
 
 		if (!$this->passwords->verify($password->getValue(), $user['password'])) {
-			$form->setError('Neplatné přihlašovácí údaje.');
+			$form->setGlobalError('Neplatné přihlašovácí údaje.');
+			// TODO: store login failure in db
 			return;
 		}
 
 		// TODO: store user login in session
+		// TODO: store login success in db
 
 		$this->redirect('Recipes:');
 	}

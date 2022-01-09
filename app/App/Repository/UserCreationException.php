@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Repository;
 
+/**
+ * An exception that can occur during {@see UsersRepository::createUser()}.
+ */
 class UserCreationException extends \RuntimeException
 {
 

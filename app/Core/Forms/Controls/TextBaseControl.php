@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Core\Forms\Controls;
 
 /**
- * TODO: newlines in input text
- * TODO: option for trimming whitespaces
+ * Base class for all text based form controls.
+ *
+ * It adds minlength and maxlength validation support.
+ *
+ * TODO: option for normalization of newlines in the input text
+ * TODO: option for trimming whitespaces in the input text
+ *
  * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
  */
 abstract class TextBaseControl extends HtmlWithLabelControl

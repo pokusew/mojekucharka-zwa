@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-
+/**
+ * An exception that can occur during {@see UsersService::registerUser()}.
+ */
 class UserRegistrationException extends \RuntimeException
 {
 

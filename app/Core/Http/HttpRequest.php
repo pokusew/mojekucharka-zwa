@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+/**
+ * Represents an HTTP request.
+ */
 class HttpRequest
 {
 

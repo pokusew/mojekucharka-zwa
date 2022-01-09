@@ -7,6 +7,7 @@ namespace Core\Forms\Controls;
 use Nette\Utils\Validators;
 
 /**
+ * HTML input
  * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
  */
 class TextInput extends TextBaseControl
@@ -55,9 +56,10 @@ class TextInput extends TextBaseControl
 	public function setValue(?string $value): HtmlControl
 	{
 		parent::setValue($value);
-		if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
+		// TODO: re-enable this check
+		// if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
 			$this->htmlEl->value = $value;
-		}
+		// }
 		return $this;
 	}
 

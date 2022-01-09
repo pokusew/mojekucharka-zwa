@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Mail\MailGenerator;
+use App\Repository\UserCreationException;
 use App\Repository\UsersRepository;
 use Core\Utils\Passwords;
 use Core\Utils\Random;
 use Nette\Mail\Mailer;
 
+/**
+ * A that handles user-related tasks, such as registration.
+ */
 class UsersService
 {
 
@@ -83,7 +87,6 @@ class UsersService
 			->addTo($email);
 
 		$this->mailer->send($mail);
-
 	}
 
 	private function handleDuplicateEmailDuringRegistration(string $email): void

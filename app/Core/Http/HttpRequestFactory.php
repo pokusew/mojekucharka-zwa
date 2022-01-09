@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+/**
+ * Default {@see HttpRequest} factory that creates requests from $_SERVER, $_GET, and $_POST superglobals.
+ */
 class HttpRequestFactory
 {
 

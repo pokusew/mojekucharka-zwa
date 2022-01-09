@@ -7,13 +7,15 @@ namespace Core\Response;
 use Core\Http\HttpRequest;
 use Core\Http\HttpResponse;
 
+/**
+ * Interface that any presenter-generated response must implement.
+ */
 interface Response
 {
 
 	/**
 	 * Sends response to output.
-	 * @return void
 	 */
-	function send(HttpRequest $httpRequest, HttpResponse $httpResponse);
+	function send(HttpRequest $httpRequest, HttpResponse $httpResponse): void;
 
 }

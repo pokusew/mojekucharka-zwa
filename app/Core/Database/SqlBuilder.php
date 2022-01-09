@@ -9,10 +9,14 @@ namespace Core\Database;
  * A very simple SQL builder.
  *
  * **NOTE:** It does NOT escape any values! It is not safe to use with any user-input!
+ *           But it some methods use placeholders for values (see for example {@see SqlBuilder::where()})).
  */
 class SqlBuilder
 {
 
+	/**
+	 * Allows values for
+	 */
 	public const
 		ORDER_ASC = 0,
 		ORDER_DESC = 1;
@@ -60,8 +64,30 @@ class SqlBuilder
 	}
 
 	/**
+	 * Recursively traverses the $where associative array and builds the condition.
+	 *
+	 * Examples:
+	 * ```php
+	 * $whereSimple = ['email' => $email, 'active' => true];
+	 * // returns `email = :email, active = :active`
+	 * // and sets $params['email'] = $email
+	 * // and sets $params['active'] = true
+	 *
+	 * $whereOr = [
+	 *   'active' => true,
+	 *   'OR' => [
+	 *     'email' => $emailOrUsername,
+	 *     'username' => $emailOrUsername,
+	 *   ],
+	 * ];
+	 * // returns `active = :active, (email = :email OR username = :username)`
+	 * // and sets $params['active'] = true
+	 * // and sets $params['email'] = $emailOrUsername
+	 * // and sets $params['username'] = $emailOrUsername
+	 * ```
+	 *
 	 * @param array<string, mixed> $where
-	 * @param string $operator
+	 * @param string $operator logical operator that will be used between the columns of $where, either `AND` or `OR`
 	 * @param array<string, mixed>|null $params flattened parameters
 	 * @return string
 	 */
@@ -98,8 +124,9 @@ class SqlBuilder
 	 * **NOTE:** The values are not used and instead placeholders in format :name are generated,
 	 * so the the resulting SQL query can be used as the input for prepared statements ({@see \PDO::prepare()}).
 	 *
-	 * @param array<string, mixed>|null $where
-	 * @param array<string, mixed>|null $params flattened parameters
+	 * @param array<string, mixed>|null $where see {@see SqlBuilder::condToString()}
+	 * @param array<string, mixed>|null $params a reference to an array, flattened parameters with their values
+	 *                                          will be added
 	 * @return $this
 	 */
 	public function where(?array $where, ?array &$params = null): self
@@ -120,8 +147,11 @@ class SqlBuilder
 	}
 
 	/**
-	 * @param array<string, int>|null $by
+	 * Adds ORDER BY column1 ASC|DESC, column2 ASC|DESC, ..., columnN ASC|DESC clause.
+	 * @param array<string, int>|null $by associate ((column name => ordering) ordered array
 	 * @return $this
+	 * @see SqlBuilder::ORDER_ASC
+	 * @see SqlBuilder::ORDER_DESC
 	 */
 	public function order(?array $by): self
 	{
@@ -147,6 +177,7 @@ class SqlBuilder
 	}
 
 	/**
+	 * Adds LIMIT $rowCount [ OFFSET $offset] clause.
 	 * @param int|null $rowCount
 	 * @param int|null $offset
 	 * @return $this

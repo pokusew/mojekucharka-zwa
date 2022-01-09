@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace Core\Database;
 
-use Core\Database\Connection;
-use Core\Database\SqlBuilder;
 use Core\Exceptions\InvalidStateException;
 use PDO;
 
+/**
+ * Contains useful methods for working with a specific table.
+ */
 abstract class Repository
 {
 
@@ -21,6 +22,10 @@ abstract class Repository
 		$this->connection = $connection;
 	}
 
+	/**
+	 * Ensures that the {@see Repository::$tableName} is not empty (i.e. it was set by the subclass).
+	 * @throws InvalidStateException if the tableName is empty
+	 */
 	protected function ensureValidTableName(): void
 	{
 		if ($this->tableName === '') {
@@ -29,9 +34,10 @@ abstract class Repository
 	}
 
 	/**
+	 * Finds one record (row) in the table.
 	 * @param array<string, mixed>|null $where
 	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
-	 * @return array<string, mixed>|null
+	 * @return array<string, mixed>|null associative array (column name => value)
 	 */
 	public function findOne(?array $where = null, ?array $columns = null): ?array
 	{
@@ -58,7 +64,6 @@ abstract class Repository
 		}
 
 		return $result;
-
 	}
 
 }

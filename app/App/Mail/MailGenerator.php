@@ -8,6 +8,9 @@ use Core\Config;
 use Core\Routing\Router;
 use Nette\Mail\Message;
 
+/**
+ * A service for generating app-specific e-mail messages from templates.
+ */
 class MailGenerator
 {
 
@@ -23,8 +26,9 @@ class MailGenerator
 	/**
 	 * Creates a new e-mail message from the given template.
 	 * @param string $templateName
-	 * @param array<string, mixed> $variables
-	 * @return Message the generated message, do not forget to call setFrom before sending it
+	 * @param array<string, mixed> $variables template specific variables, name => value
+	 * @return Message The generated message, without any recipient set. Do not forget
+	 *                 to add least one recipient using {@see Message::addTo()} before sending it.
 	 */
 	public function createFromTemplate(string $templateName, array $variables): Message
 	{
@@ -54,11 +58,19 @@ class MailGenerator
 		return $mail;
 	}
 
-	public function getDefaultFrom(): string {
+	/**
+	 * Returns the default From value (`email.from` config parameter).
+	 */
+	public function getDefaultFrom(): string
+	{
 		return $this->config->parameters['email.from'];
 	}
 
-	public function getAdminEmail(): string {
+	/**
+	 * Returns the admin e-mail (`email.admin` config parameter).
+	 */
+	public function getAdminEmail(): string
+	{
 		return $this->config->parameters['email.admin'];
 	}
 

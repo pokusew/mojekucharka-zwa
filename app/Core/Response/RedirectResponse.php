@@ -9,6 +9,8 @@ use Core\Http\HttpResponse;
 
 /**
  * Redirects to new URI.
+ *
+ * Uses {@see HttpResponse::redirect()}.
  */
 class RedirectResponse implements Response
 {
@@ -17,8 +19,8 @@ class RedirectResponse implements Response
 	private int $code;
 
 	/**
-	 * @param string $url
-	 * @param int $code
+	 * @param string $url a URL where to redirect
+	 * @param int $code a valid HTTP status code
 	 */
 	public function __construct(string $url, int $code)
 	{
@@ -26,7 +28,7 @@ class RedirectResponse implements Response
 		$this->code = $code;
 	}
 
-	public function send(HttpRequest $httpRequest, HttpResponse $httpResponse)
+	public function send(HttpRequest $httpRequest, HttpResponse $httpResponse): void
 	{
 		$httpResponse->redirect($this->url, $this->code);
 	}

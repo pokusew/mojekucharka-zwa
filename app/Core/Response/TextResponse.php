@@ -8,7 +8,7 @@ use Core\Http\HttpRequest;
 use Core\Http\HttpResponse;
 
 /**
- * TODO
+ * A text response.
  */
 class TextResponse implements Response
 {
@@ -16,14 +16,14 @@ class TextResponse implements Response
 	protected string $text;
 
 	/**
-	 * @param string $text
+	 * @param string $text text to send
 	 */
 	public function __construct(string $text)
 	{
 		$this->text = $text;
 	}
 
-	public function send(HttpRequest $httpRequest, HttpResponse $httpResponse)
+	public function send(HttpRequest $httpRequest, HttpResponse $httpResponse): void
 	{
 		echo $this->text;
 	}

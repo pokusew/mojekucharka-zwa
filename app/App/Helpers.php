@@ -8,6 +8,9 @@ use Core\Forms\Controls\TextBaseControl;
 use Core\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * App-specific helpers, mainly form rendering.
+ */
 class Helpers
 {
 
@@ -57,13 +60,13 @@ class Helpers
 	 */
 	public static function renderFormError(Form $form): string
 	{
-		if (!$form->hasError()) {
+		if (!$form->hasGlobalError()) {
 			return '';
 		}
 
 		$feedback = Html::el('p');
 		$feedback->class('form-control-feedback form-error');
-		$feedback->setText($form->getError());
+		$feedback->setText($form->getGlobalError());
 
 		return (string) $feedback;
 	}

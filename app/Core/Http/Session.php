@@ -8,12 +8,13 @@ use Core\Exceptions\InvalidStateException;
 use RuntimeException;
 
 /**
- * Provides access to session sections as well as session settings and management methods.
+ * A simple wrapper around PHP's native session
+ * that sets secure defaults.
  */
 class Session
 {
 
-	/** Default file lifetime */
+	/** Default file lifetime (session.gc_maxlifetime) */
 	private const DEFAULT_FILE_LIFETIME = 3 * 3600; // 3 hours in seconds
 
 	private const SECURITY_OPTIONS = [
@@ -166,44 +167,5 @@ class Session
 			}
 		}
 	}
-
-	// /**
-	//  * Sets the amount of time (like '20 minutes') allowed between requests before the session will be terminated,
-	//  * null means "for a maximum of 3 hours or until the browser is closed".
-	//  */
-	// public function setExpiration(?string $time): self
-	// {
-	// 	if ($time === null) {
-	// 		return $this->setOptions([
-	// 			'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
-	// 			'cookie_lifetime' => 0,
-	// 		]);
-	//
-	// 	} else {
-	// 		$time = \Nette\Utils\DateTime::from($time)->format('U') - time();
-	// 		return $this->setOptions([
-	// 			'gc_maxlifetime' => $time,
-	// 			'cookie_lifetime' => $time,
-	// 		]);
-	// 	}
-	// }
-	//
-	// /**
-	//  * Sets the session cookie parameters.
-	//  */
-	// public function setCookieParameters(
-	// 	string $path,
-	// 	?string $domain = null,
-	// 	?bool $secure = null,
-	// 	?string $sameSite = null,
-	// ): self
-	// {
-	// 	return $this->setOptions([
-	// 		'cookie_path' => $path,
-	// 		'cookie_domain' => $domain,
-	// 		'cookie_secure' => $secure,
-	// 		'cookie_samesite' => $sameSite,
-	// 	]);
-	// }
 
 }

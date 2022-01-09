@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Forms\Controls;
 
 /**
+ * HTML textarea
  * @phpstan-import-type HtmlLabel from HtmlWithLabelControl
  */
 class TextArea extends HtmlWithLabelControl

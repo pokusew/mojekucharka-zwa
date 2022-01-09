@@ -7,6 +7,7 @@ namespace Core\Forms\Controls;
 use Nette\Utils\Html;
 
 /**
+ * Base class for all form controls that have a HTML label element.
  * @phpstan-type HtmlLabel \Nette\HtmlStringable|string|int|float
  */
 abstract class HtmlWithLabelControl extends HtmlControl

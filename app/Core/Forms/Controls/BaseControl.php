@@ -6,6 +6,9 @@ namespace Core\Forms\Controls;
 
 use Core\Forms\Form;
 
+/**
+ * Base class for all form controls.
+ */
 abstract class BaseControl
 {
 
@@ -41,6 +44,7 @@ abstract class BaseControl
 	}
 
 	/**
+	 * Sets the binding to the form. This may cause the control's id to regenerated.
 	 * @return $this
 	 */
 	public function setForm(?Form $form): self

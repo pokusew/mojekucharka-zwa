@@ -9,17 +9,28 @@ use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\Button;
 use Core\Forms\Controls\TextInput;
 use Core\Http\HttpRequest;
+use InvalidArgumentException;
 use Nette\Utils\Html;
 
 /**
+ * An abstraction of HTML form that simplifies creation and processing.
+ *
+ * It allows declarative building of the form.
+ *
+ * Once the form is submitted using {@see Form::process()} it cannot be further modified.
+ *
  * @phpstan-implements ArrayAccess<string, BaseControl>
  * @phpstan-import-type HtmlLabel from \Core\Forms\Controls\HtmlWithLabelControl
  */
 class Form implements ArrayAccess
 {
 
-	const METHOD_GET = 'GET';
-	const METHOD_POST = 'POST';
+	/**
+	 * Allows values for the form method
+	 */
+	public const
+		METHOD_GET = 'GET',
+		METHOD_POST = 'POST';
 
 	protected string $name;
 
@@ -32,11 +43,18 @@ class Form implements ArrayAccess
 	/** @var BaseControl[] */
 	protected array $controls = [];
 
-	protected ?string $error = null;
+	protected ?string $globalError = null;
 
-	/** @var callable[] */
-	public array $onSuccess;
+	/**
+	 * @phpstan-var (callable(Form $form): void)[] handlers that will be called on submission if the form is valid
+	 */
+	public array $onSuccess = [];
 
+	/**
+	 * Creates a new form.
+	 * @param string $name form name (immutable, cannot be changed once the instance is created)
+	 * @param string $method form method (immutable, cannot be changed once the instance is created)
+	 */
 	public function __construct(string $name, string $method = self::METHOD_POST)
 	{
 		$this->name = $name;
@@ -44,11 +62,31 @@ class Form implements ArrayAccess
 		$this->htmlEl = Html::el('form');
 		$this->htmlEl->name = $name;
 		$this->htmlEl->method = strtolower($method);
-		$this->htmlEl->action = '';
+
 		// enable custom validation using JS (see frontend/scripts/forms.ts)
 		$this->htmlEl->data('validation', true);
 	}
 
+	/**
+	 * Sets the form action attribute.
+	 * @param string|null $action if `null` the action attribute is removed
+	 * @return $this
+	 */
+	public function setAction(?string $action): self
+	{
+		$this->htmlEl->action = $action;
+		return $this;
+	}
+
+	/**
+	 * Returns the HTML form element of this form.
+	 *
+	 * It use this for example for adding class or other HTML attributes.
+	 *
+	 * **NOTE:** If you change name, method or action you may break the form.
+	 *
+	 * @return Html the HTML form element of this form
+	 */
 	public function getElem(): Html
 	{
 		return $this->htmlEl;
@@ -67,6 +105,7 @@ class Form implements ArrayAccess
 	}
 
 	/**
+	 * Adds a new {@see TextInput}
 	 * @param string $name
 	 * @phpstan-param HtmlLabel $label
 	 * @param mixed $label
@@ -82,6 +121,7 @@ class Form implements ArrayAccess
 	}
 
 	/**
+	 * Adds a new {@see Button} with type set to `submit`
 	 * @param string $name
 	 * @phpstan-param HtmlLabel $label
 	 * @param mixed $label
@@ -96,32 +136,66 @@ class Form implements ArrayAccess
 		return $control;
 	}
 
+	/**
+	 * Checks if the given offset is valid (i.e. if it can be used form control name)
+	 * @param mixed $offset
+	 * @throws InvalidArgumentException if the offset is not valid
+	 */
+	protected function ensureValidOffset($offset): void
+	{
+		if (!is_string($offset)) {
+			$offsetType = gettype($offset);
+			throw new InvalidArgumentException("Invalid Form offset '$offset' of type $offsetType.");
+		}
+	}
+
 	public function offsetExists($offset): bool
 	{
+		// no need to validate offset here
 		return isset($this->controls[$offset]);
 	}
 
 	public function offsetGet($offset)
 	{
+		// no need to validate offset here
 		return $this->controls[$offset];
 	}
 
 	public function offsetSet($offset, $value)
 	{
-		$this->controls[$offset] = $value;
+		$this->ensureValidOffset($offset);
+
+		if (!($value instanceof BaseControl)) {
+			$baseControlClass = BaseControl::class;
+			throw new InvalidArgumentException(
+				"Invalid value attempted to set for offset '$offset'."
+				. " Value must be an instance of $baseControlClass."
+			);
+		}
+
+		if ($value->getName() !== $offset) {
+			$expectedOffsetName = $value->getName();
+			throw new InvalidArgumentException(
+				"Invalid offsetSet: given offset '$offset' !== the control name '$expectedOffsetName'."
+			);
+		}
+
+		$this->addControl($value);
 	}
 
 	public function offsetUnset($offset)
 	{
+		// no need to validate offset here
 		unset($this->controls[$offset]);
 	}
 
+	/**
+	 * Validates all controls of this form.
+	 * @return bool `true` if all controls are valid and at the same time the form has no global error
+	 *               (i.e. {@see Form::hasGlobalError() is `false`}
+	 */
 	public function validate(): bool
 	{
-		if ($this->hasError()) {
-			return false;
-		}
-
 		$valid = true;
 		foreach ($this->controls as $name => $control) {
 			if (!$control->validate()) {
@@ -129,45 +203,64 @@ class Form implements ArrayAccess
 				// do not break, we want to trigger validation of all controls
 			}
 		}
-		return $valid;
-	}
-
-	public function getError(): ?string
-	{
-		return $this->error;
+		return $valid && !$this->hasGlobalError();
 	}
 
 	/**
-	 * @return $this
+	 * Returns the form global error if set
+	 * @return string|null
 	 */
-	public function setError(?string $error): self
+	public function getGlobalError(): ?string
 	{
-		$this->error = $error;
-		return $this;
-	}
-
-	public function setErrorIf(bool $cond, ?string $error): bool
-	{
-		if ($cond) {
-			$this->error = $error;
-		}
-		return !$cond;
+		return $this->globalError;
 	}
 
 	/**
+	 * Sets the form global error
 	 * @return $this
 	 */
-	public function clearError(): self
+	public function setGlobalError(?string $globalError): self
 	{
-		$this->error = null;
+		$this->globalError = $globalError;
 		return $this;
 	}
 
-	public function hasError(): bool
+	/**
+	 * Clears the form global error
+	 * @return $this
+	 */
+	public function clearGlobalError(): self
 	{
-		return $this->error !== null;
+		$this->globalError = null;
+		return $this;
 	}
 
+	/**
+	 * Checks if the form has the global error set.
+	 *
+	 * **NOTE:** This may return `false` even if the form is NOT valid.
+	 *
+	 * @return bool `true` if the form global error was set
+	 */
+	public function hasGlobalError(): bool
+	{
+		return $this->globalError !== null;
+	}
+
+	/**
+	 * Tries to submit the form using the given HTTP request.
+	 *
+	 * If this form was already submitted, it immediately returns `false` and does nothing.
+	 *
+	 * Currently, it only checks if the HTTP request's method matches the form's method.
+	 * If so, it considers it as submission. In the future we may implement support for another checks.
+	 *
+	 * If the form is submitted, values of all its controls are populated from the HTTP request data.
+	 * Then the form is validated. If the validation succeeds, all {@see Form::$onSuccess} handlers will be invoked
+	 * in the order they were defined in and the form instance will be passed as their first argument.
+	 *
+	 * @return bool `true` if the form was submitted during this call, `false` otherwise
+	 */
 	public function process(HttpRequest $httpRequest): bool
 	{
 		if ($this->submitted) {
@@ -197,6 +290,9 @@ class Form implements ArrayAccess
 		return true;
 	}
 
+	/**
+	 * @return bool `true` if the form was submitted using {@see Form::process()}
+	 */
 	public function isSubmitted(): bool
 	{
 		return $this->submitted;

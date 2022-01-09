@@ -98,9 +98,9 @@ class App
 	/**
 	 * Runs the app.
 	 *
-	 * It calls {@see processRequest()} which does the actual work.
+	 * It calls {@see App::processRequest()} which does the actual work.
 	 *
-	 * When an exception occurs during {@see processRequest()},
+	 * When an exception occurs during {@see App::processRequest()},
 	 * it is automatically caught, and the ErrorPresenter
 	 * is instantiated and the exception is handed to it.
 	 *

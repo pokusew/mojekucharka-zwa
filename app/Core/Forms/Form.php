@@ -7,6 +7,7 @@ namespace Core\Forms;
 use ArrayAccess;
 use Core\Forms\Controls\BaseControl;
 use Core\Forms\Controls\Button;
+use Core\Forms\Controls\TextArea;
 use Core\Forms\Controls\TextInput;
 use Core\Http\HttpRequest;
 use InvalidArgumentException;
@@ -123,6 +124,22 @@ class Form implements ArrayAccess
 	public function addText(string $name, $label): TextInput
 	{
 		$control = new TextInput($name, $label);
+
+		$this->addControl($control);
+
+		return $control;
+	}
+
+	/**
+	 * Adds a new {@see TextArea}
+	 * @param string $name
+	 * @phpstan-param HtmlLabel $label
+	 * @param mixed $label
+	 * @return TextArea
+	 */
+	public function addTextArea(string $name, $label): TextArea
+	{
+		$control = new TextArea($name, $label);
 
 		$this->addControl($control);
 

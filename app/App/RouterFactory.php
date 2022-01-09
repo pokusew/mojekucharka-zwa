@@ -48,6 +48,21 @@ class RouterFactory
 				},
 			],
 		));
+		// /recipe/:id/edit
+		$router->addRoute(new RegexRoute(
+			'#^/recipe/(?<id>[1-9][0-9]{0,9})/edit$#',
+			function (callable $getParam) {
+				$id = (string) $getParam('id');
+				return "/recipe/$id/edit";
+			},
+			'Recipe',
+			'edit',
+			[
+				'id' => function ($value) {
+					return (int) $value;
+				},
+			],
+		));
 
 		// /profile/:username
 		$usernameLimit = '{' . Limits::USERNAME_MIN_LENGTH . ',' . Limits::USERNAME_MAX_LENGTH . '}';

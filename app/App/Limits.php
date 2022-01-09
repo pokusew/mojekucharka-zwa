@@ -16,7 +16,9 @@ class Limits
 		// see https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
 		EMAIL_MAX_LENGTH = 254,
 		PASSWORD_MIN_LENGTH = 8,
-		PASSWORD_MAX_LENGTH = 64;
+		PASSWORD_MAX_LENGTH = 64,
+		RECIPE_MIN_LENGTH = 4,
+		RECIPE_MAX_LENGTH = 255;
 
 
 }

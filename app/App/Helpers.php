@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App;
 
-use Core\Forms\Controls\TextBaseControl;
+use Core\Forms\Controls\HtmlWithLabelControl;
 use Core\Forms\Form;
 use Core\Utils\Paginator;
 use DateTime;
+use DateTimeInterface;
 use Nette\Utils\Html;
 
 /**
@@ -21,10 +22,10 @@ class Helpers
 	 *
 	 * Note! It also mutates the HTML elements attributes of the given control.
 	 *
-	 * @param TextBaseControl $control
+	 * @param HtmlWithLabelControl $control
 	 * @return string HTML
 	 */
-	public static function renderFormControl(TextBaseControl $control): string
+	public static function renderFormControl(HtmlWithLabelControl $control): string
 	{
 		$group = Html::el('div');
 		// @phpstan-ignore-next-line
@@ -191,6 +192,20 @@ class Helpers
 	public static function ds(string $dateStr): DateTime
 	{
 		return DateTime::createFromFormat('Y-m-d H:i:s', $dateStr);
+	}
+
+	/**
+	 * Creates and returns HTML time element.
+	 * @param DateTime $dateTime
+	 * @param string $userFormat
+	 * @return Html an HTML time element
+	 */
+	public static function timeEl(DateTime $dateTime, string $userFormat = 'j. n. Y \v H:i'): Html
+	{
+		$time = Html::el('time');
+		$time->datetime = $dateTime->format(DateTimeInterface::W3C);
+		$time->setText($dateTime->format($userFormat));
+		return $time;
 	}
 
 }

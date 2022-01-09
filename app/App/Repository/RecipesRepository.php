@@ -92,19 +92,19 @@ class RecipesRepository extends Repository
 			UPDATE recipes SET
 				public = :public,
 				name = :name,
-				category_id = :category_id,
-				main_image_id = :main_image_id,
+				category_id = :categoryId,
+				main_image_id = :mainImageId,
 				ingredients = :ingredients,
 				instructions = :instructions,
-				private_rating = :private_rating
-			WHERE id = :id AND user_id = :user_id
+				private_rating = :privateRating
+			WHERE id = :id AND user_id = :userId
 			SQL
 		);
 
 		$sth->execute([
 			'id' => $id,
 			'userId' => $userId,
-			'public' => $public,
+			'public' => (int) $public,
 			'name' => $name,
 			'categoryId' => $categoryId,
 			'mainImageId' => $mainImageId,

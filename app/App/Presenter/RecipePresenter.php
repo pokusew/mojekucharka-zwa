@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Limits;
 use App\Repository\CategoriesRepository;
 use App\Repository\RecipesRepository;
 use Core\Exceptions\BadRequestException;
+use Core\Forms\Controls\TextArea;
+use Core\Forms\Controls\TextInput;
+use Core\Forms\Form;
 use Core\Http\HttpResponse;
 
 class RecipePresenter extends BasePresenter
@@ -20,6 +24,8 @@ class RecipePresenter extends BasePresenter
 
 	/** @var array<string, mixed> */
 	protected array $recipe;
+
+	protected Form $recipeForm;
 
 	public function __construct()
 	{
@@ -80,6 +86,81 @@ class RecipePresenter extends BasePresenter
 		}
 
 		$this->recipe = $recipe;
+
+		$this->recipeForm = $this->createRecipeForm();
+
+		$this->recipeForm->process($this->httpRequest);
+
+		// if the form was not submitted, prefill the form with the recipe data
+		$this->setRecipeFormInitialValues();
+	}
+
+	private function createRecipeForm(): Form
+	{
+		$form = new Form('recipe');
+
+		$form->setAction($this->link('this'));
+
+		$form->addText('name', 'Název')
+			->setPlaceholder('Název recptu')
+			->setRequired()
+			->setMinLength(Limits::RECIPE_MIN_LENGTH)
+			->setMaxLength(Limits::RECIPE_MAX_LENGTH);
+
+		$form->addTextArea('ingredients', 'Suroviny')
+			->getElem()->setAttribute('rows', 10);
+
+		$form->addTextArea('instructions', 'Postup')
+			->getElem()->setAttribute('rows', 10);
+
+		$form->addSubmit('submit', 'Upravit');
+
+		$form->onSuccess[] = function (Form $form) {
+			$this->handleRecipeFormSuccess($form);
+		};
+
+		return $form;
+	}
+
+	private function setRecipeFormInitialValues(): void
+	{
+		/** @var TextInput */
+		$name = $this->recipeForm['name'];
+		/** @var TextArea */
+		$ingredients = $this->recipeForm['ingredients'];
+		/** @var TextArea */
+		$instructions = $this->recipeForm['instructions'];
+
+		$name->setDefaultValue($this->recipe['name']);
+		$ingredients->setDefaultValue($this->recipe['ingredients']);
+		$instructions->setDefaultValue($this->recipe['instructions']);
+	}
+
+	private function handleRecipeFormSuccess(Form $form): void
+	{
+		/** @var TextInput */
+		$name = $form['name'];
+		/** @var TextArea */
+		$ingredients = $form['ingredients'];
+		/** @var TextArea */
+		$instructions = $form['instructions'];
+		// $category = $form['category'];
+		// $public = $form['public'];
+
+		// TODO
+		$this->recipesRepository->updateUsersRecipe(
+			$this->recipe['id'],
+			$this->getUser()->getId(),
+			(bool) $this->recipe['public'],
+			$name->getValue(),
+			$this->recipe['category_id'],
+			$this->recipe['main_image_id'],
+			$ingredients->getValue(),
+			$instructions->getValue(),
+			$this->recipe['private_rating'],
+		);
+
+		$this->redirect('Recipe:view', ['id' => $this->recipe['id']]);
 	}
 
 }

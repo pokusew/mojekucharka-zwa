@@ -33,6 +33,10 @@ $title = $recipe['name'];
 
 			<?= Helpers::renderFormControl($this->recipeForm['instructions']) ?>
 
+			<?= Helpers::renderSelect($this->recipeForm['category']) ?>
+
+			<?= Helpers::renderFormControl($this->recipeForm['public']) ?>
+
 			<?= $this->recipeForm['submit']->getElem()->class('btn btn-primary') ?>
 
 			<?= $this->recipeForm->getElem()->endTag() ?>

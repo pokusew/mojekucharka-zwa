@@ -8,11 +8,16 @@ use App\Limits;
 use App\Repository\CategoriesRepository;
 use App\Repository\RecipesRepository;
 use Core\Exceptions\BadRequestException;
+use Core\Forms\Controls\CheckBox;
+use Core\Forms\Controls\Select;
 use Core\Forms\Controls\TextArea;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
 use Core\Http\HttpResponse;
 
+/**
+ * @phpstan-import-type CategoriesData from CategoriesRepository
+ */
 class RecipePresenter extends BasePresenter
 {
 
@@ -24,6 +29,9 @@ class RecipePresenter extends BasePresenter
 
 	/** @var array<string, mixed> */
 	protected array $recipe;
+
+	/** @phpstan-var CategoriesData */
+	protected array $categories;
 
 	protected Form $recipeForm;
 
@@ -87,6 +95,8 @@ class RecipePresenter extends BasePresenter
 
 		$this->recipe = $recipe;
 
+		$this->categories = $this->categoriesRepository->findAllAsData();
+
 		$this->recipeForm = $this->createRecipeForm();
 
 		$this->recipeForm->process($this->httpRequest);
@@ -113,6 +123,23 @@ class RecipePresenter extends BasePresenter
 		$form->addTextArea('instructions', 'Postup')
 			->getElem()->setAttribute('rows', 10);
 
+		$categoriesOptions = [];
+		$categoriesOptionsGrouped = [];
+
+		foreach ($this->categories['nested'] as $topLevelCategory) {
+			foreach ($topLevelCategory['children'] as $category) {
+				$categoriesOptionsGrouped[$topLevelCategory['name']][$category['id']] = $category['name'];
+				$categoriesOptions[$category['id']] = $category['name'];
+			}
+		}
+
+		$form->addSelect('category', 'Kategorie')
+			->setOptions($categoriesOptions)
+			->setGroupedOptions($categoriesOptionsGrouped)
+			->setValue((string) Limits::DEFAULT_CATEGORY);
+
+		$form->addCheckBox('public', 'Veřejný recept');
+
 		$form->addSubmit('submit', 'Upravit');
 
 		$form->onSuccess[] = function (Form $form) {
@@ -124,36 +151,44 @@ class RecipePresenter extends BasePresenter
 
 	private function setRecipeFormInitialValues(): void
 	{
-		/** @var TextInput */
+		/** @var TextInput $name */
 		$name = $this->recipeForm['name'];
-		/** @var TextArea */
+		/** @var TextArea $ingredients */
 		$ingredients = $this->recipeForm['ingredients'];
-		/** @var TextArea */
+		/** @var TextArea $instructions */
 		$instructions = $this->recipeForm['instructions'];
+		/** @var Select $category */
+		$category = $this->recipeForm['category'];
+		/** @var CheckBox $public */
+		$public = $this->recipeForm['public'];
 
 		$name->setDefaultValue($this->recipe['name']);
 		$ingredients->setDefaultValue($this->recipe['ingredients']);
 		$instructions->setDefaultValue($this->recipe['instructions']);
+		$category->setDefaultValue((string) $this->recipe['category_id']);
+		$public->setChecked((bool) $this->recipe['public']);
 	}
 
 	private function handleRecipeFormSuccess(Form $form): void
 	{
-		/** @var TextInput */
-		$name = $form['name'];
-		/** @var TextArea */
-		$ingredients = $form['ingredients'];
-		/** @var TextArea */
-		$instructions = $form['instructions'];
-		// $category = $form['category'];
-		// $public = $form['public'];
+		/** @var TextInput $name */
+		$name = $this->recipeForm['name'];
+		/** @var TextArea $ingredients */
+		$ingredients = $this->recipeForm['ingredients'];
+		/** @var TextArea $instructions */
+		$instructions = $this->recipeForm['instructions'];
+		/** @var Select $category */
+		$category = $this->recipeForm['category'];
+		/** @var CheckBox $public */
+		$public = $this->recipeForm['public'];
 
 		// TODO
 		$this->recipesRepository->updateUsersRecipe(
 			$this->recipe['id'],
 			$this->getUser()->getId(),
-			(bool) $this->recipe['public'],
+			$public->isChecked(),
 			$name->getValue(),
-			$this->recipe['category_id'],
+			(int) $category->getValue(),
 			$this->recipe['main_image_id'],
 			$ingredients->getValue(),
 			$instructions->getValue(),

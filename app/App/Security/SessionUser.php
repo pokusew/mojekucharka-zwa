@@ -6,6 +6,9 @@ namespace App\Security;
 
 use DateTime;
 
+/**
+ * Represents data of logged in user in the session.
+ */
 class SessionUser
 {
 

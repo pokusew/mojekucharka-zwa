@@ -20,7 +20,7 @@ use ReflectionException;
 use ReflectionMethod;
 
 /**
- * Presenter processes the given request and generate a response.
+ * Presenter processes the given request and generates a response.
  *
  * It represents the (page) controller in the MVC architecture.
  */

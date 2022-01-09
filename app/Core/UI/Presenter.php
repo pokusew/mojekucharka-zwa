@@ -59,8 +59,21 @@ abstract class Presenter
 	 */
 	protected ?Response $response = null;
 
+	/**
+	 * @var string|null The directory where the layout and view templates are located.
+	 *                  Must not contain the trailing slash.
+	 * @see Presenter::render()
+	 */
 	protected ?string $templatesDir = null;
+	/**
+	 * @var string|null The name of the layout template. Without the .php extension.
+	 * @see Presenter::render()
+	 */
 	protected ?string $layout = null;
+	/**
+	 * @var string|null The name of the layout template. Without the .php extension.
+	 * @see Presenter::render()
+	 */
 	protected ?string $view = null;
 
 	/**

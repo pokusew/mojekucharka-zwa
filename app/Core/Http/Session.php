@@ -15,9 +15,9 @@ class Session
 {
 
 	/** Default file lifetime (session.gc_maxlifetime) */
-	private const DEFAULT_FILE_LIFETIME = 3 * 3600; // 3 hours in seconds
+	protected const DEFAULT_FILE_LIFETIME = 3 * 3600; // 3 hours in seconds
 
-	private const SECURITY_OPTIONS = [
+	protected const SECURITY_OPTIONS = [
 		'referer_check' => '',     // must be disabled because PHP implementation is invalid
 		'use_cookies' => 1,        // must be enabled to prevent Session Hijacking and Fixation
 		'use_only_cookies' => 1,   // must be enabled to prevent Session Fixation
@@ -36,11 +36,11 @@ class Session
 		'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME, // 3 hours
 	];
 
-	private bool $regenerated = false;
+	protected bool $regenerated = false;
 
-	private bool $started = false;
+	protected bool $started = false;
 
-	private HttpResponse $httpResponse;
+	protected HttpResponse $httpResponse;
 
 	public function __construct(HttpResponse $httpResponse)
 	{
@@ -144,9 +144,10 @@ class Session
 	}
 
 	/**
-	 * @param mixed[] $config
+	 * Configures session using ini_set("session.$key", $value).
+	 * @param array<string, mixed> $config array ($key => $value) of directives to set
 	 */
-	private function configure(array $config): void
+	protected function configure(array $config): void
 	{
 		foreach ($config as $key => $value) {
 
@@ -166,6 +167,67 @@ class Session
 				);
 			}
 		}
+	}
+
+	/**
+	 * Ensures that the session is started (it starts it using {@see Session::start()} if needed).
+	 */
+	protected function ensureStarted(): void
+	{
+		if (!$this->isStarted()) {
+			$this->start();
+		}
+	}
+
+	/**
+	 * Sets the key to the given value.
+	 *
+	 * The session is automatically started (if it has not been already started).
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function set(string $key, $value): void
+	{
+		$this->ensureStarted();
+		$_SESSION[$key] = $value;
+	}
+
+	/**
+	 * Gets the value associated with the given key.
+	 *
+	 * The session is automatically started (if it has not been already started).
+	 *
+	 * @param string $key
+	 * @return mixed|null `null` when the key does not exists. To differentiate between non-existent key
+	 *                     and an actual `null` value, use {@see Session::has()}.
+	 */
+	public function get(string $key)
+	{
+		$this->ensureStarted();
+		return $_SESSION[$key] ?? null;
+	}
+
+	/**
+	 * Deletes the the given key from the session.
+	 *
+	 * The session is automatically started (if it has not been already started).
+	 */
+	public function delete(string $key): void
+	{
+		$this->ensureStarted();
+		unset($_SESSION[$key]);
+	}
+
+	/**
+	 * Checks if the given key exists in the session.
+	 *
+	 * The session is automatically started (if it has not been already started).
+	 */
+	public function has(string $key): bool
+	{
+		$this->ensureStarted();
+		return array_key_exists($key, $_SESSION);
 	}
 
 }

@@ -1,0 +1,56 @@
+//
+// Pagination navigation
+// --------------------------------------------------
+
+@use "utils";
+@use "config" as *;
+
+.pagination {
+	display: block;
+	margin: 0;
+	padding: 0;
+
+	ul, li {
+		margin: 0;
+		padding: 0;
+	}
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		list-style-type: none;
+		padding-left: 1px;
+		row-gap: .5rem;
+	}
+
+	li {
+		> * {
+			display: block;
+			padding: .5rem 1rem;
+			text-decoration: none;
+			margin-left: -1px;
+			border: 1px $gray-lighter solid;
+			background-color: $white;
+		}
+
+		&.active {
+			> * {
+				border: 1px $gray-lighter solid;
+				background-color: $blue;
+				color: $white;
+			}
+		}
+
+		&:not(.disabled):not(.active) {
+			> * {
+				&:hover, &:focus {
+					background-color: $gray-lighter;
+				}
+			}
+		}
+
+		&.disabled {
+			pointer-events: none;
+		}
+	}
+}

@@ -5,31 +5,57 @@ declare(strict_types=1);
 namespace App\Presenter;
 
 use App\Repository\CategoriesRepository;
-use App\Repository\UsersRepository;
+use App\Repository\RecipesRepository;
+use Core\Database\SqlBuilder;
+use Core\Utils\Paginator;
 
+/**
+ * @phpstan-import-type CategoriesData from CategoriesRepository
+ */
 class RecipesPresenter extends BasePresenter
 {
 
 	/** @inject */
-	public UsersRepository $usersRepository;
+	public CategoriesRepository $categoriesRepository;
 
 	/** @inject */
-	public CategoriesRepository $categoriesRepository;
+	public RecipesRepository $recipesRepository;
+
+	/** @phpstan-var CategoriesData */
+	protected array $categories;
+
+	/** @var mixed[] */
+	protected array $recipes;
+
+	protected Paginator $paginator;
 
 	public function __construct()
 	{
-		$this->view = null;
+		$this->view = 'recipes';
 	}
 
 	public function action(): void
 	{
-		if ($this->isUserLoggedIn()) {
-			dump($this->getUser());
-		} else {
-			dump('user not logged in');
-		}
-		dump(
-			$this->categoriesRepository->findAllNested()
+		$this->categories = $this->categoriesRepository->findAllAsData();
+
+		$this->paginator = new Paginator();
+
+		// TODO: get from query
+		$filter = null;
+		$itemsPerPage = 20;
+		$pageNumber = 1;
+
+		$this->paginator->setItemsPerPage($itemsPerPage);
+		$this->paginator->setPageNumber($pageNumber);
+		$this->paginator->setItemsCount($this->recipesRepository->count($filter));
+
+		$this->recipes = $this->recipesRepository->findAndJoinCategoryAndUserAndMainImage(
+			null,
+			[
+				RecipesRepository::TABLE . '.name' => SqlBuilder::ORDER_ASC,
+			],
+			$this->paginator->getLimit(),
+			$this->paginator->getOffset(),
 		);
 	}
 

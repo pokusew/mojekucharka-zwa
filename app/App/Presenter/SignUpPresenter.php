@@ -39,6 +39,8 @@ class SignUpPresenter extends BasePresenter
 	{
 		$form = new Form('signUp');
 
+		$form->setAction($this->link('this'));
+
 		$form->addText('username', 'Uživatelské jméno')
 			->setPlaceholder('Uživatelské jméno')
 			->setRequired()

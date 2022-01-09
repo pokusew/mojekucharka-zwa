@@ -28,6 +28,8 @@ class SignForgottenPresenter extends BasePresenter
 	{
 		$form = new Form('signForgotten');
 
+		$form->setAction($this->link('this'));
+
 		$form->addText('email', 'E-mail')
 			->setType(TextInput::TYPE_EMAIL)
 			->setRequired()

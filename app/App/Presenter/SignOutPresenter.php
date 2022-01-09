@@ -27,6 +27,8 @@ class SignOutPresenter extends BasePresenter
 	{
 		$form = new Form('signOut');
 
+		$form->setAction($this->link('this'));
+
 		$form->addSubmit('submit', 'Odhlásit se');
 
 		$form->onSuccess[] = function (Form $form) {

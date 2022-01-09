@@ -42,6 +42,8 @@ class SignInPresenter extends BasePresenter
 	{
 		$form = new Form('signIn');
 
+		$form->setAction($this->link('this'));
+
 		$form->addText('usernameOrEmail', 'Uživatelské jméno nebo e-mail')
 			->setRequired()
 			// see https://stackoverflow.com/questions/53173806/what-should-be-correct-autocomplete-for-username-email

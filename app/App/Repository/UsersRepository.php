@@ -10,7 +10,7 @@ use PDOException;
 class UsersRepository extends Repository
 {
 
-	protected string $tableName = 'users';
+	public const TABLE = 'users';
 
 	/**
 	 * Tries to create a new user with the given parameters.

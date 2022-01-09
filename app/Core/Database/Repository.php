@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
-use Core\Exceptions\InvalidStateException;
 use PDO;
+use RuntimeException;
 
 /**
  * Contains useful methods for working with a specific table.
@@ -13,7 +13,7 @@ use PDO;
 abstract class Repository
 {
 
-	protected string $tableName = '';
+	const TABLE = '';
 
 	protected Connection $connection;
 
@@ -23,43 +23,26 @@ abstract class Repository
 	}
 
 	/**
-	 * Ensures that the {@see Repository::$tableName} is not empty (i.e. it was set by the subclass).
-	 * @throws InvalidStateException if the tableName is empty
+	 * Gets a new instance of the SQL builder
+	 * @return SqlBuilder a new instance
 	 */
-	protected function ensureValidTableName(): void
+	public function getSqlBuilder(): SqlBuilder
 	{
-		if ($this->tableName === '') {
-			throw new InvalidStateException('Table name must not be empty.');
-		}
+		return new SqlBuilder();
 	}
 
 	/**
-	 * Finds one record (row) in the table.
-	 * @param array<string, mixed>|null $where
-	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
-	 * @param array<string, int>|null $orderBy see {@see SqlBuilder::order()}
-	 * @return array<string, mixed>|null associative array (column name => value)
+	 * Prepares the given query, executes it with the given params
+	 * and fetches one rows with `fetch(PDO::FETCH_ASSOC)`.
+	 * @param string $query raw SQL query but with placeholders
+	 * @param array<string, mixed>|null $params values for placeholders
+	 * @return array<string, mixed>|null associative array (column name => value), `null` when there is no result
 	 */
-	public function findOne(
-		?array $where = null,
-		?array $columns = null,
-		?array $orderBy = null
-	): ?array
+	public function fetchOneAssoc(string $query, ?array $params): ?array
 	{
-		$this->ensureValidTableName();
-
-		$params = [];
-
-		$sql = (new SqlBuilder())
-			->select($this->tableName, $columns)
-			->where($where, $params)
-			->order($orderBy)
-			->limit(1)
-			->getQuery();
-
 		$dbh = $this->connection->get();
 
-		$sth = $dbh->prepare($sql);
+		$sth = $dbh->prepare($query);
 
 		$sth->execute($params);
 
@@ -70,6 +53,49 @@ abstract class Repository
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Prepares the given query, executes it with the given params
+	 * and fetches all rows with `fetchAll(PDO::FETCH_ASSOC)`.
+	 * @param string $query raw SQL query but with placeholders
+	 * @param array<string, mixed>|null $params values for placeholders
+	 * @return array<int, array<string, mixed>> numbered array of associative arrays (column name => value)
+	 */
+	public function fetchAllAssoc(string $query, ?array $params): array
+	{
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare($query);
+
+		$sth->execute($params);
+
+		return $sth->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Finds one record (row) in the table.
+	 * @param array<string, mixed>|null $where
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
+	 * @param array<string, int>|null $orderBy see {@see SqlBuilder::order()}
+	 * @return array<string, mixed>|null associative array (column name => value), `null` when there is no result
+	 */
+	public function findOne(
+		?array $where = null,
+		?array $columns = null,
+		?array $orderBy = null
+	): ?array
+	{
+		$params = [];
+
+		$query = $this->getSqlBuilder()
+			->select(static::TABLE, $columns)
+			->where($where, $params)
+			->order($orderBy)
+			->limit(1)
+			->getQuery();
+
+		return $this->fetchOneAssoc($query, $params);
 	}
 
 	/**
@@ -89,24 +115,45 @@ abstract class Repository
 		?int $offset = null
 	): ?array
 	{
-		$this->ensureValidTableName();
-
 		$params = [];
 
-		$sql = (new SqlBuilder())
-			->select($this->tableName, $columns)
+		$query = $this->getSqlBuilder()
+			->select(static::TABLE, $columns)
 			->where($where, $params)
 			->order($orderBy)
 			->limit($limit, $offset)
 			->getQuery();
 
-		$dbh = $this->connection->get();
+		return $this->fetchAllAssoc($query, $params);
+	}
 
-		$sth = $dbh->prepare($sql);
+	/**
+	 * Counts records (rows) in the table.
+	 * @param array<string, mixed>|null $where
+	 * @param ?string $column the column name to use in COUNT(), set to `*` on `null`
+	 * @return int number of rows
+	 */
+	public function count(
+		?array $where = null,
+		?string $column = null
+	): int
+	{
+		$value = $column ?? '*';
 
-		$sth->execute($params);
+		$params = [];
 
-		return $sth->fetchAll(PDO::FETCH_ASSOC);
+		$query = $this->getSqlBuilder()
+			->select(static::TABLE, ['total' => "COUNT($value)"])
+			->where($where, $params)
+			->getQuery();
+
+		$result = $this->fetchOneAssoc($query, $params);
+
+		if (!is_int($result['total'])) {
+			throw new RuntimeException('Unexpected result for count query.');
+		}
+
+		return $result['total'];
 	}
 
 }

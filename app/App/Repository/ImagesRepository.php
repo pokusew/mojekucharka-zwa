@@ -9,6 +9,6 @@ use Core\Database\Repository;
 class ImagesRepository extends Repository
 {
 
-	protected string $tableName = 'images';
+	public const TABLE = 'images';
 
 }

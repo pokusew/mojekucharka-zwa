@@ -24,7 +24,8 @@ class SqlBuilder
 	protected string $sql = '';
 
 	/**
-	 * @param string $from i.e. table name
+	 * Starts query building with SELECT.
+	 * @param string $from i.e. table name, or table name AS something
 	 * @param array<string|int, string>|null $columns
 	 * @return $this
 	 */
@@ -61,6 +62,40 @@ class SqlBuilder
 		$this->sql = "SELECT $what FROM $from";
 
 		return $this;
+	}
+
+	/**
+	 * Adds $type JOIN $what ON $on.
+	 * @param string $type
+	 * @param string $what
+	 * @param string $on
+	 * @return $this
+	 */
+	public function join(string $type, string $what, string $on): self
+	{
+		$this->sql .= " $type JOIN $what ON $on";
+		return $this;
+	}
+
+	/**
+	 * Adds LEFT JOIN $what ON $on.
+	 * @param string $what
+	 * @param string $on
+	 * @return $this
+	 */
+	public function leftJoin(string $what, string $on): self
+	{
+		return $this->join('LEFT', $what, $on);
+	}
+
+	/**
+	 * Converts the given column name so that it can be used as a placeholder name.
+	 * @param string $column table column name
+	 * @return void a name that can be used as a placeholder name
+	 */
+	public static function columnNameToPlaceholder(string $column): string /* @phpstan-ignore-line */
+	{
+		return preg_replace('/[^a-zA-Z0-9_]/', '_', $column);
 	}
 
 	/**
@@ -102,9 +137,10 @@ class SqlBuilder
 				continue;
 			}
 
-			$parts[] = "$column = :$column";
+			$placeholder = self::columnNameToPlaceholder($column);
+			$parts[] = "$column = :$placeholder";
 			if ($params !== null) {
-				$params[$column] = $value;
+				$params[$placeholder] = $value;
 			}
 		}
 
@@ -185,7 +221,7 @@ class SqlBuilder
 
 		$this->sql .= " LIMIT $rowCount";
 
-		if ($offset !== null) {
+		if ($offset !== null && $offset !== 0) {
 			$this->sql .= " OFFSET $offset";
 		}
 

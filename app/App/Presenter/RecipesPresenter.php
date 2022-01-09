@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Repository\CategoriesRepository;
 use App\Repository\UsersRepository;
 
 class RecipesPresenter extends BasePresenter
@@ -11,6 +12,9 @@ class RecipesPresenter extends BasePresenter
 
 	/** @inject */
 	public UsersRepository $usersRepository;
+
+	/** @inject */
+	public CategoriesRepository $categoriesRepository;
 
 	public function __construct()
 	{
@@ -24,11 +28,9 @@ class RecipesPresenter extends BasePresenter
 		} else {
 			dump('user not logged in');
 		}
-		dump($this->usersRepository->findOneByEmailOrUsername('pokusew@seznam.cz', [
-			'id',
-			'username',
-			'registered_from_ip' => 'INET6_NTOA(registered_from_ip)',
-		]));
+		dump(
+			$this->categoriesRepository->findAllNested()
+		);
 	}
 
 }

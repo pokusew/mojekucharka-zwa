@@ -76,7 +76,7 @@ abstract class Repository
 	/**
 	 * Finds one record (row) in the table.
 	 * @param array<string, mixed>|null $where
-	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allowed
 	 * @param array<string, int>|null $orderBy see {@see SqlBuilder::order()}
 	 * @return array<string, mixed>|null associative array (column name => value), `null` when there is no result
 	 */
@@ -101,7 +101,7 @@ abstract class Repository
 	/**
 	 * Finds records (rows) in the table.
 	 * @param array<string, mixed>|null $where
-	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allowed
 	 * @param array<string, int>|null $orderBy see {@see SqlBuilder::order()}
 	 * @param int|null $limit
 	 * @param int|null $offset

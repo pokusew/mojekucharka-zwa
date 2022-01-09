@@ -56,24 +56,36 @@ use Core\Template\Html;
 					</a>
 				</li>
 			</ul>
-			<ul class="right">
-				<li>
-					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignIn:')]) ?>
-						href="<?= $this->link('SignIn:') ?>"
-					>
-						Přihlášení
-					</a>
-				</li>
-				<li>
-					<a
-						<?= Html::attrClass(['active' => $this->isLinkCurrent('SignUp:')]) ?>
-						href="<?= $this->link('SignUp:') ?>"
-					>
-						Registrace
-					</a>
-				</li>
-			</ul>
+			<?php if ($this->isUserLoggedIn()): ?>
+				<ul class="right">
+					<li>
+						<a
+							href="<?= $this->link('SignOut:') ?>"
+						>
+							<?= htmlspecialchars($this->getUser()->getDisplayName()) ?>
+						</a>
+					</li>
+				</ul>
+			<?php else: ?>
+				<ul class="right">
+					<li>
+						<a
+							<?= Html::attrClass(['active' => $this->isLinkCurrent('SignIn:')]) ?>
+							href="<?= $this->link('SignIn:') ?>"
+						>
+							Přihlášení
+						</a>
+					</li>
+					<li>
+						<a
+							<?= Html::attrClass(['active' => $this->isLinkCurrent('SignUp:')]) ?>
+							href="<?= $this->link('SignUp:') ?>"
+						>
+							Registrace
+						</a>
+					</li>
+				</ul>
+			<?php endif; ?>
 		</nav>
 
 	</div>

@@ -16,7 +16,7 @@ parameters:
 			message: '#Access to protected property [a-zA-Z0-9\\_]+Presenter::\$[a-zA-Z0-9\\_]+#'
 			path: **/templates/*.php
 		-
-			message: '#Call to protected method (link|isLinkCurrent)#'
+			message: '#Call to protected method (link|isLinkCurrent|getUser|isUserLoggedIn)#'
 			path: **/templates/*.php
 		-
 			message: '#Call to an undefined method Core\\Forms\\Controls\\BaseControl::[a-zA-Z0-9\\_]+#'

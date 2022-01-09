@@ -6,9 +6,11 @@ namespace App\Presenter;
 
 use App\Limits;
 use App\Repository\UsersRepository;
+use App\Security\SessionUser;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
 use Core\Utils\Passwords;
+use DateTime;
 
 class SignInPresenter extends BasePresenter
 {
@@ -76,7 +78,9 @@ class SignInPresenter extends BasePresenter
 
 		$user = $this->usersRepository->findOneByEmailOrUsername($usernameOrEmail->getValue(), [
 			'id',
+			'username',
 			'name',
+			'email',
 			'email_verified_at',
 			'password',
 		]);
@@ -96,12 +100,23 @@ class SignInPresenter extends BasePresenter
 
 		if (!$this->passwords->verify($password->getValue(), $user['password'])) {
 			$form->setGlobalError('Neplatné přihlašovácí údaje.');
-			// TODO: store login failure in db
+			// TODO: log unsuccessful login metadata in the logins table in the db
 			return;
 		}
 
-		// TODO: store user login in session
-		// TODO: store login success in db
+		$sessionUser = new SessionUser(
+			$user['id'],
+			$user['username'],
+			$user['name'],
+			$user['email'],
+			new DateTime(),
+			$this->httpRequest->remoteAddress,
+		);
+
+		$this->session->regenerateId();
+		$this->session->set('user', $sessionUser);
+
+		// TODO: log successful login metadata in the logins table in the db
 
 		$this->redirect('Recipes:');
 	}

@@ -19,6 +19,11 @@ class RecipesPresenter extends BasePresenter
 
 	public function action(): void
 	{
+		if ($this->isUserLoggedIn()) {
+			dump($this->getUser());
+		} else {
+			dump('user not logged in');
+		}
 		dump($this->usersRepository->findOneByEmailOrUsername('pokusew@seznam.cz', [
 			'id',
 			'username',

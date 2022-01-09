@@ -18,6 +18,8 @@ class SignOutPresenter extends BasePresenter
 
 	public function action(): void
 	{
+		$this->ensureUserLoggedIn();
+
 		$this->signOutForm = $this->createSignOutForm();
 
 		$this->signOutForm->process($this->httpRequest);
@@ -40,9 +42,9 @@ class SignOutPresenter extends BasePresenter
 
 	private function handleSignOutFormSuccess(Form $form): void
 	{
-		// dump('handleSignOutFormSuccess', $form);
-		// exit(0);
-		$this->redirect('Home:');
+		$this->session->delete('user');
+		// TODO: add message (successful logout)
+		$this->redirect('SignIn:');
 	}
 
 }

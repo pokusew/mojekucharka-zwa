@@ -175,7 +175,9 @@ class Helpers
 			false,
 			$prevPageNumber === null,
 		);
-		$prevPageItem->getChildren()[0]->setAttribute('aria-label', 'Předchozí');
+		if ($prevPageNumber !== null) {
+			$prevPageItem->getChildren()[0]->setAttribute('aria-label', 'Předchozí');
+		}
 		$prevPageItem->getChildren()[0]->setHtml('<span aria-hidden="true">&laquo;</span>');
 
 		$list->insert(null, $prevPageItem);
@@ -198,7 +200,9 @@ class Helpers
 			false,
 			$nextPageNumber === null,
 		);
-		$nextPageItem->getChildren()[0]->setAttribute('aria-label', 'Následující');
+		if ($nextPageNumber !== null) {
+			$nextPageItem->getChildren()[0]->setAttribute('aria-label', 'Následující');
+		}
 		$nextPageItem->getChildren()[0]->setHtml('<span aria-hidden="true">&raquo;</span>');
 
 		$list->insert(null, $nextPageItem);

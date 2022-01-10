@@ -15,7 +15,7 @@ $recipe = $this->recipe;
 
 $title = $recipe['name'];
 
-$isUsersOwnRecipe = $recipe['user_id'] === $this->getUser()->getId();
+$isUsersOwnRecipe = $this->isUserLoggedIn() && $recipe['user_id'] === $this->getUser()->getId();
 
 $createdAt = Helpers::ds($recipe['created_at']);
 $changedAt = isset($recipe['changed_at']) ? Helpers::ds($recipe['changed_at']) : null;

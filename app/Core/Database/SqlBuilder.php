@@ -137,8 +137,15 @@ class SqlBuilder
 				continue;
 			}
 
+			$comparator = SqlComparator::EQUALS;
+
+			if ($value instanceof SqlComparator) {
+				$comparator = $value->getOperator();
+				$value = $value->getValue();
+			}
+
 			$placeholder = self::columnNameToPlaceholder($column);
-			$parts[] = "$column = :$placeholder";
+			$parts[] = "$column $comparator :$placeholder";
 			if ($params !== null) {
 				$params[$placeholder] = $value;
 			}

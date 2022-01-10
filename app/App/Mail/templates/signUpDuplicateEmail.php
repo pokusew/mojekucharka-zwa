@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @var ?string $key
  */
 
-$subject = 'Opakováná registrace';
+$subject = 'Opakovaná registrace';
 
 ?>
 <p>

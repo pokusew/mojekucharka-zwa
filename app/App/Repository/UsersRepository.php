@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Limits;
 use Core\Database\Repository;
 use PDOException;
 
@@ -53,7 +54,7 @@ class UsersRepository extends Repository
 						INET6_ATON(:registrationIp)
 					)
 				;
-			SQL
+				SQL
 			);
 
 			$sth->execute([
@@ -111,6 +112,32 @@ class UsersRepository extends Repository
 	}
 
 	/**
+	 * @param string $passwordResetKey
+	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
+	 * @return array<string, mixed>|null
+	 */
+	public function findOneByValidPasswordResetKey(string $passwordResetKey, ?array $columns = null): ?array
+	{
+		$expirationInterval = Limits::PASSWORD_RESET_KEY_EXPIRATION;
+
+		$customWhere
+			= "WHERE password_reset_key = :passwordResetKey"
+			. " AND (NOW() < (password_reset_key_created_at + INTERVAL $expirationInterval))";
+
+		$query = $this->getSqlBuilder()
+			->select(self::TABLE, $columns)
+			->append($customWhere)
+			->limit(1)
+			->getQuery();
+
+		$params = [
+			'passwordResetKey' => $passwordResetKey,
+		];
+
+		return $this->fetchOneAssoc($query, $params);
+	}
+
+	/**
 	 * @param string $emailOrUsername
 	 * @param array<string|int, string>|null $columns will use `*` if `null` is given, empty array not allows
 	 * @return array<string, mixed>|null
@@ -136,7 +163,6 @@ class UsersRepository extends Repository
 	 */
 	public function verifyEmail(string $emailVerificationKey, string $verificationIp): bool
 	{
-
 		$dbh = $this->connection->get();
 
 		// TODO: maybe limit max email verification key age
@@ -146,8 +172,8 @@ class UsersRepository extends Repository
 				email_verified_from_ip = INET6_ATON(:verificationIp),
 				email_verification_key = NULL,
 				email_verification_key_created_at = NULL
-			WHERE email_verification_key = :emailVerificationKey LIMIT 1
-		SQL
+			WHERE email_verification_key = :emailVerificationKey LIMIT 1;
+			SQL
 		);
 
 		$sth->execute([
@@ -156,7 +182,98 @@ class UsersRepository extends Repository
 		]);
 
 		return $sth->rowCount() === 1;
+	}
 
+	/**
+	 * Tries to reset the password of a user using the given password reset key.
+	 * @param string $passwordResetKey the password reset key
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool `true` if successful, `false` otherwise (typically invalid or expired key)
+	 */
+	public function resetPassword(string $passwordResetKey, string $newPasswordHash, string $requestIp): bool
+	{
+		$dbh = $this->connection->get();
+
+		$expirationInterval = Limits::PASSWORD_RESET_KEY_EXPIRATION;
+
+		$sth = $dbh->prepare(<<<SQL
+			UPDATE users SET
+				password = :newPasswordHash,
+				password_changed_at = NOW(),
+				password_changed_from_ip = INET6_ATON(:requestIp),
+			    password_reset_key = NULL,
+				password_reset_key_created_at = NULL
+			WHERE
+				password_reset_key = :passwordResetKey
+				AND (NOW() < (password_reset_key_created_at + INTERVAL $expirationInterval))
+			LIMIT 1;
+			SQL
+		);
+
+		$sth->execute([
+			'passwordResetKey' => $passwordResetKey,
+			'newPasswordHash' => $newPasswordHash,
+			'requestIp' => $requestIp
+		]);
+
+		return $sth->rowCount() === 1;
+	}
+
+	/**
+	 * Changes the password of the user with the given id.
+	 * @param int $id the user id
+	 * @param string $newPasswordHash the hash of the new password
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool `true` if successful, `false` otherwise
+	 */
+	public function changePassword(int $id, string $newPasswordHash, string $requestIp): bool
+	{
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
+			UPDATE users SET
+			    password = :newPasswordHash,
+				password_changed_at = NOW(),
+				password_changed_from_ip = INET6_ATON(:requestIp)
+			WHERE id = :id LIMIT 1;
+			SQL
+		);
+
+		$sth->execute([
+			'id' => $id,
+			'newPasswordHash' => $newPasswordHash,
+			'requestIp' => $requestIp,
+		]);
+
+		return $sth->rowCount() === 1;
+	}
+
+	/**
+	 * Sets the password reset key of the user with the given email.
+	 * @param string $email the user's email
+	 * @param string $passwordResetKey the new password reset key
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool `true` if successful, `false` otherwise
+	 */
+	public function setPasswordResetKey(string $email, string $passwordResetKey, string $requestIp): bool
+	{
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
+			UPDATE users SET
+			    password_reset_key = :passwordResetKey,
+				password_reset_key_created_at = NOW()
+			WHERE email = :email LIMIT 1;
+			SQL
+		);
+
+		$sth->execute([
+			'email' => $email,
+			'passwordResetKey' => $passwordResetKey,
+			// 'requestIp' => $requestIp,
+		]);
+
+		return $sth->rowCount() === 1;
 	}
 
 }

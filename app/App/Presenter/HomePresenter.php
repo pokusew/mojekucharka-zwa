@@ -7,14 +7,9 @@ namespace App\Presenter;
 class HomePresenter extends BasePresenter
 {
 
-	public function __construct()
-	{
-		$this->view = 'home';
-	}
-
 	public function action(): void
 	{
-
+		$this->view = 'home';
 	}
 
 }

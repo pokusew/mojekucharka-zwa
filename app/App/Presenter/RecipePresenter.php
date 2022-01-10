@@ -8,6 +8,7 @@ use App\Limits;
 use App\Repository\CategoriesRepository;
 use App\Repository\RecipesRepository;
 use Core\Exceptions\BadRequestException;
+use Core\Forms\Controls\Button;
 use Core\Forms\Controls\CheckBox;
 use Core\Forms\Controls\Select;
 use Core\Forms\Controls\TextArea;
@@ -27,21 +28,18 @@ class RecipePresenter extends BasePresenter
 	/** @inject */
 	public CategoriesRepository $categoriesRepository;
 
-	/** @var array<string, mixed> */
-	protected array $recipe;
+	/** @var array<string, mixed>|null */
+	protected ?array $recipe = null;
 
 	/** @phpstan-var CategoriesData */
 	protected array $categories;
 
 	protected Form $recipeForm;
 
-	public function __construct()
-	{
-		$this->view = 'recipe';
-	}
-
 	public function actionView(int $id): void
 	{
+		$this->view = 'recipe';
+
 		$userId = $this->isUserLoggedIn() ? $this->getUser()->getId() : null;
 
 		if ($userId === null) {
@@ -105,6 +103,20 @@ class RecipePresenter extends BasePresenter
 		$this->setRecipeFormInitialValues();
 	}
 
+	public function actionNew(): void
+	{
+		$this->view = 'recipe-edit';
+
+		// user must be logged in to create their own recipes
+		$this->ensureUserLoggedIn();
+
+		$this->categories = $this->categoriesRepository->findAllAsData();
+
+		$this->recipeForm = $this->createRecipeForm();
+
+		$this->recipeForm->process($this->httpRequest);
+	}
+
 	private function createRecipeForm(): Form
 	{
 		$form = new Form('recipe');
@@ -140,7 +152,9 @@ class RecipePresenter extends BasePresenter
 
 		$form->addCheckBox('public', 'Veřejný recept');
 
-		$form->addSubmit('submit', 'Upravit');
+		$form->addSubmit('edit', 'Upravit', 'edit');
+
+		$form->addSubmit('delete', 'Smazat', 'delete');
 
 		$form->onSuccess[] = function (Form $form) {
 			$this->handleRecipeFormSuccess($form);
@@ -151,6 +165,10 @@ class RecipePresenter extends BasePresenter
 
 	private function setRecipeFormInitialValues(): void
 	{
+		if ($this->recipe === null) {
+			return;
+		}
+
 		/** @var TextInput $name */
 		$name = $this->recipeForm['name'];
 		/** @var TextArea $ingredients */
@@ -181,21 +199,45 @@ class RecipePresenter extends BasePresenter
 		$category = $this->recipeForm['category'];
 		/** @var CheckBox $public */
 		$public = $this->recipeForm['public'];
+		/** @var Button $deleteButton */
+		$deleteButton = $this->recipeForm['delete'];
 
-		// TODO
-		$this->recipesRepository->updateUsersRecipe(
-			$this->recipe['id'],
-			$this->getUser()->getId(),
-			$public->isChecked(),
-			$name->getValue(),
-			(int) $category->getValue(),
-			$this->recipe['main_image_id'],
-			$ingredients->getValue(),
-			$instructions->getValue(),
-			$this->recipe['private_rating'],
-		);
+		if ($this->recipe !== null && $deleteButton->wasUsedForSubmission()) {
+			$this->recipesRepository->deleteRecipe(
+				$this->recipe['id'],
+				$this->getUser()->getId(),
+			);
+			$this->redirect('Recipes:');
+		}
 
-		$this->redirect('Recipe:view', ['id' => $this->recipe['id']]);
+		if ($this->recipe === null) {
+			// create a new recipe
+			$id = $this->recipesRepository->createRecipe(
+				$this->getUser()->getId(),
+				$public->isChecked(),
+				$name->getValue(),
+				(int) $category->getValue(),
+				null,
+				$ingredients->getValue(),
+				$instructions->getValue(),
+				null,
+			);
+			$this->redirect('Recipe:view', ['id' => $id]);
+		} else {
+			// edit an existing recipe
+			$this->recipesRepository->updateUsersRecipe(
+				$this->recipe['id'],
+				$this->getUser()->getId(),
+				$public->isChecked(),
+				$name->getValue(),
+				(int) $category->getValue(),
+				$this->recipe['main_image_id'],
+				$ingredients->getValue(),
+				$instructions->getValue(),
+				$this->recipe['private_rating'],
+			);
+			$this->redirect('Recipe:view', ['id' => $this->recipe['id']]);
+		}
 	}
 
 }

@@ -9,7 +9,12 @@ declare(strict_types=1);
  * @var Core\Routing\Router $router
  */
 
-$title = 'Uživatel TODO';
+use App\Helpers;
+
+$displayName = $this->user['name'] ?? $this->user['username'];
+$registeredAt = Helpers::ds($this->user['registered_at']);
+
+$title = "Uživatel $displayName";
 
 ?>
 <body class="app">
@@ -19,7 +24,11 @@ $title = 'Uživatel TODO';
 	<main class="app-content">
 		<div class="container">
 
-			<h1>Uživatel <?= htmlspecialchars($this->user['username']) ?></h1>
+			<h1><?= htmlspecialchars($title) ?></h1>
+
+			<p>
+				Datum registrace: <?= Helpers::timeEl($registeredAt) ?>
+			</p>
 
 		</div>
 	</main>

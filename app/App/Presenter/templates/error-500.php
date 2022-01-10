@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Presenter\HomePresenter $this
+ * @var App\Presenter\ErrorPresenter $this
  * @var Core\Config $config
  * @var Core\Assets $assets
  * @var Core\Routing\Router $router

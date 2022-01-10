@@ -13,7 +13,7 @@ use App\Helpers;
 
 $recipe = $this->recipe;
 
-$title = $recipe['name'];
+$title = $recipe !== null ? $recipe['name'] : 'Nový recept';
 
 ?>
 <body class="app">
@@ -23,7 +23,7 @@ $title = $recipe['name'];
 	<main class="app-content">
 		<div class="container">
 
-			<h1><?= htmlspecialchars($recipe['name']) ?></h1>
+			<h1><?= htmlspecialchars($title) ?></h1>
 
 			<?= $this->recipeForm->getElem()->startTag() ?>
 
@@ -37,7 +37,11 @@ $title = $recipe['name'];
 
 			<?= Helpers::renderFormControl($this->recipeForm['public']) ?>
 
-			<?= $this->recipeForm['submit']->getElem()->class('btn btn-primary') ?>
+			<?= $this->recipeForm['edit']->getElem()->class('btn btn-primary') ?>
+
+			<?php if ($recipe !== null): ?>
+				<?= $this->recipeForm['delete']->getElem()->class('btn btn-danger') ?>
+			<?php endif; ?>
 
 			<?= $this->recipeForm->getElem()->endTag() ?>
 

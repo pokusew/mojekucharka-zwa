@@ -29,13 +29,10 @@ class RecipesPresenter extends BasePresenter
 
 	protected Paginator $paginator;
 
-	public function __construct()
-	{
-		$this->view = 'recipes';
-	}
-
 	public function action(): void
 	{
+		$this->view = 'recipes';
+
 		$this->categories = $this->categoriesRepository->findAllAsData();
 
 		$this->paginator = new Paginator();

@@ -13,11 +13,6 @@ use Tracy\ILogger;
 class ErrorPresenter extends BasePresenter
 {
 
-	public function __construct()
-	{
-
-	}
-
 	public function action(): void
 	{
 		if ($this->exception instanceof BadRequestException) {

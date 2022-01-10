@@ -38,6 +38,10 @@ $getCategoryName = function (int $id) {
 
 			<h1>Recepty</h1>
 
+			<?php if ($this->isUserLoggedIn()): ?>
+				<a class="btn btn-primary" href="<?= $this->link('Recipe:new') ?>">Nový recept</a>
+			<?php endif; ?>
+
 			<ul>
 				<?php foreach ($this->categories['nested'] as $topLevelCategory): ?>
 

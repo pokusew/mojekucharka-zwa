@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Limits;
 use App\Security\SessionUser;
 use Core\Exceptions\InvalidStateException;
+use Core\Forms\Controls\TextInput;
+use Core\Forms\Form;
 use Core\Http\Session;
 use Core\UI\Presenter;
 
@@ -63,6 +66,81 @@ abstract class BasePresenter extends Presenter
 		}
 
 		return $user;
+	}
+
+	protected function createSignOutForm(): Form
+	{
+		$form = new Form('signOut');
+
+		$form->setAction($this->link('SignOut:'));
+
+		$form->addSubmit('submit', 'Odhlásit se');
+
+		$form->onSuccess[] = function (Form $form) {
+			$this->handleSignOutFormSuccess($form);
+		};
+
+		return $form;
+	}
+
+	private function handleSignOutFormSuccess(Form $form): void
+	{
+		$this->session->delete('user');
+		// TODO: add message (successful logout)
+		$this->redirect('SignIn:');
+	}
+
+	/**
+	 * Adds standard new password fields with full-featured validation.
+	 *
+	 * Designed to be uses throughout the app in signUp, passwordReset, and passwordChange forms.
+	 *
+	 * @param Form $form
+	 * @param string $passwordName
+	 * @param string $passwordAgainName
+	 * @return void
+	 */
+	public function addNewPasswordWithConfirmationToForm(
+		Form $form,
+		string $passwordName = 'password',
+		string $passwordAgainName = 'passwordAgain'
+	)
+	{
+		$password = $form->addText($passwordName, 'Heslo')
+			->setType(TextInput::TYPE_PASSWORD)
+			->setAutocomplete('new-password')
+			->setPlaceholder('Heslo')
+			->setRequired()
+			->setMinLength(Limits::PASSWORD_MIN_LENGTH)
+			->setMaxLength(Limits::PASSWORD_MAX_LENGTH)
+			->addPattern('[0-9]', 'Heslo musí obsahovat alespoň jedno číslo.')
+			->addPattern('\p{L}', 'Heslo musí obsahovat alespoň jedno písmeno.');
+
+		$passwordAgain = $form->addText($passwordAgainName, 'Heslo znovu pro kontrolu')
+			->setType(TextInput::TYPE_PASSWORD)
+			->setAutocomplete('new-password')
+			->setPlaceholder('Heslo');
+
+		$password->getElem()
+			->setAttribute('data-trigger-validation', $passwordAgain->getElem()->name);
+
+		$passwordAgain->getElem()
+			->setAttribute('data-equal-to', $password->getElem()->name)
+			->setAttribute('data-equal-to-msg', 'Zadaná hesla se neshodují.');
+
+		$form->customValidators[] = function (Form $form) use ($passwordName, $passwordAgainName) {
+			/** @var TextInput $password */
+			$password = $form[$passwordName];
+			/** @var TextInput $passwordAgain */
+			$passwordAgain = $form[$passwordAgainName];
+
+			if ($password->getValue() !== $passwordAgain->getValue()) {
+				$passwordAgain->setError('Zadaná hesla se neshodují.');
+				return false;
+			}
+
+			return true;
+		};
 	}
 
 }

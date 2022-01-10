@@ -4,24 +4,30 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\Service\UsersService;
 use Core\Forms\Controls\TextInput;
 use Core\Forms\Form;
 
 class SignForgottenPresenter extends BasePresenter
 {
 
-	protected Form $signForgottenForm;
+	/** @inject */
+	public UsersService $usersService;
 
-	public function __construct()
-	{
-		$this->view = 'signForgotten';
-	}
+	protected Form $signForgottenForm;
 
 	public function action(): void
 	{
+		$this->view = 'signForgotten';
+
 		$this->signForgottenForm = $this->createSignForgottenForm();
 
 		$this->signForgottenForm->process($this->httpRequest);
+	}
+
+	public function actionSuccess(): void
+	{
+		$this->view = 'signForgotten-success';
 	}
 
 	private function createSignForgottenForm(): Form
@@ -48,9 +54,14 @@ class SignForgottenPresenter extends BasePresenter
 
 	private function handleSignForgottenFormSuccess(Form $form): void
 	{
-		// dump('handleSignForgottenFormSuccess', $form);
-		// exit(0);
-		$this->redirect('Home:');
+		/** @var TextInput $email */
+		$email = $form['email'];
+
+		// we do not care about the result as we do not want to leak the info
+		// if such an e-mail is associated to an existing user account
+		$this->usersService->createAndSendPasswordResetKey($email->getValue(), $this->httpRequest->remoteAddress);
+
+		$this->redirect('SignForgotten:success');
 	}
 
 }

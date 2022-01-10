@@ -63,6 +63,7 @@ class RouterFactory
 				},
 			],
 		));
+		$router->addRoute(new SimpleRoute('/recipe/new', 'Recipe', 'new'));
 
 		// /profile/:username
 		$usernameLimit = '{' . Limits::USERNAME_MIN_LENGTH . ',' . Limits::USERNAME_MAX_LENGTH . '}';
@@ -92,8 +93,22 @@ class RouterFactory
 		$router->addRoute(new SimpleRoute('/sign/in', 'SignIn'));
 		$router->addRoute(new SimpleRoute('/sign/in/not-verified', 'SignIn', 'emailNotVerified'));
 		$router->addRoute(new SimpleRoute('/sign/forgotten', 'SignForgotten'));
+		$router->addRoute(new SimpleRoute('/sign/forgotten/success', 'SignForgotten', 'success'));
+
+		// /reset-password/:key
+		$router->addRoute(new RegexRoute(
+			'#^/reset-password/(?<key>[^/]+)$#',
+			function (callable $getParam) {
+				$key = $getParam('key');
+				return "/reset-password/$key";
+			},
+			'ResetPassword',
+		));
+
 		$router->addRoute(new SimpleRoute('/sign/out', 'SignOut'));
 		$router->addRoute(new SimpleRoute('/settings', 'Settings'));
+		$router->addRoute(new SimpleRoute('/settings/change-password', 'Settings', 'changePassword'));
+		$router->addRoute(new SimpleRoute('/settings/edit-profile', 'Settings', 'editProfile'));
 
 		return $router;
 	}

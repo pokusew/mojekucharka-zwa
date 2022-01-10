@@ -60,7 +60,7 @@ use Core\Template\Html;
 				<ul class="right">
 					<li>
 						<a
-							href="<?= $this->link('SignOut:') ?>"
+							href="<?= $this->link('Settings:') ?>"
 						>
 							<?= htmlspecialchars($this->getUser()->getDisplayName()) ?>
 						</a>

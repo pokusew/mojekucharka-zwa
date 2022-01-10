@@ -18,14 +18,13 @@ class ProfilePresenter extends BasePresenter
 	 */
 	protected $user;
 
-	public function __construct()
-	{
-		$this->view = 'profile';
-	}
-
 	public function actionView(string $username): void
 	{
-		$user = $this->usersRepository->findOneByUsername($username);
+		$this->view = 'profile';
+
+		$user = $this->usersRepository->findOneByUsername($username, [
+			'id', 'username', 'name', 'registered_at',
+		]);
 
 		if ($user === null) {
 			throw new BadRequestException("User with username '$username' not found.", 404);

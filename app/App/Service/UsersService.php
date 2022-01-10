@@ -107,4 +107,111 @@ class UsersService
 		$this->mailer->send($mail);
 	}
 
+	/**
+	 * Changes user's password.
+	 *
+	 * @param int $userId
+	 * @param string $currentPassword raw password (hash will be calculated within this function)
+	 * @param string $newPassword raw password (hash will be calculated within this function)
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @throws UserChangePasswordException
+	 */
+	public function changeUserPassword(
+		int $userId,
+		string $currentPassword,
+		string $newPassword,
+		string $requestIp
+	): void
+	{
+		$user = $this->usersRepository->findOne(['id' => $userId], [
+			'id',
+			'email',
+			'password',
+		]);
+
+		if ($user === null) {
+			throw new UserChangePasswordException(
+				"User with id '$user' not found.",
+				UserChangePasswordException::USER_NOT_FOUND,
+			);
+		}
+
+		if (!$this->passwords->verify($currentPassword, $user['password'])) {
+			throw new UserChangePasswordException(
+				"Invalid current password.",
+				UserChangePasswordException::INVALID_CURRENT_PASSWORD,
+			);
+		}
+
+		$newPasswordHash = $this->passwords->hash($newPassword);
+
+		$this->usersRepository->changePassword($userId, $newPasswordHash, $requestIp);
+
+		$mail = $this->mailGenerator
+			->createFromTemplate('passwordChangedNotification', [])
+			->addTo($user['email']);
+
+		$this->mailer->send($mail);
+	}
+
+	/**
+	 * Generates a new password reset key for a user with the given email.
+	 *
+	 * @param string $email the user's email
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool
+	 */
+	public function createAndSendPasswordResetKey(
+		string $email,
+		string $requestIp
+	): bool
+	{
+		$passwordResetKey = Random::generateHexString();
+
+		if (!$this->usersRepository->setPasswordResetKey($email, $passwordResetKey, $requestIp)) {
+			return false;
+		}
+
+		$mail = $this->mailGenerator
+			->createFromTemplate('passwordReset', [
+				'key' => $passwordResetKey,
+			])
+			->addTo($email);
+
+		$this->mailer->send($mail);
+
+		return true;
+	}
+
+	/**
+	 * Resets user's password.
+	 *
+	 * @param string $email the user's email address (so we don't need to issue another SELECT)
+	 * @param string $passwordResetKey
+	 * @param string $newPassword raw password (hash will be calculated within this function)
+	 * @param string $requestIp the IPv4 or IPv6 address from which the request originated
+	 * @return bool `true` on success, `false` otherwise
+	 */
+	public function resetUserPassword(
+		string $email,
+		string $passwordResetKey,
+		string $newPassword,
+		string $requestIp
+	): bool
+	{
+		$newPasswordHash = $this->passwords->hash($newPassword);
+
+		if (!$this->usersRepository->resetPassword($passwordResetKey, $newPasswordHash, $requestIp)) {
+			return false;
+		}
+
+		$mail = $this->mailGenerator
+			->createFromTemplate('passwordChangedNotification', [])
+			->addTo($email);
+
+		$this->mailer->send($mail);
+
+		return true;
+	}
+
 }

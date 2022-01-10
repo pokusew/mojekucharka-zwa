@@ -58,7 +58,7 @@ class RecipesRepository extends Repository
 
 		$sth->execute([
 			'userId' => $userId,
-			'public' => $public,
+			'public' => (int) $public,
 			'name' => $name,
 			'categoryId' => $categoryId,
 			'mainImageId' => $mainImageId,
@@ -68,7 +68,6 @@ class RecipesRepository extends Repository
 		]);
 
 		return (int) $dbh->lastInsertId();
-
 	}
 
 	/**
@@ -97,7 +96,7 @@ class RecipesRepository extends Repository
 				ingredients = :ingredients,
 				instructions = :instructions,
 				private_rating = :privateRating
-			WHERE id = :id AND user_id = :userId
+			WHERE id = :id AND user_id = :userId;
 			SQL
 		);
 
@@ -114,7 +113,6 @@ class RecipesRepository extends Repository
 		]);
 
 		return $sth->rowCount() === 1;
-
 	}
 
 	/**
@@ -195,6 +193,48 @@ class RecipesRepository extends Repository
 			->getQuery();
 
 		return $this->fetchOneAssoc($query, $params);
+	}
+
+	/**
+	 * Sets the deleted_at filed to the current date.
+	 */
+	public function softDeleteRecipe(int $id, int $userId): bool
+	{
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
+			UPDATE recipes SET
+				deleted_at = NOW()
+			WHERE id = :id AND user_id = :userId;
+			SQL
+		);
+
+		$sth->execute([
+			'id' => $id,
+			'userId' => $userId,
+		]);
+
+		return $sth->rowCount() === 1;
+	}
+
+	/**
+	 * Really delete the recipe.
+	 */
+	public function deleteRecipe(int $id, int $userId): bool
+	{
+		$dbh = $this->connection->get();
+
+		$sth = $dbh->prepare(<<<'SQL'
+			DELETE FROM recipes WHERE id = :id AND user_id = :userId;
+			SQL
+		);
+
+		$sth->execute([
+			'id' => $id,
+			'userId' => $userId,
+		]);
+
+		return $sth->rowCount() === 1;
 	}
 
 }

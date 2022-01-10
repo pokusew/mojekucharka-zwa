@@ -23,13 +23,10 @@ class SignInPresenter extends BasePresenter
 
 	protected Form $signInForm;
 
-	public function __construct()
-	{
-		$this->view = 'signIn';
-	}
-
 	public function action(): void
 	{
+		$this->view = 'signIn';
+
 		$this->signInForm = $this->createSignInForm();
 
 		$this->signInForm->process($this->httpRequest);

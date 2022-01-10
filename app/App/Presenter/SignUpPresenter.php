@@ -18,13 +18,10 @@ class SignUpPresenter extends BasePresenter
 
 	protected Form $signUpForm;
 
-	public function __construct()
-	{
-		$this->view = 'signUp';
-	}
-
 	public function action(): void
 	{
+		$this->view = 'signUp';
+
 		$this->signUpForm = $this->createSignUpForm();
 
 		$this->signUpForm->process($this->httpRequest);
@@ -59,37 +56,7 @@ class SignUpPresenter extends BasePresenter
 			->setRequired()
 			->setMaxLength(Limits::EMAIL_MAX_LENGTH);
 
-		$password = $form->addText('password', 'Heslo')
-			->setType(TextInput::TYPE_PASSWORD)
-			->setAutocomplete('new-password')
-			->setPlaceholder('Heslo')
-			->setRequired()
-			->setMinLength(Limits::PASSWORD_MIN_LENGTH)
-			->setMaxLength(Limits::PASSWORD_MAX_LENGTH)
-			->addPattern('[0-9]', 'Heslo musí obsahovat alespoň jedno číslo.')
-			->addPattern('\p{L}', 'Heslo musí obsahovat alespoň jedno písmeno.');
-
-		$form->addText('passwordAgain', 'Heslo znovu pro kontrolu')
-			->setType(TextInput::TYPE_PASSWORD)
-			->setAutocomplete('new-password')
-			->setPlaceholder('Heslo')
-			->getElem()
-			->setAttribute('data-equal-to', $password->getElem()->name)
-			->setAttribute('data-equal-to-msg', 'Zadaná hesla se neshodují.');
-
-		$form->customValidators[] = function (Form $form) {
-			/** @var TextInput $password */
-			$password = $form['password'];
-			/** @var TextInput $passwordAgain */
-			$passwordAgain = $form['passwordAgain'];
-
-			if ($password->getValue() !== $passwordAgain->getValue()) {
-				$passwordAgain->setError('Zadaná hesla se neshodují.');
-				return false;
-			}
-
-			return true;
-		};
+		$this->addNewPasswordWithConfirmationToForm($form);
 
 		$form->addSubmit('submit', 'Zaregistrovat se');
 

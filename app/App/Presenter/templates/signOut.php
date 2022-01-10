@@ -22,9 +22,7 @@ $title = 'Odhlášení';
 			<h1>Odhlášení</h1>
 
 			<?= $this->signOutForm->getElem()->startTag() ?>
-
 			<?= $this->signOutForm['submit']->getElem()->class('btn btn-primary') ?>
-
 			<?= $this->signOutForm->getElem()->endTag() ?>
 
 		</div>

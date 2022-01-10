@@ -16,5 +16,3 @@ Registraci dokončíte pomocí následujícího odkazu:
 <a href="<?= $emailVerificationLink ?>">
 	<?= $emailVerificationLink ?>
 </a>
-
-

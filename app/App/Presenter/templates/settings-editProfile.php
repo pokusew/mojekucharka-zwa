@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 /**
- * @var App\Presenter\ErrorPresenter $this
+ * @var App\Presenter\SettingsPresenter $this
  * @var Core\Config $config
  * @var Core\Assets $assets
  * @var Core\Routing\Router $router
  */
+
+$title = 'Úprava profilu';
 
 ?>
 <body class="app">
@@ -17,7 +19,9 @@ declare(strict_types=1);
 	<main class="app-content">
 		<div class="container">
 
-			<h1>Stránka nenalezena</h1>
+			<h1>Úprava profilu</h1>
+
+			TODO
 
 		</div>
 	</main>

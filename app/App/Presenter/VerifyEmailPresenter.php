@@ -14,13 +14,10 @@ class VerifyEmailPresenter extends BasePresenter
 
 	protected bool $success = false;
 
-	public function __construct()
-	{
-		$this->view = 'verifyEmail';
-	}
-
 	public function action(string $key): void
 	{
+		$this->view = 'verifyEmail';
+
 		$this->success = $this->usersRepository->verifyEmail($key, $this->httpRequest->remoteAddress);
 	}
 

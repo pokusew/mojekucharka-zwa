@@ -13,6 +13,11 @@ use Core\Database\SqlBuilder;
 use Core\Database\SqlComparator;
 
 /**
+ * Implementation of filter logic for the use is {@see RecipesRepository}.
+ *
+ * It handles parsing (incl. validation) of query params into the the filter params and vice-versa.
+ * It also implements conversion of the filters to WHERE and ORDER BY SQL clauses.
+ *
  * @phpstan-import-type CategoriesData from CategoriesRepository
  * @phpstan-import-type Category from CategoriesRepository
  */

@@ -28,6 +28,10 @@ abstract class BaseControl
 	/** @var string[] */
 	protected array $defaultValidators = [];
 
+	protected ?string $normalizeNewlines = "\n";
+	protected bool $trimStart = true;
+	protected bool $trimEnd = true;
+
 	public function __construct(string $name)
 	{
 		$this->name = $name;
@@ -79,6 +83,7 @@ abstract class BaseControl
 		} else {
 			$this->value = $value;
 		}
+		$this->value = $this->normalize($this->value);
 		return $this;
 	}
 
@@ -206,6 +211,89 @@ abstract class BaseControl
 		// TODO: add support for custom validator function
 
 		return true;
+	}
+
+	/**
+	 * Normalizes the given value according
+	 * to the {@see BaseControl::$normalizeNewlines}, {@see BaseControl::$trimStart}
+	 * and {@see BaseControl::$trimEnd}.
+	 *
+	 * @param string|null $value
+	 * @return string|null the normalized value
+	 */
+	public function normalize(?string $value): ?string
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		if ($this->normalizeNewlines !== null) {
+			$value = str_replace(["\r\n", "\r", "\n"], $this->normalizeNewlines, $value);
+		}
+
+		if ($this->trimStart) {
+			$value = ltrim($value);
+		}
+
+		if ($this->trimEnd) {
+			$value = rtrim($value);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getNormalizeNewlines(): ?string
+	{
+		return $this->normalizeNewlines;
+	}
+
+	/**
+	 * @param string|null $normalizeNewlines
+	 * @return $this
+	 */
+	public function setNormalizeNewlines(?string $normalizeNewlines): self
+	{
+		$this->normalizeNewlines = $normalizeNewlines;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isTrimStart(): bool
+	{
+		return $this->trimStart;
+	}
+
+	/**
+	 * @param bool $trimStart
+	 * @return $this
+	 */
+	public function setTrimStart(bool $trimStart): self
+	{
+		$this->trimStart = $trimStart;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isTrimEnd(): bool
+	{
+		return $this->trimEnd;
+	}
+
+	/**
+	 * @param bool $trimEnd
+	 * @return $this
+	 */
+	public function setTrimEnd(bool $trimEnd): self
+	{
+		$this->trimEnd = $trimEnd;
+		return $this;
 	}
 
 }

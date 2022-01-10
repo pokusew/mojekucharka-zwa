@@ -26,6 +26,8 @@ class TextInput extends TextBaseControl
 
 	protected bool $outputPasswordValueEnabled = false;
 
+	protected ?string $normalizeNewlines = ''; // this removes new lines completely
+
 	/**
 	 * @param string $name
 	 * @param HtmlLabel $label

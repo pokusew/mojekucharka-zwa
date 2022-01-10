@@ -93,13 +93,24 @@ abstract class Presenter
 	 *
 	 * @param bool $fullUrl When `true`, the full URL (incl. scheme and host) is returned.
 	 *
+	 * @param array<string, mixed>|null $query query string parameters to append
+	 *
 	 * @return string The URL corresponding to the given logical address
 	 *                or `#invalid-link` when no route was found and app is NOT in the development mode.
 	 *
-	 * @throws InvalidArgumentException When no route was found and app is in the development mode.
 	 */
-	protected function link(string $dest, ?array $params = null, bool $fullUrl = false): string
+	protected function link(string $dest, ?array $params = null, bool $fullUrl = false, ?array $query = null): string
 	{
+		if ($query !== null) {
+			$queryString = http_build_query($query);
+			if ($queryString !== '') {
+				$queryString = '?' . $queryString;
+			}
+		}
+		else {
+			$queryString = '';
+		}
+
 		// handle special presenter-only value this
 		if ($dest === 'this') {
 
@@ -119,10 +130,10 @@ abstract class Presenter
 				$this->routeMatch->route->getLogicalAddress(),
 				$params ?? $this->routeMatch->params,
 				$fullUrl
-			);
+			) . $queryString;
 		}
 
-		return $this->router->link($dest, $params ?? [], $fullUrl);
+		return $this->router->link($dest, $params ?? [], $fullUrl) . $queryString;
 	}
 
 	/**
@@ -135,15 +146,17 @@ abstract class Presenter
 	 *                                          the current parameters are used. Otherwise the given $params
 	 *                                          are used.
 	 *
+	 * @param array<string, mixed>|null $query query string parameters to append
+	 *
 	 * @return bool `true` if the given logical address is same as the actual logical address
 	 *               or `false` when no route was found and app is NOT in the development mode.
 	 *
 	 * @throws InvalidArgumentException When no route was found and app is in the development mode.
 	 *
 	 */
-	protected function isLinkCurrent(string $dest, ?array $params = null): bool
+	protected function isLinkCurrent(string $dest, ?array $params = null, ?array $query = null): bool
 	{
-		$url = $this->link($dest, $params);
+		$url = $this->link($dest, $params, false, $query);
 		return $url === $this->httpRequest->path;
 	}
 
@@ -161,6 +174,8 @@ abstract class Presenter
 	 *                                          the current parameters are used. Otherwise the given $params
 	 *                                          are used.
 	 *
+	 * @param array<string, mixed>|null $query query string parameters to append
+	 *
 	 * @param bool $fullUrl When `true`, the full URL (incl. scheme and host) is returned.
 	 *
 	 * @return never always throws an AbortException
@@ -169,12 +184,12 @@ abstract class Presenter
 	 *
 	 * @throws AbortException
 	 */
-	protected function redirect(string $dest, ?array $params = null, bool $fullUrl = false)
+	protected function redirect(string $dest, ?array $params = null, bool $fullUrl = false, ?array $query = null)
 	{
 		$code = $this->httpRequest->method === 'POST'
 			? HttpResponse::S_303_SEE_OTHER // see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/303
 			: HttpResponse::S_302_FOUND;
-		$this->redirectWithCode($code, $dest, $params, $fullUrl);
+		$this->redirectWithCode($code, $dest, $params, $fullUrl, $query);
 	}
 
 	/**
@@ -197,15 +212,23 @@ abstract class Presenter
 	 *
 	 * @param bool $fullUrl When `true`, the full URL (incl. scheme and host) is returned.
 	 *
+	 * @param array<string, mixed>|null $query query string parameters to append
+	 *
 	 * @return never always throws an AbortException
 	 *
 	 * @throws InvalidArgumentException When no route was found and app is in the development mode.
 	 *
 	 * @throws AbortException
 	 */
-	protected function redirectWithCode(int $code, string $dest, ?array $params = null, bool $fullUrl = false)
+	protected function redirectWithCode(
+		int $code,
+		string $dest,
+		?array $params = null,
+		bool $fullUrl = false,
+		?array $query = null
+	)
 	{
-		$url = $this->link($dest, $params, $fullUrl);
+		$url = $this->link($dest, $params, $fullUrl, $query);
 		$this->sendResponse(new RedirectResponse($url, $code));
 	}
 

@@ -109,6 +109,15 @@ const validateValueAgainstPatterns = (value: string, patterns: [string, string |
 
 const validateFormControlValue = (el: FormControlElement): string | null => {
 
+	// custom attribute for triggering validation on other element when this one is being validated
+	if (isDefined(el.dataset.triggerValidation)) {
+		const otherName: string = el.dataset.triggerValidation;
+		const otherInput = el.form?.elements?.[otherName];
+		if (isDefined(otherInput) && isFormControlElement(otherInput)) {
+			validateFormControl(otherInput);
+		}
+	}
+
 	// start with resetting custom validity
 	el.setCustomValidity('');
 

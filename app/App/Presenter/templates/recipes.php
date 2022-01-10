@@ -30,7 +30,9 @@ $getCategoryName = function (int $id) {
 		return 'Neznámá ktegorie';
 	}
 	return $this->categories['map'][$id]['name'];
-}
+};
+
+$userId = $this->isUserLoggedIn() ? $this->getUser()->getId() : null;
 
 ?>
 <body class="app">
@@ -214,6 +216,13 @@ $getCategoryName = function (int $id) {
 											<br />Naposledy upraveno <?= Helpers::timeEl(Helpers::ds($recipe['changed_at'])) ?>.
 										<?php endif; ?>
 									</div>
+									<?php if ($userId !== null && $userId === $recipe['user_id']): ?>
+										<div <?= Html::attrClass('recipe-visibility', ['public' => (bool) $recipe['public']]) ?>>
+											<span class="label">Veřejný:</span>
+											<?= $recipe['public'] ? Icons::FA_GLOBAL_EUROPA_DUOTONE : Icons::FA_LOCK_DUOTONE ?>
+											<span class="value"><?= $recipe['public'] ? 'ano' : 'ne' ?></span>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						<?php endforeach; ?>

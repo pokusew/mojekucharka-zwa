@@ -21,6 +21,7 @@
 		font-size: utils.remy(14px);
 		gap: .725rem;
 		align-items: center;
+		background-color: $white;
 
 		&:hover, &:focus {
 			background-color: $gray-lighter;
@@ -128,6 +129,49 @@
 
 }
 
+.recipe-visibility {
+	display: flex;
+	align-items: center;
+	gap: utils.remy(6px);
+
+	.svg-inline--fa {
+		width: utils.remy(16px);
+	}
+
+	.svg-inline--fa, .value {
+		color: $state-success-text;
+	}
+
+	&.public {
+		.svg-inline--fa, .value {
+			color: $brand-primary;
+		}
+	}
+
+}
+
 .recipe-tools {
 	margin: 0 0 1rem 0;
+}
+
+main.recipe {
+
+	h1 {
+		margin: 0;
+	}
+
+	.recipe-category {
+		font-style: normal;
+		font-size: utils.remy(18px);
+		margin-bottom: utils.remy(8px);
+	}
+
+	.recipe-dates {
+		margin: 0;
+	}
+
+	.recipe-visibility {
+		margin: 0 0 1rem 0;
+	}
+
 }

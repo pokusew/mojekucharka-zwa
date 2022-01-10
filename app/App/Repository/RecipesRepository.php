@@ -21,8 +21,8 @@ class RecipesRepository extends Repository
 		string $name,
 		?int $categoryId,
 		?int $mainImageId,
-		string $ingredients,
-		string $instructions,
+		?string $ingredients,
+		?string $instructions,
 		?int $privateRating
 	): int
 	{
@@ -80,8 +80,8 @@ class RecipesRepository extends Repository
 		string $name,
 		?int $categoryId,
 		?int $mainImageId,
-		string $ingredients,
-		string $instructions,
+		?string $ingredients,
+		?string $instructions,
 		?int $privateRating
 	): bool
 	{

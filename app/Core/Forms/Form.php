@@ -54,6 +54,11 @@ class Form implements ArrayAccess
 	public array $onSuccess = [];
 
 	/**
+	 * @phpstan-var (callable(Form $form): bool)[] validator run after the normal validation
+	 */
+	public array $customValidators = [];
+
+	/**
 	 * Creates a new form.
 	 * @param string $name form name (immutable, cannot be changed once the instance is created)
 	 * @param string $method form method (immutable, cannot be changed once the instance is created)
@@ -261,6 +266,12 @@ class Form implements ArrayAccess
 			if (!$control->validate()) {
 				$valid = false;
 				// do not break, we want to trigger validation of all controls
+			}
+		}
+		foreach ($this->customValidators as $validator) {
+			if (!$validator($this)) {
+				$valid = false;
+				// do not break, we want to run all validators
 			}
 		}
 		return $valid && !$this->hasGlobalError();

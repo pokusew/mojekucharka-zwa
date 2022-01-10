@@ -27,10 +27,10 @@ $public = (bool) $recipe['public'];
 
 	<?php require __DIR__ . '/_header.php' ?>
 
-	<main class="app-content">
+	<main class="app-content" itemscope itemtype="http://schema.org/Recipe">
 		<div class="container">
 
-			<h1><?= htmlspecialchars($recipe['name']) ?></h1>
+			<h1 itemprop="name"><?= htmlspecialchars($recipe['name']) ?></h1>
 
 			<span
 				itemprop="recipeCategory"
@@ -71,12 +71,16 @@ $public = (bool) $recipe['public'];
 
 			<section>
 				<h2>Suroviny</h2>
-				<?= Helpers::stringToHtml(($recipe['ingredients'] ?? '')) ?>
+				<div itemprop="ingredients">
+					<?= Helpers::stringToHtml(($recipe['ingredients'] ?? '')) ?>
+				</div>
 			</section>
 
 			<section>
 				<h2>Postup</h2>
-				<?= Helpers::stringToHtml(($recipe['instructions'] ?? '')) ?>
+				<div itemprop="recipeInstructions">
+					<?= Helpers::stringToHtml(($recipe['instructions'] ?? '')) ?>
+				</div>
 			</section>
 
 		</div>

@@ -13,7 +13,7 @@ class Paginator
 	protected int $itemsPerPage = 1;
 	protected int $itemsCount = 0;
 	protected int $pagesCount = 0;
-	protected int $pageNumber = 0;
+	protected int $pageNumber = 1;
 
 	protected function recalculatePagesCount(): void
 	{
@@ -132,6 +132,11 @@ class Paginator
 	public function getLastPageNumber(): int
 	{
 		return $this->getPagesCount();
+	}
+
+	public function isValidPageNumber(int $pageNumber): bool
+	{
+		return $this->getFirstPageNumber() <= $pageNumber && $pageNumber <= $this->getLastPageNumber();
 	}
 
 }

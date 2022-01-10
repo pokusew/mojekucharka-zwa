@@ -170,7 +170,7 @@ class Helpers
 
 		$prevPageNumber = $paginator->getPrevPageNumber();
 		$prevPageItem = self::createPaginationItem(
-			true,
+			'',
 			$prevPageNumber !== null ? $createLink($prevPageNumber) : null,
 			false,
 			$prevPageNumber === null,
@@ -182,7 +182,7 @@ class Helpers
 
 		$firstPageNumber = $paginator->getFirstPageNumber();
 		$lastPageNumber = $paginator->getLastPageNumber();
-		for ($pageNumber = $firstPageNumber; $pageNumber < $lastPageNumber; $pageNumber++) {
+		for ($pageNumber = $firstPageNumber; $pageNumber <= $lastPageNumber; $pageNumber++) {
 			$pageItem = self::createPaginationItem(
 				(string) $pageNumber,
 				$createLink($pageNumber),
@@ -193,7 +193,7 @@ class Helpers
 
 		$nextPageNumber = $paginator->getNextPageNumber();
 		$nextPageItem = self::createPaginationItem(
-			null,
+			'',
 			$nextPageNumber !== null ? $createLink($nextPageNumber) : null,
 			false,
 			$nextPageNumber === null,

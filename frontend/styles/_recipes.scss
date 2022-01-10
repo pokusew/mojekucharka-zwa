@@ -109,6 +109,12 @@
 
 }
 
+.recipe-category {
+	font-weight: bold;
+	font-style: italic;
+	margin-bottom: utils.remy(2px);
+}
+
 @media (min-width: $md) {
 
 	.recipes-view {

@@ -9,6 +9,8 @@ declare(strict_types=1);
  * @var Core\Routing\Router $router
  */
 
+use App\RecipesFilter;
+
 ?>
 <body class="app">
 
@@ -54,7 +56,12 @@ declare(strict_types=1);
 
 			<p>
 				Bez registrace a přihlášení si můžete prohlížet
-				<a href="<?= $this->link('Recipes:') ?>">veřejné recepty.</a>
+				<a href="<?= $this->link(
+					'Recipes:',
+					null,
+					false,
+					RecipesFilter::DEFAULT_NOT_LOGGED_IN_QUERY,
+				) ?>">veřejné recepty.</a>
 			</p>
 
 		</div>

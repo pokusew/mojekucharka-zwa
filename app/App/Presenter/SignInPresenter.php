@@ -115,7 +115,7 @@ class SignInPresenter extends BasePresenter
 
 		// TODO: log successful login metadata in the logins table in the db
 
-		$this->redirect('Recipes:');
+		$this->defaultRecipesRedirect();
 	}
 
 }

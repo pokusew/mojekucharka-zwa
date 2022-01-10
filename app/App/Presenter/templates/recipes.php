@@ -94,34 +94,37 @@ $getCategoryName = function (int $id) {
 							</div>
 						<?php endif; ?>
 
-						<div class="recipes-filter-public">
+						<?php if ($this->isUserLoggedIn()): ?>
+							<div class="recipes-filter-public">
 
-							Filtrovat podle vlastníka:
+								Filtrovat podle vlastníka:
 
-							<div class="toggle-group">
-								<a
-									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ME]) ?>"
-									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ME]) ?>
-								>
-									<?= Icons::FA_LOCK_DUOTONE ?>
-									<span>Pouze moje recepty</span>
-								</a>
-								<a
-									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_OTHERS]) ?>"
-									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_OTHERS]) ?>
-								>
-									<?= Icons::FA_GLOBAL_EUROPA_DUOTONE ?>
-									<span>Pouze recepty ostatních uživatelů</span>
-								</a>
-								<a
-									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ALL]) ?>"
-									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ALL]) ?>
-								>
-									<span>Všechny recepty</span>
-								</a>
+								<div class="toggle-group">
+									<a
+										href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ME]) ?>"
+										<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ME]) ?>
+									>
+										<?= Icons::FA_LOCK_DUOTONE ?>
+										<span>Pouze moje recepty</span>
+									</a>
+									<a
+										href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_OTHERS]) ?>"
+										<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_OTHERS]) ?>
+									>
+										<?= Icons::FA_GLOBAL_EUROPA_DUOTONE ?>
+										<span>Pouze recepty ostatních uživatelů</span>
+									</a>
+									<a
+										href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ALL]) ?>"
+										<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ALL]) ?>
+									>
+										<span>Všechny recepty</span>
+									</a>
+								</div>
+
 							</div>
+						<?php endif; ?>
 
-						</div>
 
 						<div class="recipes-ordering">
 
@@ -199,11 +202,18 @@ $getCategoryName = function (int $id) {
 									<div class="recipe-category">
 										<?= htmlspecialchars($getCategoryName($recipe['category_id'])) ?>
 									</div>
-									<a
-										class="recipe-author"
-										href="<?= $this->link('Profile:view', ['username' => $recipe['user.username']]) ?>"
-									><?= htmlspecialchars($recipe['user.name'] ?? $recipe['user.username']) ?></a>
-
+									<div class="recipe-author">
+										<span class="label">Autor:</span>
+										<a
+											href="<?= $this->link('Profile:view', ['username' => $recipe['user.username']]) ?>"
+										><?= htmlspecialchars($recipe['user.name'] ?? $recipe['user.username']) ?></a>
+									</div>
+									<div class="recipe-dates">
+										Přidáno <?= Helpers::timeEl(Helpers::ds($recipe['created_at'])) ?>.
+										<?php if (isset($recipe['changed_at'])): ?>
+											<br />Naposledy upraveno <?= Helpers::timeEl(Helpers::ds($recipe['changed_at'])) ?>.
+										<?php endif; ?>
+									</div>
 								</div>
 							</div>
 						<?php endforeach; ?>

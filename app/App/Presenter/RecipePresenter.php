@@ -207,7 +207,7 @@ class RecipePresenter extends BasePresenter
 				$this->recipe['id'],
 				$this->getUser()->getId(),
 			);
-			$this->redirect('Recipes:');
+			$this->defaultRecipesRedirect();
 		}
 
 		if ($this->recipe === null) {

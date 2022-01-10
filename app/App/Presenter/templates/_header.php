@@ -51,7 +51,7 @@ use Core\Template\Html;
 				<li>
 					<a
 						<?= Html::attrClass(['active' => $this->isLinkCurrent('Recipes:')]) ?>
-						href="<?= $this->link('Recipes:') ?>"
+						href="<?= $this->defaultRecipesLink() ?>"
 					>
 						Recepty
 					</a>

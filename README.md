@@ -4,7 +4,9 @@ A simple web app for managing recipes
 
 🚧 **Note:** This is work in progress.
 
-(TODO: add a nice screenshot here)
+<div style="text-align: center">
+<img alt="Recipes page with an user logged-in" title="A screenshot from the running app" src="./docs/images/ui/logged-desktop-recipes-2.png" width="800" />
+</div>
 
 Written in **[PHP][php]** as an SSR (server-side rendered) web app that should work without JavaScript
 (but with JavaScript it is more comfortable to use, i.e. [progressive enhancement][mdn-progressive-enhancement]).

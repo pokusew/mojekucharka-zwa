@@ -86,7 +86,7 @@ class SignUpPresenter extends BasePresenter
 		} catch (UserRegistrationException $e) {
 
 			if ($e->getCode() === UserRegistrationException::DUPLICATE_USERNAME) {
-				$msg = 'Toto uživatelské jméno je již používá jiný uživatel. Prosím zvolte si jiné.';
+				$msg = 'Toto uživatelské jméno již používá jiný uživatel. Prosím zvolte si jiné.';
 				$username->setError($msg);
 				$username->getElem()->attrs['data-invalid'] = $username->getValue();
 				$username->getElem()->attrs['data-invalid-msg'] = $msg;

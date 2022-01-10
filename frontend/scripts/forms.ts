@@ -109,6 +109,9 @@ const validateValueAgainstPatterns = (value: string, patterns: [string, string |
 
 const validateFormControlValue = (el: FormControlElement): string | null => {
 
+	// start with resetting custom validity
+	el.setCustomValidity('');
+
 	// always start with required validation
 	if (el.validity.valueMissing) {
 		return getValidationMessage(el);
@@ -121,6 +124,8 @@ const validateFormControlValue = (el: FormControlElement): string | null => {
 			const patterns: [string, string | null][] = JSON.parse(el.dataset.patterns);
 			const error = validateValueAgainstPatterns(value, patterns);
 			if (error !== null) {
+				// set also custom validity so that :invalid selector will work correctly
+				el.setCustomValidity(error);
 				return error;
 			}
 		} catch (e) {
@@ -133,7 +138,30 @@ const validateFormControlValue = (el: FormControlElement): string | null => {
 	if (isDefined(el.dataset.invalid)) {
 		const value = el.value;
 		if (value === el.dataset.invalid) {
-			return typeof el.dataset.invalidMsg === 'string' ? el.dataset.invalidMsg : 'This value is not allowed.';
+			const msg = typeof el.dataset.invalidMsg === 'string'
+				? el.dataset.invalidMsg
+				: 'This value is not allowed.';
+			// set also custom validity so that :invalid selector will work correctly
+			el.setCustomValidity(msg);
+			return msg;
+		}
+	}
+
+	// then custom must be equal to other input value check
+	if (isDefined(el.dataset.equalTo)) {
+		const otherName: string = el.dataset.equalTo;
+		const otherInput = el.form?.elements?.[otherName];
+		if (isDefined(otherInput) && isDefined(otherInput.value)) {
+			const value = el.value;
+			const otherValue = otherInput.value;
+			if (value !== otherValue) {
+				const msg =  typeof el.dataset.equalToMsg === 'string'
+					? el.dataset.equalToMsg
+					: 'This value is not allowed.';
+				// set also custom validity so that :invalid selector will work correctly
+				el.setCustomValidity(msg);
+				return msg;
+			}
 		}
 	}
 

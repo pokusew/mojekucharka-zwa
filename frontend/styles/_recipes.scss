@@ -93,6 +93,22 @@
 	}
 }
 
+.recipes-list {
+	margin: 0 0 2rem 0;
+
+	.recipe {
+		margin: 0 0 1rem 0;
+		padding: 0 0 1rem 0;
+		// border-top: 1px rgba(0, 0, 0, .1) solid;
+		border-bottom: 1px rgba(0, 0, 0, .1) solid;
+
+		h3 {
+			margin: 0 0 utils.remy(4px) 0;
+		}
+	}
+
+}
+
 @media (min-width: $md) {
 
 	.recipes-view {
@@ -104,4 +120,8 @@
 		padding-top: 2rem;
 	}
 
+}
+
+.recipe-tools {
+	margin: 0 0 1rem 0;
 }

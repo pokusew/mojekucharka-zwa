@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Presenter;
 
+use App\RecipesFilter;
 use App\Repository\CategoriesRepository;
 use App\Repository\RecipesRepository;
-use Core\Database\SqlBuilder;
+use App\Security\SecurityException;
 use Core\Utils\Paginator;
 
 /**
@@ -29,28 +30,65 @@ class RecipesPresenter extends BasePresenter
 
 	protected Paginator $paginator;
 
+	protected RecipesFilter $filter;
+
+	/**
+	 * Merges the given query with the current query and returns the corresponding link.
+	 * @param array<string, mixed> $query
+	 * @return string
+	 */
+	public function recipesLink(array $query = []): string
+	{
+		$merged = $query + $this->filter->getQuery();
+		return $this->link('this', null, false, $merged);
+	}
+
+	/**
+	 * Merges the given query with the current query and redirects to the corresponding link.
+	 * @param array<string, mixed> $query
+	 * @return never
+	 */
+	public function recipesRedirect(array $query = []): string
+	{
+		$merged = $query + $this->filter->getQuery();
+		$this->redirect('this', null, false, $merged);
+	}
+
 	public function action(): void
 	{
 		$this->view = 'recipes';
 
 		$this->categories = $this->categoriesRepository->findAllAsData();
 
+		$this->filter = new RecipesFilter($this->categories);
+
+		if (!$this->filter->setFromQuery($this->httpRequest->query)) {
+			$this->defaultRecipesRedirect();
+		}
+
 		$this->paginator = new Paginator();
 
-		// TODO: get from query
-		$filter = null;
-		$itemsPerPage = 20;
-		$pageNumber = 1;
+		try {
+			$where = $this->filter->getWhere($this->isUserLoggedIn() ? $this->getUser() : null);
+		} catch (SecurityException $e) {
+			// TODO: add reason and backUrl
+			$this->redirect('SignIn:');
+		}
 
-		$this->paginator->setItemsPerPage($itemsPerPage);
-		$this->paginator->setPageNumber($pageNumber);
-		$this->paginator->setItemsCount($this->recipesRepository->count($filter));
+		$this->paginator->setItemsPerPage(20); // TODO: make configurable
+		$this->paginator->setItemsCount($this->recipesRepository->count($where));
+
+		if (!$this->paginator->isValidPageNumber($this->filter->getPage())) {
+			$this->recipesRedirect([
+				'page' => $this->paginator->getFirstPageNumber()
+			]);
+		}
+
+		$this->paginator->setPageNumber($this->filter->getPage());
 
 		$this->recipes = $this->recipesRepository->findAndJoinCategoryAndUserAndMainImage(
-			null,
-			[
-				RecipesRepository::TABLE . '.name' => SqlBuilder::ORDER_ASC,
-			],
+			$where,
+			$this->filter->getOrderBy(),
 			$this->paginator->getLimit(),
 			$this->paginator->getOffset(),
 		);

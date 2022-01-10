@@ -11,13 +11,16 @@ declare(strict_types=1);
 
 use App\Helpers;
 use App\Icons;
+use App\RecipesFilter;
+use Core\Database\SqlBuilder;
+use Core\Template\Html;
 
 $title = 'Recepty';
 
 $pagination = Helpers::renderPagination(
 	$this->paginator,
 	function (int $pageNumber): string {
-		return $this->link('this');
+		return $this->recipesLink(['page' => $pageNumber]);
 	},
 	'Stránkování receptů',
 );
@@ -42,14 +45,12 @@ $getCategoryName = function (int $id) {
 					<ul>
 						<?php foreach ($this->categories['nested'] as $topLevelCategory): ?>
 							<li>
-								<a href="<?= $this->link('this', ['category' => $topLevelCategory['id']]) ?>">
-									<?= htmlspecialchars($topLevelCategory['name']) ?>
-								</a>
+								<?= htmlspecialchars($topLevelCategory['name']) ?>
 								<?php if (count($topLevelCategory['children']) > 0): ?>
 									<ul>
 										<?php foreach ($topLevelCategory['children'] as $category): ?>
 											<li>
-												<a href="<?= $this->link('this', ['category' => $category['id']]) ?>">
+												<a href="<?= $this->recipesLink(['category' => $category['id']]) ?>">
 													<?= htmlspecialchars($category['name']) ?>
 												</a>
 											</li>
@@ -65,38 +66,57 @@ $getCategoryName = function (int $id) {
 					<h1>Recepty</h1>
 
 					<?php if ($this->isUserLoggedIn()): ?>
-						<a class="btn btn-warning btn-new-recipe" href="<?= $this->link('Recipe:new') ?>">Nový recept</a>
+						<a
+							class="btn btn-warning btn-new-recipe"
+							href="<?= $this->link('Recipe:new') ?>"
+						>Nový recept</a>
 					<?php endif; ?>
 
 					<div class="recipes-filter">
 
-						<div class="recipes-filter-categories">
-							Pouze kategorie:
-							<div class="pills">
-								<div class="pill">
-									<span class="pill-label">Bábovky</span>
-									<a href="#" class="pill-close" aria-label="Odstranit kategorii z výběru">
-										<?= Icons::FA_TIMES_REGULAR ?>
-									</a>
+						<?php if ($this->filter->getCategory() !== null): ?>
+							<div class="recipes-filter-categories">
+								Pouze kategorie:
+								<div class="pills">
+									<div class="pill">
+										<span
+											class="pill-label"
+										><?= htmlspecialchars($this->filter->getCategory()['name']) ?></span>
+										<a
+											href="<?= $this->recipesLink(['category' => null]) ?>"
+											class="pill-close"
+											aria-label="Odstranit kategorii z výběru"
+										>
+											<?= Icons::FA_TIMES_REGULAR ?>
+										</a>
+									</div>
 								</div>
 							</div>
-
-						</div>
+						<?php endif; ?>
 
 						<div class="recipes-filter-public">
 
-							Filtrovat podle viditelnosti:
+							Filtrovat podle vlastníka:
 
 							<div class="toggle-group">
-								<a href="#" class="toggle active" aria-current="page">
+								<a
+									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ME]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ME]) ?>
+								>
 									<?= Icons::FA_LOCK_DUOTONE ?>
 									<span>Pouze moje recepty</span>
 								</a>
-								<a href="#" class="toggle">
+								<a
+									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_OTHERS]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_OTHERS]) ?>
+								>
 									<?= Icons::FA_GLOBAL_EUROPA_DUOTONE ?>
-									<span>Pouze veřejné recepty</span>
+									<span>Pouze recepty ostatních uživatelů</span>
 								</a>
-								<a href="#" class="toggle">
+								<a
+									href="<?= $this->recipesLink(['owner' => RecipesFilter::OWNER_ALL]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getOwner() === RecipesFilter::OWNER_ALL]) ?>
+								>
 									<span>Všechny recepty</span>
 								</a>
 							</div>
@@ -108,29 +128,49 @@ $getCategoryName = function (int $id) {
 							Řadit podle:
 
 							<div class="toggle-group">
-								<a href="#" class="toggle active">
+								<a
+									href="<?= $this->recipesLink(['sort' => RecipesFilter::SORT_NAME]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getSort() === RecipesFilter::SORT_NAME]) ?>
+								>
 									<?= Icons::FA_TAG_DUOTONE ?>
 									<span>Názvu</span>
 								</a>
-								<a href="#" class="toggle">
+								<a
+									href="<?= $this->recipesLink(['sort' => RecipesFilter::SORT_USER]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getSort() === RecipesFilter::SORT_USER]) ?>
+								>
 									<?= Icons::FA_USER_DUOTONE ?>
 									<span>Autora</span>
 								</a>
-								<a href="#" class="toggle">
+								<a
+									href="<?= $this->recipesLink(['sort' => RecipesFilter::SORT_CREATED]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getSort() === RecipesFilter::SORT_CREATED]) ?>
+								>
 									<?= Icons::FA_CLOCK_DUOTONE ?>
 									<span>Data přidání</span>
 								</a>
-								<a href="#" class="toggle">
+								<a
+									href="<?= $this->recipesLink(['sort' => RecipesFilter::SORT_CHANGED]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getSort() === RecipesFilter::SORT_CHANGED]) ?>
+								>
 									<?= Icons::FA_CLOCK_DUOTONE ?>
 									<span>Data poslední změny</span>
 								</a>
 							</div>
 
 							<div class="toggle-group">
-								<a href="#" class="toggle active" aria-label="vzestupně (A-Z)">
+								<a
+									aria-label="vzestupně (A-Z)"
+									href="<?= $this->recipesLink(['order' => SqlBuilder::ORDER_ASC]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getOrder() === SqlBuilder::ORDER_ASC]) ?>
+								>
 									<?= Icons::FA_SORT_ALPHA_UP_DUOTONE ?>
 								</a>
-								<a href="#" class="toggle" aria-label="sestupně (Z-A)">
+								<a
+									aria-label="sestupně (Z-A)"
+									href="<?= $this->recipesLink(['order' => SqlBuilder::ORDER_DESC]) ?>"
+									<?= Html::attrClass('toggle', ['active' => $this->filter->getOrder() === SqlBuilder::ORDER_DESC]) ?>
+								>
 									<?= Icons::FA_SORT_ALPHA_DOWN_ALT_DUOTONE ?>
 								</a>
 							</div>

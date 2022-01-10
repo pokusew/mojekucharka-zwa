@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presenter;
 
 use App\Limits;
+use App\RecipesFilter;
 use App\Security\SessionUser;
 use Core\Exceptions\InvalidStateException;
 use Core\Forms\Controls\TextInput;
@@ -141,6 +142,47 @@ abstract class BasePresenter extends Presenter
 
 			return true;
 		};
+	}
+
+	public function defaultRecipesLink(): string
+	{
+		if ($this->isUserLoggedIn()) {
+			return $this->link(
+				'Recipes:',
+				null,
+				false,
+				RecipesFilter::DEFAULT_LOGGED_IN_QUERY,
+			);
+		} else {
+			return $this->link(
+				'Recipes:',
+				null,
+				false,
+				RecipesFilter::DEFAULT_NOT_LOGGED_IN_QUERY,
+			);
+		}
+	}
+
+	/**
+	 * @return never
+	 */
+	public function defaultRecipesRedirect()
+	{
+		if ($this->isUserLoggedIn()) {
+			$this->redirect(
+				'Recipes:',
+				null,
+				false,
+				RecipesFilter::DEFAULT_LOGGED_IN_QUERY,
+			);
+		} else {
+			$this->redirect(
+				'Recipes:',
+				null,
+				false,
+				RecipesFilter::DEFAULT_NOT_LOGGED_IN_QUERY,
+			);
+		}
 	}
 
 }

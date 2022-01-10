@@ -1,0 +1,39 @@
+//
+// Rewrites from print
+// --------------------------------------------------
+
+@use "sass:color";
+@use "utils";
+@use "config" as *;
+
+@media print {
+
+	html, body, .app {
+		height: auto;
+	}
+
+	.app {
+		display: block;
+		.app-header, .app-footer {
+			display: none;
+		}
+		.app-content {
+			padding: 0;
+			margin: 0;
+			> .container {
+				margin: .5rem;
+			}
+		}
+	}
+
+	.recipe-tools {
+		display: none;
+	}
+
+	.recipes-view {
+		.recipes-categories {
+			display: none;
+		}
+	}
+
+}

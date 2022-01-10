@@ -4,6 +4,9 @@
 
 @use "utils";
 
+// This is meant to be used on the regular buttons (HTML5 button, input[type="submit"])
+// as well as on any other elements (such as links (a), etc.).
+// Most of the styles directives resets the browser built-in style.
 .btn {
 	display: inline-block;
 	margin: 0;

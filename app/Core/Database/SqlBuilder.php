@@ -229,6 +229,20 @@ class SqlBuilder
 	}
 
 	/**
+	 * Appends the given SQL to the current SQL.
+	 *
+	 * **NOTE:** It automatically adds a whitespace between the current SQL and the given SQL.
+	 *
+	 * @param string $sql SQL to append
+	 * @return $this
+	 */
+	public function append(string $sql): self
+	{
+		$this->sql .= ' ' . $sql;
+		return $this;
+	}
+
+	/**
 	 * Gets the current SQL query
 	 * @return string the current SQL query
 	 */

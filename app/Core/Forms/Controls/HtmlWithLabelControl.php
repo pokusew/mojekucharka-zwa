@@ -32,6 +32,16 @@ abstract class HtmlWithLabelControl extends HtmlControl
 		return $this->htmlLabelEl;
 	}
 
+	/**
+	 * @param HtmlLabel $label
+	 * @return $this
+	 */
+	public function setLabelText($label): self
+	{
+		$this->htmlLabelEl->setText($label);
+		return $this;
+	}
+
 	protected function generateId(): void
 	{
 		parent::generateId();

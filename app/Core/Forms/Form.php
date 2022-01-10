@@ -190,11 +190,12 @@ class Form implements ArrayAccess
 	 * @param string $name
 	 * @phpstan-param HtmlLabel $label
 	 * @param mixed $label
+	 * @param string|null $value
 	 * @return Button
 	 */
-	public function addSubmit(string $name, $label): Button
+	public function addSubmit(string $name, $label, ?string $value = null): Button
 	{
-		$control = new Button($name, $label, 'submit');
+		$control = new Button($name, $label, 'submit', $value);
 
 		$this->addControl($control);
 

@@ -32,7 +32,10 @@ class TextArea extends HtmlWithLabelControl
 		return $this;
 	}
 
-	public function setValue(?string $value): HtmlControl
+	/**
+	 * @return $this
+	 */
+	public function setValue(?string $value): self
 	{
 		parent::setValue($value);
 		$this->htmlEl->setText($value);

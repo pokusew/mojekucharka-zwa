@@ -11,16 +11,20 @@ namespace Core\Forms\Controls;
 class Button extends HtmlControl
 {
 
+	protected ?string $buttonValue = null;
+
 	/**
 	 * @param string $name
 	 * @param HtmlLabel $label
 	 * @param string|null $type
+	 * @param string|null $value
 	 */
-	public function __construct(string $name, $label, ?string $type = 'submit')
+	public function __construct(string $name, $label, ?string $type = 'submit', ?string $value = null)
 	{
 		parent::__construct($name, 'button');
 		$this->htmlEl->setText($label);
 		$this->htmlEl->type = $type;
+		$this->setButtonValue($value);
 	}
 
 	/**
@@ -29,7 +33,20 @@ class Button extends HtmlControl
 	 */
 	public function setValueFromRequest(array &$data): self
 	{
-		// TODO
+		$htmlDataName = $this->htmlEl->name;
+		$value = isset($data[$htmlDataName]) && is_string($data[$htmlDataName]) ? $data[$htmlDataName] : null;
+		$this->setValue($value);
+		return $this;
+	}
+
+	/**
+	 * @param string|null $value
+	 * @return $this
+	 */
+	public function setValue(?string $value): self
+	{
+		parent::setValue($value);
+		$this->htmlEl->value = $this->buttonValue;
 		return $this;
 	}
 
@@ -45,6 +62,30 @@ class Button extends HtmlControl
 	{
 		$this->htmlEl->type = $type;
 		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getButtonValue(): ?string
+	{
+		return $this->buttonValue;
+	}
+
+	/**
+	 * @param string|null $buttonValue
+	 * @return $this
+	 */
+	public function setButtonValue(?string $buttonValue): self
+	{
+		$this->buttonValue = $buttonValue;
+		$this->htmlEl->value = $this->buttonValue;
+		return $this;
+	}
+
+	public function wasUsedForSubmission(): bool
+	{
+		return $this->getValue() === $this->buttonValue;
 	}
 
 }

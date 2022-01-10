@@ -38,7 +38,7 @@ class TextArea extends HtmlWithLabelControl
 	public function setValue(?string $value): self
 	{
 		parent::setValue($value);
-		$this->htmlEl->setText($value);
+		$this->htmlEl->setText($this->value);
 		return $this;
 	}
 

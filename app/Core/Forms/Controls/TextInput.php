@@ -62,7 +62,7 @@ class TextInput extends TextBaseControl
 	{
 		parent::setValue($value);
 		if ($this->type !== self::TYPE_PASSWORD || $this->outputPasswordValueEnabled) {
-			$this->htmlEl->value = $value;
+			$this->htmlEl->value = $this->value;
 		}
 		return $this;
 	}

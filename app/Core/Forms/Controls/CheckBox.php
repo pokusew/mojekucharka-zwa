@@ -42,7 +42,7 @@ class CheckBox extends HtmlWithLabelControl
 	public function setValue(?string $value): self
 	{
 		parent::setValue($value);
-		$this->htmlEl->value = $value;
+		$this->htmlEl->value = $this->value;
 		return $this;
 	}
 

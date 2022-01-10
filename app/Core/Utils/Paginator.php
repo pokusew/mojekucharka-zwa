@@ -12,14 +12,25 @@ class Paginator
 
 	protected int $itemsPerPage = 1;
 	protected int $itemsCount = 0;
-	protected int $pagesCount = 0;
+	/**
+	 * @var int There is always at least one page (though it may be completely empty).
+	 */
+	protected int $pagesCount = 1;
+	/**
+	 * @var int The first page has $pageNumber === 1, there is **no page** with number 0.
+	 */
 	protected int $pageNumber = 1;
 
 	protected function recalculatePagesCount(): void
 	{
-		$this->pagesCount = intdiv($this->itemsCount, $this->itemsPerPage);
+		$fullPagesCount = intdiv($this->itemsCount, $this->itemsPerPage);
+		// if there is a non-full last page
 		if ($this->itemsCount % $this->itemsPerPage > 0) {
-			$this->pagesCount++;
+			$this->pagesCount = $fullPagesCount + 1;
+		}
+		else {
+			// There is always at least one page (though it may be completely empty).
+			$this->pagesCount = max(1, $fullPagesCount);
 		}
 	}
 
@@ -35,9 +46,9 @@ class Paginator
 
 	public function setItemsPerPage(int $itemsPerPage): Paginator
 	{
-		if ($itemsPerPage <= 0) {
+		if (!($itemsPerPage >= 1)) {
 			throw new \InvalidArgumentException(
-				"Invalid itemsPerPage '$itemsPerPage'. Items per page must be greater than 0."
+				"Invalid itemsPerPage = $itemsPerPage. It must hold: itemsPerPage >= 1."
 			);
 		}
 		$this->itemsPerPage = $itemsPerPage;
@@ -52,9 +63,9 @@ class Paginator
 
 	public function setItemsCount(int $itemsCount): Paginator
 	{
-		if ($itemsCount < 0) {
+		if (!($itemsCount >= 0)) {
 			throw new \InvalidArgumentException(
-				"Invalid itemsCount '$itemsCount'. Items count must be greater than or equal to 0."
+				"Invalid itemsCount = $itemsCount. It must hold: itemsCount >= 0."
 			);
 		}
 		$this->itemsCount = $itemsCount;
@@ -69,9 +80,9 @@ class Paginator
 
 	public function setPageNumber(int $pageNumber): Paginator
 	{
-		if ($pageNumber <= 0) {
+		if (!($pageNumber >= 1)) {
 			throw new \InvalidArgumentException(
-				"Invalid pageNumber '$pageNumber'. Page number must be greater than 0."
+				"Invalid pageNumber = $pageNumber. It must hold: pageNumber >= 0."
 			);
 		}
 		$this->pageNumber = $pageNumber;
@@ -90,7 +101,7 @@ class Paginator
 
 	public function hasPrevPage(): bool
 	{
-		return $this->pageNumber > 1;
+		return $this->pageNumber > $this->getFirstPageNumber();
 	}
 
 	public function getPrevPageNumber(): ?int
@@ -103,7 +114,7 @@ class Paginator
 
 	public function hasNextPage(): bool
 	{
-		return $this->pageNumber < $this->pagesCount;
+		return $this->pageNumber < $this->getLastPageNumber();
 	}
 
 	public function getNextPageNumber(): ?int
@@ -116,7 +127,7 @@ class Paginator
 
 	public function getNumberOfFirstItemOnPage(): int
 	{
-		return $this->getOffset() + 1;
+		return min($this->itemsCount, $this->getOffset() + 1);
 	}
 
 	public function getNumberOfLastItemOnPage(): int

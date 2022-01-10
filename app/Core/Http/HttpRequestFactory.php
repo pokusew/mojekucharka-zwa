@@ -17,7 +17,7 @@ class HttpRequestFactory
 		$host = $_SERVER['HTTP_HOST'];
 
 		$path = isset($_SERVER['QUERY_STRING']) && is_int($queryStringPos = strpos($_SERVER['REQUEST_URI'], '?'))
-			? substr($_SERVER['REQUEST_URI'], $queryStringPos)
+			? substr($_SERVER['REQUEST_URI'], 0, $queryStringPos)
 			: $_SERVER['REQUEST_URI'];
 
 		return new HttpRequest(

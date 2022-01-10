@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @var ?string $headers additional HTML to place in the HTML head
  */
 
+use App\Icons;
 use Core\Template\Html;
 
 ?>
@@ -58,10 +59,12 @@ use Core\Template\Html;
 			</ul>
 			<?php if ($this->isUserLoggedIn()): ?>
 				<ul class="right">
-					<li>
+					<li class="user">
 						<a
+							<?= Html::attrClass(['active' => $this->isLinkCurrent('Settings:')]) ?>
 							href="<?= $this->link('Settings:') ?>"
 						>
+							<?= Icons::FA_USER_CIRCLE_DUOTONE ?>
 							<?= htmlspecialchars($this->getUser()->getDisplayName()) ?>
 						</a>
 					</li>

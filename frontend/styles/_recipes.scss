@@ -1,0 +1,107 @@
+//
+// Recipes
+// --------------------------------------------------
+
+@use "sass:color";
+@use "utils";
+@use "config" as *;
+
+.toggle-group {
+	display: flex;
+	flex-wrap: wrap;
+	list-style-type: none;
+	padding: 1px 0 0 1px;
+
+	.toggle {
+		display: flex;
+		padding: utils.remy(6px) utils.remy(12px);
+		text-decoration: none;
+		margin: -1px 0 0 -1px;
+		border: 1px $gray-lighter solid;
+		font-size: utils.remy(14px);
+		gap: .725rem;
+		align-items: center;
+
+		&:hover, &:focus {
+			background-color: $gray-lighter;
+		}
+
+		&.active {
+			border: 1px $blue solid;
+			background-color: $blue;
+			color: $white;
+		}
+
+		.svg-inline--fa {
+			width: 1.125rem;
+		}
+	}
+}
+
+.recipes-filter-categories, .recipes-filter-public, .recipes-ordering {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	column-gap: 1rem;
+	row-gap: .5rem;
+	margin: 0 0 1rem 0;
+}
+
+.recipes-filter {
+	border-top: 1px rgba(0, 0, 0, .1) solid;
+	border-bottom: 1px rgba(0, 0, 0, .1) solid;
+	padding: 1rem 0;
+}
+
+.btn-new-recipe, .recipes-filter, .recipes-list, .pagination {
+	margin: 0 0 1rem 0;
+}
+
+.pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .725rem;
+
+	.pill {
+		display: flex;
+		align-items: center;
+		border: 1px solid $gray-lighter;
+		padding: utils.remy(4px) utils.remy(8px);
+		gap: utils.remy(6px);
+		border-radius: .5rem;
+
+		.pill-close {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: $brand-danger;
+			color: $white;
+			width: 2rem;
+			height: 2rem;
+			border-radius: .5rem;
+			text-decoration: none;
+
+			.svg-inline--fa {
+				width: utils.remy(10px);
+			}
+
+			&:hover, &:focus {
+				color: $white;
+				background-color: color.adjust($brand-danger, $lightness: -10%);
+			}
+		}
+	}
+}
+
+@media (min-width: $md) {
+
+	.recipes-view {
+		display: flex;
+		gap: 3rem;
+	}
+
+	.recipes-categories {
+		padding-top: 2rem;
+	}
+
+}

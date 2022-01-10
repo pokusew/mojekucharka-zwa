@@ -19,8 +19,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		list-style-type: none;
-		padding-left: 1px;
-		row-gap: .5rem;
+		padding: 1px 0 0 1px;
 	}
 
 	li {
@@ -28,14 +27,13 @@
 			display: block;
 			padding: .5rem 1rem;
 			text-decoration: none;
-			margin-left: -1px;
+			margin: -1px 0 0 -1px;
 			border: 1px $gray-lighter solid;
-			background-color: $white;
 		}
 
 		&.active {
 			> * {
-				border: 1px $gray-lighter solid;
+				border: 1px $blue solid;
 				background-color: $blue;
 				color: $white;
 			}

@@ -152,7 +152,7 @@ class RecipePresenter extends BasePresenter
 
 		$form->addCheckBox('public', 'Veřejný recept');
 
-		$form->addSubmit('edit', 'Upravit', 'edit');
+		$form->addSubmit('edit', $this->recipe === null ? 'Vytvořit' : 'Upravit', 'edit');
 
 		$form->addSubmit('delete', 'Smazat', 'delete');
 

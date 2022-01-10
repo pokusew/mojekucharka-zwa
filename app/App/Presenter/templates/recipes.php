@@ -230,6 +230,13 @@ $userId = $this->isUserLoggedIn() ? $this->getUser()->getId() : null;
 
 					<?= $pagination ?>
 
+					<div class="pagination-info">
+						Zobrazuji
+						<?= $this->paginator->getNumberOfFirstItemOnPage() ?>.
+						až <?= $this->paginator->getNumberOfLastItemOnPage() ?>.
+						z <?= $this->paginator->getItemsCount() ?>
+					</div>
+
 				</div>
 			</div>
 

@@ -70,5 +70,6 @@ cd "$project_dir"
 rsync -a --delete -v -e ssh \
 	--exclude='/.*' \
 	--exclude='/composer.*' \
+	--exclude='/www/*.zip' \
 	"$build_deployment_dir/" \
 	endlemar@wa.toad.cz:~/

@@ -130,7 +130,12 @@ It also describes the commands that are available to run and automate things
    ```bash
    yarn start
    ```
-4. Run the app using the built-in PHP web server:
+4. Copy the config template and fill it with correct values (mainly for the database connection):
+   ```bash
+   cp config/config.template.php config/config.local.php
+   # now fill config/config.local.php with correct values
+   ```
+5. Run the app using the built-in PHP web server:
    ```bash
    make run
    # make SERVER=addr:port run

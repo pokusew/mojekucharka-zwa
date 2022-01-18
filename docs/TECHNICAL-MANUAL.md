@@ -23,10 +23,10 @@ and compiled to the latest ECMAScript (JavaScript).
 The app targets **only modern browsers** (as it uses the latest HTML5, CSS and ECMAScript features).
 
 🛠️ The whole project uses some **standard tooling** that is described in
-the [Technology highlights section](./README.md#technology-highlights) and
-the [Development section](./README.md#development) in the project's main README.
+the [Technology highlights section](../README.md#technology-highlights) and
+the [Development section](../README.md#development) in the project's main README.
 
-📌 **For the local development setup guide**, please refer to the [Development section](./README.md#development) in the
+📌 **For the local development setup guide**, please refer to the [Development section](../README.md#development) in the
 project's main README, which covers setting up everything so that you can get the app running locally on your machine.
 
 👉 If you want to know **where to find the source code**, see the [Project structure](#project-structure) section.
@@ -289,12 +289,12 @@ files:
 
 ## Development
 
-Please refer to the [Development section](./README.md#development) in the project README.
+Please refer to the [Development section](../README.md#development) in the project README.
 
 
 ## Deployment
 
-Please refer to the [Deployment section](./README.md#deployment) in the project README.
+Please refer to the [Deployment section](../README.md#deployment) in the project README.
 
 
 <!-- links references -->

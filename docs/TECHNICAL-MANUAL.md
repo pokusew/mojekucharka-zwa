@@ -169,7 +169,7 @@ It contains the presenters and templates that actually implement all the functio
 ### Database schema
 
 The app uses MySQL database to store its data. The schema DDL files can be found in the [db/schema](../db/schema/)
-directory. The following diagrams provides visual representations:
+directory. The following diagrams provide visual representations:
 
 <div style="text-align: center">
 <img alt="Database schema" src="./images/db-schema-jetbrains.png" width="800" />

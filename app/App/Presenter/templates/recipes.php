@@ -27,7 +27,7 @@ $pagination = Helpers::renderPagination(
 
 $getCategoryName = function (int $id) {
 	if (!isset($this->categories['map'][$id])) {
-		return 'Neznámá ktegorie';
+		return 'Neznámá kategorie';
 	}
 	return $this->categories['map'][$id]['name'];
 };
